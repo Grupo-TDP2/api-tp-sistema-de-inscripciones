@@ -1,0 +1,5 @@
+test: &test
+  adapter: postgresql
+  encoding: utf8
+  database: api-tp-sistema-de-inscripciones_test
+  username: postgres

@@ -1,0 +1,36 @@
+language: ruby
+rvm:
+  - 2.4.0
+
+addons:
+  code_climate:
+    repo_token: d71e0d9a71e70ad61a16ea688c05d1380566eb20855709ea935df7152b29206a
+
+env:
+  global:
+    - RAILS_ENV=test
+    - SECURITY_SECRET_TOKEN=traviscitraviscitraviscitraviscitravisci
+
+before_install:
+  - "echo '--colour' > ~/.rspec"
+  - "echo 'gem: --no-document' > ~/.gemrc"
+  # Solves rainbow issue: https://github.com/sickill/rainbow/issues/48
+  - gem update --system
+
+before_script:
+  - cp config/database.travis.yml config/database.yml
+  - psql -c "CREATE USER \"api-tp-sistema-de-inscripciones\" WITH PASSWORD 'api-tp-sistema-de-inscripciones';" -U postgres
+  - psql -c "DROP DATABASE IF EXISTS \"api-tp-sistema-de-inscripciones_test\";" -U postgres
+  - psql -c "CREATE DATABASE \"api-tp-sistema-de-inscripciones_test\" ENCODING 'utf8';" -U postgres
+  - bundle exec rake db:migrate
+
+install:
+  - gem install bundler
+  - bundle install --retry=3
+
+script:
+  - bundle exec rspec spec -fd
+  - bundle exec rubocop app spec -R --format simple
+
+cache:
+  bundler: true
