@@ -49,7 +49,7 @@ group :development, :test do
   gem 'byebug', platform: :mri
 
   gem 'factory_bot_rails'
-  gem 'faker'
+  gem 'faker', :git => 'https://github.com/stympy/faker.git', :branch => 'master'
 
   # Lints
   gem 'rubocop', '0.55.0'

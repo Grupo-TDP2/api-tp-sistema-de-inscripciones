@@ -10,10 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180916180945) do
+ActiveRecord::Schema.define(version: 20180916184424) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "correlativities", force: :cascade do |t|
+    t.bigint "subject_id"
+    t.bigint "correlative_subject_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["correlative_subject_id"], name: "index_correlativities_on_correlative_subject_id"
+    t.index ["subject_id", "correlative_subject_id"], name: "index_cor_subjects_on_subject_id_and_cor_subject_id", unique: true
+    t.index ["subject_id"], name: "index_correlativities_on_subject_id"
+  end
 
   create_table "departments", force: :cascade do |t|
     t.string "name", null: false
@@ -46,4 +56,15 @@ ActiveRecord::Schema.define(version: 20180916180945) do
     t.index ["reset_password_token"], name: "index_students_on_reset_password_token", unique: true
   end
 
+  create_table "subjects", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "code", null: false
+    t.integer "credits", null: false
+    t.bigint "department_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["department_id"], name: "index_subjects_on_department_id"
+  end
+
+  add_foreign_key "subjects", "departments"
 end
