@@ -52,8 +52,8 @@ group :development, :test do
   gem 'faker'
 
   # Lints
-  gem 'rubocop', '0.50.0'
-  gem 'rubocop-rspec', '1.10.0'
+  gem 'rubocop', '0.55.0'
+  gem 'rubocop-rspec', '1.25.1'
 
   gem 'scss_lint', require: false
 
