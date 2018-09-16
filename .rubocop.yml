@@ -6,6 +6,7 @@ Rails:
 AllCops:
   Exclude:
     - spec/support/spec_helper.rb
+    - spec/support/shared_examples/*
     - spec/rails_helper.rb
     - db/**/*
     - docs/**/*
