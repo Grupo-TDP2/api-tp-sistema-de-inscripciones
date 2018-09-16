@@ -9,5 +9,5 @@ class Student < ApplicationRecord
   validates :phone_number, numericality: true, length: { minimum: 8, maximum: 10 }
   validates :personal_document_number, numericality: true, length: { is: 8 }
   validates :school_document_number, numericality: true, length: { minimum: 5, maximum: 6 }
-  validates :email, uniqueness: { case_sensitive: true }
+  validates :email, uniqueness: { case_sensitive: false }
 end
