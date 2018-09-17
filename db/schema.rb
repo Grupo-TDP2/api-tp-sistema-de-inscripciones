@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180917034658) do
+ActiveRecord::Schema.define(version: 20180917035805) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,6 +22,15 @@ ActiveRecord::Schema.define(version: 20180917034658) do
     t.string "city", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "classrooms", force: :cascade do |t|
+    t.string "floor", null: false
+    t.string "number", null: false
+    t.bigint "building_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["building_id"], name: "index_classrooms_on_building_id"
   end
 
   create_table "correlativities", force: :cascade do |t|
@@ -82,5 +91,6 @@ ActiveRecord::Schema.define(version: 20180917034658) do
     t.index ["department_id"], name: "index_subjects_on_department_id"
   end
 
+  add_foreign_key "classrooms", "buildings"
   add_foreign_key "subjects", "departments"
 end
