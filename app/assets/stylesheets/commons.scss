@@ -1,0 +1,266 @@
+.main {
+  background-color: #E7FFFF;
+  grid-area: main;
+  height: 100%;
+  padding-top: 50px;
+  position: absolute;
+  width: 100%;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+
+  &.top {
+    justify-content: flex-start;
+  }
+
+  &.middle {
+    justify-content: center;
+  }
+
+  &.bottom {
+    justify-content: flex-end;
+  }
+
+  &.start {
+    align-items: flex-start;
+  }
+
+  &.center {
+    align-items: center;
+  }
+
+  &.end {
+    align-items: flex-end;
+  }
+
+  .self-start {
+    align-self: flex-start;
+  }
+
+  .self-center {
+    align-self: center;
+  }
+
+  .self-end {
+    align-self: flex-end;
+  }
+
+  .self-stretch {
+    align-self: stretch;
+  }
+
+  &.space-between {
+    justify-content: space-between;
+  }
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+
+  &.top {
+    align-items: flex-start;
+  }
+
+  &.middle {
+    align-items: center;
+  }
+
+  &.bottom {
+    align-items: flex-end;
+  }
+
+  &.baseline {
+    align-items: baseline;
+  }
+
+  &.start {
+    justify-content: flex-start;
+  }
+
+  &.center {
+    justify-content: center;
+  }
+
+  &.end {
+    justify-content: flex-end;
+  }
+
+  &.space-between {
+    justify-content: space-between;
+  }
+
+  &.space-around {
+    justify-content: space-around;
+  }
+
+  &.wrap {
+    flex-wrap: wrap;
+  }
+
+  .self-top {
+    align-self: flex-start;
+  }
+
+  .self-middle {
+    align-self: center;
+  }
+
+  .self-bottom {
+    align-self: flex-end;
+  }
+
+  .self-stretch {
+    align-self: stretch;
+  }
+}
+
+.margin-top-30 {
+  margin-top: 30px;
+}
+
+.margin-top-50 {
+  margin-top: 50px;
+}
+
+%text-base {
+  color: $atoll;
+
+  &.quicksand {
+    font-family: $quicksand, sans-serif;
+  }
+
+  &.roboto {
+    font-family: $roboto, sans-serif;
+  }
+
+  &.bold {
+    font-weight: bold;
+  }
+
+  &.underlined {
+    text-decoration: underline;
+  }
+
+  &.text-center {
+    text-align: center;
+  }
+
+  &.bright-turqoise {
+    color: $bright-turqoise;
+  }
+
+  &.casper {
+    color: $casper;
+  }
+
+  &.mine-shaft {
+    color: $mine-shaft;
+  }
+
+  &.niagara {
+    color: $niagara;
+  }
+
+  &.white {
+    color: $white;
+  }
+
+  &.egg-blue {
+    color: $egg-blue;
+  }
+
+  &.no-wrap {
+    white-space: nowrap;
+  }
+}
+
+.title-1 {
+  @extend %text-base;
+  font-size: 40px;
+  line-height: 50px;
+}
+
+.title-2 {
+  @extend %text-base;
+  font-size: 60px;
+  line-height: 75px;
+}
+
+.title-3 {
+  @extend %text-base;
+  font-size: 35px;
+  line-height: 44px;
+}
+
+.title-4 {
+  @extend %text-base;
+  font-size: 40px;
+  line-height: 50px;
+  color: $white;
+}
+
+.title-5 {
+  @extend %text-base;
+  font-size: 30px;
+  line-height: 36px;
+}
+
+.text-1 {
+  @extend %text-base;
+  font-size: 15px;
+  line-height: 19px;
+}
+
+.sign-in-form {
+  border-radius: 15px;
+  max-width: 570px;
+  min-height: 300px;
+  padding: 45px 60px;
+  width: 100%;
+  z-index: 1;
+}
+
+.box {
+  background: $white;
+  border-radius: 60px;
+  box-shadow: 5px 10px 16px 0 rgba($black, .05);
+}
+
+.full-width {
+  width: 100%;
+}
+
+.text-field-1 {
+  background-color: rgba($bright-turqoise, 0.05);
+  border: 1px solid $bright-turqoise;
+  border-radius: 5px;
+  color: $atoll;
+  padding: 15px;
+  width: 100%;
+}
+
+%button-base {
+  font-family: $quicksand, sans-serif;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.button-1 {
+  @extend %button-base;
+  background: linear-gradient(90deg, $cyan 0%, $turqoise 100%);
+  border-radius: 100px;
+  color: $atoll;
+  max-width: 350px;
+  width: 100%;
+  height: 50px;
+}
+
+.submit-button {
+  border: none;
+  max-width: 155px;
+}
