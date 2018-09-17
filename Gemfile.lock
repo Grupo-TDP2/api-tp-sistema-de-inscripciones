@@ -1,3 +1,11 @@
+GIT
+  remote: https://github.com/stympy/faker.git
+  revision: d5d22148b4144cfc165ea9b8b8551cec11ba88f7
+  branch: master
+  specs:
+    faker (1.9.1)
+      i18n (>= 0.7)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -109,8 +117,6 @@ GEM
     factory_bot_rails (4.11.1)
       factory_bot (~> 4.11.1)
       railties (>= 3.0.0)
-    faker (1.9.1)
-      i18n (>= 0.7)
     ffi (1.9.25)
     flay (2.12.0)
       erubis (~> 2.7.0)
@@ -364,7 +370,7 @@ DEPENDENCIES
   devise-i18n
   dotenv-rails
   factory_bot_rails
-  faker
+  faker!
   formulaic
   jbuilder (~> 2.5)
   launchy
