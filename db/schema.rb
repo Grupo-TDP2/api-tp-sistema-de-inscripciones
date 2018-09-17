@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180916184424) do
+ActiveRecord::Schema.define(version: 20180917031609) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,6 +23,13 @@ ActiveRecord::Schema.define(version: 20180916184424) do
     t.index ["correlative_subject_id"], name: "index_correlativities_on_correlative_subject_id"
     t.index ["subject_id", "correlative_subject_id"], name: "index_cor_subjects_on_subject_id_and_cor_subject_id", unique: true
     t.index ["subject_id"], name: "index_correlativities_on_subject_id"
+  end
+
+  create_table "course_of_studies", force: :cascade do |t|
+    t.string "name", null: false
+    t.integer "required_credits", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "departments", force: :cascade do |t|
