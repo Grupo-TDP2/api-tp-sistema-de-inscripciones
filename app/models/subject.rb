@@ -16,4 +16,5 @@ class Subject < ApplicationRecord
                                       class_name: 'Correlativity', inverse_of: :correlativities,
                                       dependent: :destroy
   has_many :needed_subjects, through: :backward_correlativities, source: :subject
+  belongs_to :department
 end

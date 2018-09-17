@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe Subject do
-  before { create(:subject) }
+  let!(:subject) { create(:subject) }
 
   it { is_expected.to validate_presence_of(:name) }
   it { is_expected.to validate_presence_of(:code) }
@@ -15,7 +15,7 @@ describe Subject do
   it { is_expected.to validate_numericality_of(:credits).is_greater_than(0) }
 
   context 'when adding correlatives' do
-    let!(:another_subject) { create(:subject) }
+    let!(:another_subject) { create(:subject, department: subject.department) }
 
     before { another_subject.correlative_subjects << described_class.first }
 
