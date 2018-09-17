@@ -24,6 +24,15 @@ ActiveRecord::Schema.define(version: 20180917042215) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "classrooms", force: :cascade do |t|
+    t.string "floor", null: false
+    t.string "number", null: false
+    t.bigint "building_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["building_id"], name: "index_classrooms_on_building_id"
+  end
+
   create_table "correlativities", force: :cascade do |t|
     t.bigint "subject_id"
     t.bigint "correlative_subject_id"
@@ -91,5 +100,6 @@ ActiveRecord::Schema.define(version: 20180917042215) do
     t.index ["department_id"], name: "index_subjects_on_department_id"
   end
 
+  add_foreign_key "classrooms", "buildings"
   add_foreign_key "subjects", "departments"
 end
