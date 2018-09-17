@@ -15,7 +15,9 @@ describe Subject do
   it { is_expected.to validate_numericality_of(:credits).is_greater_than(0) }
 
   context 'when adding correlatives' do
-    let!(:another_subject) { create(:subject, department: subject.department) }
+    let!(:another_subject) do
+      create(:subject, code: subject.code.to_i + 1, department: subject.department)
+    end
 
     before { another_subject.correlative_subjects << described_class.first }
 
