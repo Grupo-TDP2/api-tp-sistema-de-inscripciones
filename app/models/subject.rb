@@ -17,4 +17,5 @@ class Subject < ApplicationRecord
                                       dependent: :destroy
   has_many :needed_subjects, through: :backward_correlativities, source: :subject
   belongs_to :department
+  has_many :courses, dependent: :destroy
 end
