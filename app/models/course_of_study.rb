@@ -3,4 +3,5 @@ class CourseOfStudy < ApplicationRecord
   validates :required_credits, numericality: { only_integer: true, greater_than: 100,
                                                less_than_or_equal_to: 300 }
   has_many :subjects, dependent: :destroy
+  has_many :lesson_schedules, dependent: :destroy
 end
