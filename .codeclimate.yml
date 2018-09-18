@@ -1,0 +1,8 @@
+exclude_patterns:
+- 'app/views/'
+- 'config/'
+- 'db/'
+- 'log/'
+- 'public/'
+- 'spec/'
+- 'vendor/'
