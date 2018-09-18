@@ -62,6 +62,17 @@ ActiveRecord::Schema.define(version: 20180917194335) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "courses", force: :cascade do |t|
+    t.string "name", null: false
+    t.integer "vacancies", null: false
+    t.bigint "subject_id"
+    t.bigint "school_term_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["school_term_id"], name: "index_courses_on_school_term_id"
+    t.index ["subject_id"], name: "index_courses_on_subject_id"
+  end
+
   create_table "departments", force: :cascade do |t|
     t.string "name", null: false
     t.string "code", null: false
@@ -113,5 +124,7 @@ ActiveRecord::Schema.define(version: 20180917194335) do
   end
 
   add_foreign_key "classrooms", "buildings"
+  add_foreign_key "courses", "school_terms"
+  add_foreign_key "courses", "subjects"
   add_foreign_key "subjects", "departments"
 end
