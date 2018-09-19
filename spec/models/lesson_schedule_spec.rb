@@ -3,7 +3,6 @@ require 'rails_helper'
 describe LessonSchedule do
   before { create(:lesson_schedule) }
 
-:type, :day, :hour_start, :hour_end
   it { is_expected.to validate_presence_of(:type) }
   it { is_expected.to validate_presence_of(:day) }
   it { is_expected.to validate_presence_of(:hour_start) }
