@@ -1,7 +1,7 @@
-class LessonStudy < ApplicationRecord
+class LessonSchedule < ApplicationRecord
   belongs_to :course
   belongs_to :classroom
-  validates :type, :day, :hour_start, :hour_end, :date_end, presence: true
+  validates :type, :day, :hour_start, :hour_end, presence: true
   validate :validate_start_end
 
   references :course, index: true, foreign_key: true
