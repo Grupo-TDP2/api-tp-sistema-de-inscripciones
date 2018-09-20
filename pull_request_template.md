@@ -4,5 +4,5 @@
 ## Screenshots
 [Change!] If needed, show the screenshots of the views you modified.
 
-## Trello Car
+## Trello Card
 [Change!] Link to the associated Trello card.
