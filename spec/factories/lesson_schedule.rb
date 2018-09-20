@@ -4,7 +4,7 @@ FactoryBot.define do
     day { Faker::Date.between(Time.zone.today, 10.years.from_now).day }
     hour_start { Faker::Time.between(Date.today, Date.today, :day) }
     hour_end { Faker::Time.between(Date.today, Date.today, :night) }
-    building { create(:course) }
-    building { create(:classroom) }
+    course { create(:course) }
+    classroom { create(:classroom) }
   end
 end
