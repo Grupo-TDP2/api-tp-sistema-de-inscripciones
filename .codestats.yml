@@ -2,5 +2,4 @@ metrics:
   simplecov:
     name: 'Code Coverage'
     enabled: true
-    # Replace with your rules after you have some tests
     minimum: 80
