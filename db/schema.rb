@@ -89,6 +89,17 @@ ActiveRecord::Schema.define(version: 20180921214704) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "enrolments", force: :cascade do |t|
+    t.integer "type", default: 0, null: false
+    t.datetime "valid_enrolment_datetime", null: false
+    t.bigint "student_id"
+    t.bigint "course_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["course_id"], name: "index_enrolments_on_course_id"
+    t.index ["student_id"], name: "index_enrolments_on_student_id"
+  end
+
   create_table "school_terms", force: :cascade do |t|
     t.integer "term", null: false
     t.integer "year", null: false

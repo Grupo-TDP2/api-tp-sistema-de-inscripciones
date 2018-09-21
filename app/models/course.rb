@@ -6,4 +6,6 @@ class Course < ApplicationRecord
 
   belongs_to :subject
   belongs_to :school_term
+  has_many :enrolments, dependent: :destroy
+  has_many :students, through: :enrolments
 end
