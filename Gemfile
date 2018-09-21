@@ -27,6 +27,8 @@ gem 'therubyracer', platforms: :ruby
 gem 'jquery-rails'
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 gem 'turbolinks', '~> 5'
+# Use for versioning apis (api_version in routes)
+gem 'versionist'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.5'
 # Use autoprefixer to avoid writing css prefixes
@@ -49,6 +51,8 @@ gem 'rack-cors', '~> 1.0.2', require: 'rack/cors'
 # SEO Meta Tags
 gem 'meta-tags'
 gem 'metamagic'
+
+gem 'active_model_serializers'
 
 # Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails', '~> 4.2'
