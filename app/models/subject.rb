@@ -4,7 +4,10 @@ class Subject < ApplicationRecord
   validates :credits, numericality: { only_integer: true, greater_than: 0,
                                       less_than_or_equal_to: 10 }
   validates :name, uniqueness: { case_sensitive: false }
-  validates :code, uniqueness: { case_sensitive: false }
+  validates :code, uniqueness: { scope: :department_id, case_sensitive: false }
+
+  has_many :course_of_study_subjects, dependent: :destroy
+  has_many :course_of_studies, through: :course_of_study_subjects
 
   # Correlatives
   # Forward correlativity

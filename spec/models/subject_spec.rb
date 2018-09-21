@@ -8,7 +8,7 @@ describe Subject do
   it { is_expected.to validate_presence_of(:credits) }
 
   it { is_expected.to validate_uniqueness_of(:name).case_insensitive }
-  it { is_expected.to validate_uniqueness_of(:code).case_insensitive }
+  it { is_expected.to validate_uniqueness_of(:code).case_insensitive.scoped_to(:department_id) }
 
   it { is_expected.to validate_numericality_of(:credits).only_integer }
   it { is_expected.to validate_numericality_of(:credits).is_less_than_or_equal_to(10) }
