@@ -8,7 +8,8 @@ describe V1::SubjectsController do
     end
 
     context 'when the course of study contains two subjects' do
-      let(:another_subject) { create(:subject) }
+      let(:another_department) { create(:department) }
+      let(:another_subject) { create(:subject, name: 'Another', department: another_department) }
 
       before { course_of_study_subject.course_of_study.subjects << another_subject }
 
@@ -20,6 +21,11 @@ describe V1::SubjectsController do
       it 'returns http status ok' do
         index_request
         expect(response).to have_http_status :ok
+      end
+
+      it 'returns the right keys' do
+        index_request
+        expect(response_body.first.keys).to match_array(%w[id name code credits department])
       end
     end
   end
