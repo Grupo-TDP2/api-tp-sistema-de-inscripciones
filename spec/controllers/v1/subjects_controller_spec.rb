@@ -8,7 +8,7 @@ describe V1::SubjectsController do
     end
 
     context 'when the course of study contains two subjects' do
-      let(:another_department) { create(:department) }
+      let(:another_department) { create(:department, code: '00') }
       let(:another_subject) { create(:subject, name: 'Another', department: another_department) }
 
       before { course_of_study_subject.course_of_study.subjects << another_subject }
