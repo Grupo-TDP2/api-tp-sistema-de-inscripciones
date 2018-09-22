@@ -100,6 +100,19 @@ ActiveRecord::Schema.define(version: 20180922135651) do
     t.index ["student_id"], name: "index_enrolments_on_student_id"
   end
 
+  create_table "lesson_schedules", force: :cascade do |t|
+    t.integer "type", null: false
+    t.integer "day", null: false
+    t.time "hour_start", null: false
+    t.time "hour_end", null: false
+    t.bigint "course_id"
+    t.bigint "classroom_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["classroom_id"], name: "index_lesson_schedules_on_classroom_id"
+    t.index ["course_id"], name: "index_lesson_schedules_on_course_id"
+  end
+
   create_table "school_terms", force: :cascade do |t|
     t.integer "term", null: false
     t.integer "year", null: false
@@ -174,5 +187,7 @@ ActiveRecord::Schema.define(version: 20180922135651) do
   add_foreign_key "classrooms", "buildings"
   add_foreign_key "courses", "school_terms"
   add_foreign_key "courses", "subjects"
+  add_foreign_key "lesson_schedules", "classrooms"
+  add_foreign_key "lesson_schedules", "courses"
   add_foreign_key "subjects", "departments"
 end
