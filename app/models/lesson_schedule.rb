@@ -5,6 +5,7 @@ class LessonSchedule < ApplicationRecord
   validate :validate_start_end
 
   enum type: { theory: 0, practice: 1 }
+  enum day: { Monday: 0, Tuesday: 1, Wednesday: 2, Thursday: 3, Friday: 4, Saturday: 5 }
 
   private
 
