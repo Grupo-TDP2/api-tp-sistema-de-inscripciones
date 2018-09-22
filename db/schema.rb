@@ -10,10 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180917042215) do
+ActiveRecord::Schema.define(version: 20180922134416) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "admins", force: :cascade do |t|
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_admins_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true
+  end
 
   create_table "buildings", force: :cascade do |t|
     t.string "name", null: false
@@ -50,11 +62,42 @@ ActiveRecord::Schema.define(version: 20180917042215) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "course_of_study_subjects", force: :cascade do |t|
+    t.bigint "subject_id"
+    t.bigint "course_of_study_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["course_of_study_id"], name: "index_course_of_study_subjects_on_course_of_study_id"
+    t.index ["subject_id"], name: "index_course_of_study_subjects_on_subject_id"
+  end
+
+  create_table "courses", force: :cascade do |t|
+    t.string "name", null: false
+    t.integer "vacancies", null: false
+    t.bigint "subject_id"
+    t.bigint "school_term_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["school_term_id"], name: "index_courses_on_school_term_id"
+    t.index ["subject_id"], name: "index_courses_on_subject_id"
+  end
+
   create_table "departments", force: :cascade do |t|
     t.string "name", null: false
     t.string "code", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "enrolments", force: :cascade do |t|
+    t.integer "type", default: 0, null: false
+    t.datetime "valid_enrolment_datetime", null: false
+    t.bigint "student_id"
+    t.bigint "course_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["course_id"], name: "index_enrolments_on_course_id"
+    t.index ["student_id"], name: "index_enrolments_on_student_id"
   end
 
   create_table "school_terms", force: :cascade do |t|
@@ -100,6 +143,26 @@ ActiveRecord::Schema.define(version: 20180917042215) do
     t.index ["department_id"], name: "index_subjects_on_department_id"
   end
 
+  create_table "teachers", force: :cascade do |t|
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "first_name", null: false
+    t.string "last_name", null: false
+    t.string "personal_document_number", null: false
+    t.date "birthdate", null: false
+    t.string "phone_number", null: false
+    t.string "address", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_teachers_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_teachers_on_reset_password_token", unique: true
+  end
+
   add_foreign_key "classrooms", "buildings"
+  add_foreign_key "courses", "school_terms"
+  add_foreign_key "courses", "subjects"
   add_foreign_key "subjects", "departments"
 end

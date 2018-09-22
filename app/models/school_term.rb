@@ -6,6 +6,8 @@ class SchoolTerm < ApplicationRecord
 
   enum term: { first_semester: 0, second_semester: 1 }
 
+  has_many :courses, dependent: :destroy
+
   private
 
   def validate_year_start_end
