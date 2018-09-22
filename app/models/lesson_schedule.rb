@@ -1,6 +1,7 @@
 class LessonSchedule < ApplicationRecord
   belongs_to :course
   belongs_to :classroom
+  self.inheritance_column = :_type_disabled
   validates :type, :day, :hour_start, :hour_end, presence: true
   validate :validate_start_end
 
