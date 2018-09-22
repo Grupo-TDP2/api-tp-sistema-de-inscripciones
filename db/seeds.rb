@@ -23,6 +23,24 @@ subject_3 = Subject.create!(name: 'Taller de desarrollo de proyectos informátic
 subject_4 = Subject.create!(name: 'Estructura del computador', code: '70', credits: 6,
                             department_id: 3)
 
+school_term = SchoolTerm.create!(term: 1, year: '2018', date_start: '2018-08-18',
+                                 date_end: '2018-12-01')
+past_school_term = SchoolTerm.create!(term: 0, year: '2018', date_start: '2018-03-18',
+                                      date_end: '2018-07-01')
+
+course_1 = Course.create!(name: '001', vacancies: 2, subject: subject_1, school_term: school_term)
+course_2 = Course.create!(name: '002', vacancies: 2, subject: subject_2, school_term: school_term)
+course_3 = Course.create!(name: '003', vacancies: 2, subject: subject_3, school_term: school_term)
+course_4 = Course.create!(name: '004', vacancies: 2, subject: subject_4, school_term: school_term)
+course_5 = Course.create!(name: '005', vacancies: 2, subject: subject_3, school_term: school_term)
+course_6 = Course.create!(name: '006', vacancies: 2, subject: subject_3,
+                          school_term: past_school_term)
+
+teacher_1 = Teacher.create!(email: 'teacher1@example.com', password: '12345678',
+                            first_name: 'Carlos', last_name: 'Fontela',
+                            personal_document_number: '30000000', birthdate: '1970-01-01',
+                            phone_number: '44444444', address: 'Some address 123')
+
 course_of_study_1.subjects << subject_1
 course_of_study_1.subjects << subject_2
 course_of_study_1.subjects << subject_3
@@ -37,3 +55,5 @@ course_of_study_3.subjects << subject_4
 
 course_of_study_4.subjects << subject_1
 course_of_study_4.subjects << subject_2
+
+TeacherCourse.create!(course_id: 3, teacher_id: 1, teaching_position: :course_chief)

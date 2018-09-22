@@ -10,4 +10,6 @@ class Course < ApplicationRecord
   has_many :students, through: :enrolments
   has_many :teacher_courses, dependent: :destroy
   has_many :teachers, through: :teacher_courses
+
+  scope :current_school_term, -> { where(school_term_id: SchoolTerm.current_school_term.id) }
 end
