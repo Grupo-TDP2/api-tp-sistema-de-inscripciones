@@ -1,5 +1,11 @@
 RailsAdmin.config do |config|
   config.model SchoolTerm do
+    configure :term do
+      pretty_value do
+        I18n.t("activerecord.attributes.school_term.terms.#{value}")
+      end
+    end
+
     create do
       field :term
       field :year

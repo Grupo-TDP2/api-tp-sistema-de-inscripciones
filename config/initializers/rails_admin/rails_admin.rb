@@ -1,4 +1,6 @@
 RailsAdmin.config do |config|
+  require 'i18n'
+  I18n.default_locale = :es
   # == Devise ==
   config.authenticate_with do
     warden.authenticate! scope: :admin
