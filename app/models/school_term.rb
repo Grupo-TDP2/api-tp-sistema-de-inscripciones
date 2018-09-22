@@ -8,6 +8,12 @@ class SchoolTerm < ApplicationRecord
 
   has_many :courses, dependent: :destroy
 
+  scope :current_school_term, -> { find_by(year: Time.current.year, term: current_term) }
+
+  def self.current_term
+    Date.current > Date.new(Time.current.year, 7, 1) ? :second_semester : :first_semester
+  end
+
   private
 
   def validate_year_start_end
