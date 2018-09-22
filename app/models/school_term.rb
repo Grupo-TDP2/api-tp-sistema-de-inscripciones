@@ -1,4 +1,5 @@
 class SchoolTerm < ApplicationRecord
+  self.inheritance_column = :_term_disabled
   validates :term, :year, :date_start, :date_end, presence: true
   validates :year, numericality: { only_integer: true, greater_than: 2017, less_than: 2050 }
   validates :term, uniqueness: { scope: :year, case_sensitive: false }
