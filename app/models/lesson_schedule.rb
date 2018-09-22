@@ -4,9 +4,6 @@ class LessonSchedule < ApplicationRecord
   validates :type, :day, :hour_start, :hour_end, presence: true
   validate :validate_start_end
 
-  references :course, index: true, foreign_key: true
-  references :classroom, index: true, foreign_key: true
-
   enum type: { theory: 0, practice: 1 }
 
   private
@@ -15,5 +12,4 @@ class LessonSchedule < ApplicationRecord
     return if hour_start < hour_end
     errors.add(:hour_start, 'cannot be greater than hour end')
   end
-
 end
