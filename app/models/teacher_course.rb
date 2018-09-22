@@ -2,6 +2,7 @@ class TeacherCourse < ApplicationRecord
   validates :teaching_position, :teacher_id, :course_id, presence: true
   validates :teaching_position, uniqueness: { scope: :course_id, case_sensitive: false },
                                 if: :unique_position?
+  validates :teacher_id, uniqueness: { scope: :course_id }
 
   belongs_to :teacher
   belongs_to :course
