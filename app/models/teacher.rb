@@ -9,4 +9,7 @@ class Teacher < ApplicationRecord
   validates :phone_number, numericality: true, length: { minimum: 8, maximum: 10 }
   validates :personal_document_number, numericality: true, length: { is: 8 }
   validates :email, uniqueness: { case_sensitive: false }
+
+  has_many :teacher_courses, dependent: :destroy
+  has_many :courses, through: :teacher_courses
 end
