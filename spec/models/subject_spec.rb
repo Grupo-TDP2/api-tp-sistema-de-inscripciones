@@ -16,7 +16,7 @@ describe Subject do
 
   context 'when adding correlatives' do
     let!(:another_subject) do
-      create(:subject, code: subject.code.to_i + 1 , department: subject.department)
+      create(:subject, code: subject.code.to_i + 1, department: subject.department)
     end
 
     before { another_subject.correlative_subjects << described_class.first }
