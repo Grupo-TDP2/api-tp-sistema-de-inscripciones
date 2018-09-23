@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get 'course_of_study/index'
+
   root to: 'application#index'
   devise_for :admins
   devise_for :students
