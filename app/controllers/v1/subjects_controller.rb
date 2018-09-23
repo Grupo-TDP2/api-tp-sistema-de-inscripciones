@@ -1,5 +1,7 @@
 module V1
   class SubjectsController < ApplicationController
+    skip_before_action :authenticate_user!, only: %i[index]
+
     def index
       render json: course_of_study.subjects, status: :ok
     end

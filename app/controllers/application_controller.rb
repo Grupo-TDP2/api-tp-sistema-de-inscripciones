@@ -1,5 +1,8 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
+  skip_before_action :verify_authenticity_token
+  before_action :authenticate_user!
+  attr_reader :current_user
 
   # i18n configuration. See: http://guides.rubyonrails.org/i18n.html
   before_action :set_locale
@@ -18,4 +21,14 @@ class ApplicationController < ActionController::Base
   end
 
   def index; end
+
+  private
+
+  def authenticate_user!
+    @current_user = AuthenticationToken.new(authentication_token).user
+  end
+
+  def authentication_token
+    request.headers.fetch('Authorization', '').split('Bearer ').last
+  end
 end
