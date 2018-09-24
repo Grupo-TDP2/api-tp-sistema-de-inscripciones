@@ -4,6 +4,7 @@ exclude_patterns:
 - 'app/views/'
 - 'app/channels/'
 - 'app/controllers/application_controller.rb'
+- 'app/errors/'
 - 'config/'
 - 'db/'
 - 'log/'
