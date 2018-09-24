@@ -11,7 +11,8 @@ RailsAdmin.config do |config|
     dashboard
     index do
       except ['Admin', 'Building', 'Classroom', 'Correlativity', 'Course',
-              'CourseOfStudy', 'Department', 'Subject', 'Student']
+              'CourseOfStudy', 'CourseOfStudySubject', 'Department', 'Enrolment', 'LessonSchedule',
+              'Subject', 'Student', 'Teacher', 'TeacherCourse']
     end
     new
     export
