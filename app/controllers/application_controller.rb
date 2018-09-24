@@ -4,6 +4,8 @@ class ApplicationController < ActionController::Base
   before_action :authenticate_user!
   attr_reader :current_user
 
+  rescue_from UnauthorizedUserException, with: :unauthorized_user
+
   # i18n configuration. See: http://guides.rubyonrails.org/i18n.html
   before_action :set_locale
 
@@ -30,5 +32,9 @@ class ApplicationController < ActionController::Base
 
   def authentication_token
     request.headers.fetch('Authorization', '').split('Bearer ').last
+  end
+
+  def unauthorized_user
+    head :unauthorized
   end
 end
