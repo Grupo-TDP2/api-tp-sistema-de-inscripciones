@@ -1,5 +1,6 @@
 exclude_patterns:
 - 'app/assets/'
+- 'app/authentication/'
 - 'app/views/'
 - 'app/channels/'
 - 'app/controllers/application_controller.rb'
