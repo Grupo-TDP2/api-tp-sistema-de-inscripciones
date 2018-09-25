@@ -1,0 +1,2 @@
+class UnauthorizedUserException < StandardError
+end
