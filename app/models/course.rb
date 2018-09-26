@@ -13,4 +13,12 @@ class Course < ApplicationRecord
   has_many :teachers, through: :teacher_courses
 
   scope :current_school_term, -> { where(school_term_id: SchoolTerm.current_school_term.id) }
+
+  def without_vacancies?
+    vacancies.zero?
+  end
+
+  def decrease_vacancies!
+    update(vacancies: vacancies - 1) if vacancies.positive?
+  end
 end
