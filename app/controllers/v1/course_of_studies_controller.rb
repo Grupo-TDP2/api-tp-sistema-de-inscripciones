@@ -7,7 +7,7 @@ module V1
     private
 
     def course_of_studies
-      @course_of_studies ||= CourseOfStudy.all
+      CourseOfStudy.all
     end
   end
 end
