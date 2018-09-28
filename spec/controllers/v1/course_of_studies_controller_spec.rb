@@ -2,16 +2,14 @@ require 'rails_helper'
 
 describe V1::CourseOfStudiesController do
   describe '#index' do
-    let(:course_of_study) do
-      create(:course_of_study, name: 'Ingeniería Informática', required_credits: 260)
-    end
     let(:index_request) do
       get :index
     end
 
     context 'when there are two courses of study' do
-      let(:another_course_of_study) do
+      before do
         create(:course_of_study, name: 'Ingeniería Industrial', required_credits: 240)
+        create(:course_of_study, name: 'Ingeniería Informática', required_credits: 260)
       end
 
       it 'returns two courses of study' do
