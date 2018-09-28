@@ -1,5 +1,5 @@
 module V1
-  class SessionsController < ApplicationController
+  class TeacherSessionsController < ApplicationController
     def create
       if authenticated_user?
         render json: {
@@ -14,7 +14,7 @@ module V1
     private
 
     def user
-      @user ||= Student.find_by(email: authenticate_params[:email])
+      @user ||= Teacher.find_by(email: authenticate_params[:email])
     end
 
     def authenticated_user?
