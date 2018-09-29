@@ -40,6 +40,7 @@ describe V1::TeachersController do
       let(:term) { create(:school_term) }
       let(:course_1) { create(:course, school_term: term) }
       let(:course_2) { create(:course, school_term: term) }
+      let(:course_3) { create(:course, school_term: term) }
 
       before { sign_in current_teacher }
 
@@ -47,7 +48,7 @@ describe V1::TeachersController do
         before do
           create(:teacher_course, teacher: current_teacher, course: course_1)
           create(:teacher_course, teacher: current_teacher, course: course_2)
-          create(:teacher_course, teacher: another_teacher)
+          create(:teacher_course, teacher: another_teacher, course: course_3)
         end
 
         it 'returns his 2 courses' do

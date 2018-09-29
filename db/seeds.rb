@@ -5,6 +5,21 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+CourseOfStudy.delete_all
+DepartmentStaff.delete_all
+LessonSchedule.delete_all
+Course.delete_all
+Subject.delete_all
+Department.delete_all
+Classroom.delete_all
+Building.delete_all
+SchoolTerm.delete_all
+Teacher.delete_all
+Student.delete_all
+TeacherCourse.delete_all
+Enrolment.delete_all
+
+
 course_of_study_1 = CourseOfStudy.create!(name: 'Ingeniería en Informática', required_credits: 240)
 course_of_study_2 = CourseOfStudy.create!(name: 'Ingeniería Química', required_credits: 240)
 course_of_study_3 = CourseOfStudy.create!(name: 'Ingeniería Electrónica', required_credits: 240)
@@ -26,12 +41,12 @@ department_3 = Department.create!(name: 'Departamento de Electrónica', code: '6
 department_4 = Department.create!(name: 'Departamento de Física', code: '62')
 
 subject_1 = Subject.create!(name: 'Análisis matemático II A', code: '03', credits: 6,
-                            department_id: 2)
-subject_2 = Subject.create!(name: 'Física II A', code: '03', credits: 6, department_id: 4)
+                            department: department_2)
+subject_2 = Subject.create!(name: 'Física II A', code: '03', credits: 6, department: department_4)
 subject_3 = Subject.create!(name: 'Taller de desarrollo de proyectos informáticos II', code: '48',
-                            credits: 6, department_id: 1)
+                            credits: 6, department: department_1)
 subject_4 = Subject.create!(name: 'Estructura del computador', code: '70', credits: 6,
-                            department_id: 3)
+                            department: department_3)
 
 school_term = SchoolTerm.create!(term: 1, year: '2018', date_start: '2018-08-18',
                                  date_end: '2018-12-01')
@@ -79,6 +94,9 @@ student_3 = Student.create!(email: 'enzo.perez@example.com', password: '12345678
                             phone_number: '12345670', birthdate: '1991-08-09',
                             address: 'Abbey Road 12345')
 
+DepartmentStaff.create!(email: 'staff_informatica@example.com', password: '12345678',
+                        department: department_1)
+
 course_of_study_1.subjects << subject_1
 course_of_study_1.subjects << subject_2
 course_of_study_1.subjects << subject_3
@@ -94,9 +112,9 @@ course_of_study_3.subjects << subject_4
 course_of_study_4.subjects << subject_1
 course_of_study_4.subjects << subject_2
 
-TeacherCourse.create!(course_id: 3, teacher_id: 1, teaching_position: :course_chief)
-TeacherCourse.create!(course_id: 2, teacher_id: 1, teaching_position: :course_chief)
-TeacherCourse.create!(course_id: 3, teacher_id: 2, teaching_position: :practice_chief)
+TeacherCourse.create!(course: course_3, teacher: teacher_1, teaching_position: :course_chief)
+TeacherCourse.create!(course: course_2, teacher: teacher_1, teaching_position: :course_chief)
+TeacherCourse.create!(course: course_3, teacher: teacher_2, teaching_position: :practice_chief)
 
 Enrolment.create!(course: course_3, student: student_1, type: :normal)
 Enrolment.create!(course: course_3, student: student_2, type: :normal)
