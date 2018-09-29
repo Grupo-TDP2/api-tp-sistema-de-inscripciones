@@ -46,4 +46,51 @@ describe V1::CoursesController do
       end
     end
   end
+
+  describe '#associate_teacher' do
+    let(:course) { create(:course) }
+    let(:teacher) { create(:teacher) }
+
+    let(:associate_teacher_request) do
+      post :associate_teacher, params: {
+        subject_id: course.subject.id, course_id: course.id, teacher_course: {
+          teacher_id: teacher.id, teaching_position: 'first_assistant'
+        }
+      }
+    end
+
+    context 'when there is no department staff logged in' do
+      it 'returns unauthorized' do
+        associate_teacher_request
+        expect(response).to have_http_status :unauthorized
+      end
+    end
+
+    context 'when there is a department staff logged in' do
+      let(:department_staff) { create(:department_staff) }
+
+      before { sign_in department_staff }
+
+      context 'when the course to modify is not from the same department' do
+        it 'returns forbidden' do
+          associate_teacher_request
+          expect(response).to have_http_status :forbidden
+        end
+      end
+
+      context 'when the course to modify is from the same department' do
+        let(:subject) { create(:subject, department: department_staff.department) }
+        let(:course) { create(:course, subject: subject) }
+
+        it 'creates the association' do
+          expect { associate_teacher_request }.to change(TeacherCourse, :count).by(1)
+        end
+
+        it 'returns created' do
+          associate_teacher_request
+          expect(response).to have_http_status :created
+        end
+      end
+    end
+  end
 end

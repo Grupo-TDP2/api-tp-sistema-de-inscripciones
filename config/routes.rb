@@ -28,7 +28,7 @@ Rails.application.routes.draw do
         scope :me do
           resources :subjects, only: [] do
             resources :courses, only: [] do
-              post :teachers
+              post :teachers, to: 'courses#associate_teacher'
             end
           end
         end
