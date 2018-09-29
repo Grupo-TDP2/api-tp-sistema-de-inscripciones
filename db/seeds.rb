@@ -10,6 +10,16 @@ course_of_study_2 = CourseOfStudy.create!(name: 'Ingeniería Química', required
 course_of_study_3 = CourseOfStudy.create!(name: 'Ingeniería Electrónica', required_credits: 240)
 course_of_study_4 = CourseOfStudy.create!(name: 'Ingeniería Mecánica', required_credits: 240)
 
+building_1 = Building.create!(name: 'PC', address: 'Av. Paseo Colón 850', postal_code: '1063',
+                              city: 'CABA')
+building_2 = Building.create!(name: 'LH', address: 'Av. Gral. Las Heras 2220', postal_code: '1126',
+                              city: 'CABA')
+
+classroom_1 = Classroom.create!(floor: '3', number: '22', building: building_1)
+classroom_2 = Classroom.create!(floor: '3', number: '03', building: building_1)
+classroom_3 = Classroom.create!(floor: '3', number: '02', building: building_1)
+classroom_4 = Classroom.create!(floor: '1', number: '06', building: building_2)
+
 department_1 = Department.create!(name: 'Departamento de Informática', code: '75')
 department_2 = Department.create!(name: 'Departamento de Matemática', code: '61')
 department_3 = Department.create!(name: 'Departamento de Electrónica', code: '66')
@@ -35,6 +45,11 @@ course_4 = Course.create!(name: '004', vacancies: 2, subject: subject_4, school_
 course_5 = Course.create!(name: '005', vacancies: 2, subject: subject_3, school_term: school_term)
 course_6 = Course.create!(name: '006', vacancies: 2, subject: subject_3,
                           school_term: past_school_term)
+
+LessonSchedule.create!(course: course_3, classroom: classroom_1, type: :theory, day: :Monday,
+                       hour_start: '17:00', hour_end: '19:00')
+LessonSchedule.create!(course: course_3, classroom: classroom_2, type: :practice, day: :Monday,
+                       hour_start: '19:00', hour_end: '23:00')
 
 teacher_1 = Teacher.create!(email: 'teacher1@example.com', password: '12345678',
                             first_name: 'Carlos', last_name: 'Fontela',

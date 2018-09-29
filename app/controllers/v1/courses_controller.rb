@@ -1,7 +1,9 @@
 module V1
   class CoursesController < ApplicationController
     def index
-      render json: subject.courses.current_school_term, status: :ok
+      render json: subject.courses.current_school_term,
+             include: ['lesson_schedules', 'lesson_schedules.classroom',
+                       'lesson_schedules.classroom.building', 'subject'], status: :ok
     end
 
     private
