@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   api_version(module: 'v1', path: { value: 'api/v1' }, defaults: { format: :json }) do
     resources :student_sessions, only: [:create]
     resources :teacher_sessions, only: [:create]
-    resources :course_of_studies, only: [] do
+    resources :course_of_studies, only: [:index] do
       resources :subjects, only: [:index] do
         resources :courses, only: [:index] do
           resources :enrolments, only: [:create]
