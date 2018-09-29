@@ -4,14 +4,18 @@ class SchoolTerm < ApplicationRecord
   validates :term, uniqueness: { scope: :year, case_sensitive: false }
   validate :validate_year_start_end, :validate_start_end, if: %i[date_start date_end]
 
-  enum term: { first_semester: 0, second_semester: 1 }
+  enum term: { first_semester: 0, second_semester: 1 , summer_school: 2}
 
   has_many :courses, dependent: :destroy
 
   scope :current_school_term, -> { find_by(year: Time.current.year, term: current_term) }
 
   def self.current_term
-    Date.current > Date.new(Time.current.year, 7, 1) ? :second_semester : :first_semester
+    Date.current > Date.new(Time.current.year, 7, 1) ? :second_semester : current_term_beginning_of_year
+  end
+
+  def self.current_term_beginning_of_year
+    Date.current > Date.new(Time.current.year, 3, 1) ? :first_semester : :summer_school
   end
 
   private
