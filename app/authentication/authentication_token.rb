@@ -12,8 +12,8 @@ class AuthenticationToken
     @payload = decode(token)
   end
 
-  def user
-    Student.find_by(id: @payload.dig('data', 'id')).tap do |user|
+  def user(entity)
+    entity.constantize.find_by(id: @payload.dig('data', 'id')).tap do |user|
       raise UnauthorizedUserException if user.blank?
     end
   end

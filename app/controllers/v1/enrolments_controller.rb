@@ -1,5 +1,7 @@
 module V1
   class EnrolmentsController < ApplicationController
+    before_action -> { authenticate_user!('Student') }
+
     def create
       enrolment = Enrolment.new(course: course, student: @current_user)
       enrolment_type(enrolment)

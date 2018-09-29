@@ -41,6 +41,11 @@ teacher_1 = Teacher.create!(email: 'teacher1@example.com', password: '12345678',
                             personal_document_number: '30000000', birthdate: '1970-01-01',
                             phone_number: '44444444', address: 'Some address 123')
 
+teacher_2 = Teacher.create!(email: 'teacher2@example.com', password: '12345678',
+                            first_name: 'Luis', last_name: 'Argerich',
+                            personal_document_number: '30000001', birthdate: '1970-01-01',
+                            phone_number: '44444445', address: 'Some address 1234')
+
 course_of_study_1.subjects << subject_1
 course_of_study_1.subjects << subject_2
 course_of_study_1.subjects << subject_3
@@ -57,3 +62,5 @@ course_of_study_4.subjects << subject_1
 course_of_study_4.subjects << subject_2
 
 TeacherCourse.create!(course_id: 3, teacher_id: 1, teaching_position: :course_chief)
+TeacherCourse.create!(course_id: 2, teacher_id: 1, teaching_position: :course_chief)
+TeacherCourse.create!(course_id: 3, teacher_id: 2, teaching_position: :practice_chief)

@@ -1,7 +1,6 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   skip_before_action :verify_authenticity_token
-  before_action :authenticate_user!
   attr_reader :current_user
 
   rescue_from UnauthorizedUserException, with: :unauthorized_user
@@ -26,8 +25,8 @@ class ApplicationController < ActionController::Base
 
   private
 
-  def authenticate_user!
-    @current_user = AuthenticationToken.new(authentication_token).user
+  def authenticate_user!(entity)
+    @current_user = AuthenticationToken.new(authentication_token).user(entity)
   end
 
   def authentication_token

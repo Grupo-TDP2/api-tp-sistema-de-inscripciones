@@ -1,7 +1,5 @@
 module V1
   class SessionsController < ApplicationController
-    skip_before_action :authenticate_user!, only: %i[create]
-
     def create
       if authenticated_user?
         render json: {
@@ -14,10 +12,6 @@ module V1
     end
 
     private
-
-    def user
-      @user ||= Student.find_by(email: authenticate_params[:email])
-    end
 
     def authenticated_user?
       user.present? && user.valid_password?(authenticate_params[:password])
