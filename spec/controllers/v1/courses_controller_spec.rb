@@ -14,9 +14,12 @@ describe V1::CoursesController do
         create(:school_term, year: '2018', term: :second_semester, date_start: '2018-08-01',
                              date_end: '2018-12-01')
       end
+      let(:course_1) do
+        create(:course, name: '001', school_term: current_term, subject: test_subject)
+      end
 
       before do
-        create(:course, name: '001', school_term: current_term, subject: test_subject)
+        create(:lesson_schedule, course: course_1)
         create(:course, name: '002', school_term: current_term, subject: test_subject)
       end
 
@@ -28,7 +31,7 @@ describe V1::CoursesController do
       it 'returns the right keys' do
         index_request
         expect(response_body.first.keys)
-          .to match_array(%w[id name vacancies subject school_term teachers students])
+          .to match_array(%w[id name vacancies subject lesson_schedules])
       end
 
       context 'with courses from other school terms' do
