@@ -1,9 +1,17 @@
 module V1
   class CoursesController < ApplicationController
     before_action -> { authenticate_user!('DepartmentStaff') }, only: [:associate_teacher]
+    before_action -> { authenticate_user!('Teacher') }, only: [:enrolments]
 
     def index
-      render json: subject.courses.current_school_term, status: :ok
+      render json: subject.courses.current_school_term,
+             include: ['lesson_schedules', 'lesson_schedules.classroom',
+                       'lesson_schedules.classroom.building', 'subject'], status: :ok
+    end
+
+    def enrolments
+      return wrong_course_for_teacher unless teacher_course_exist
+      render json: course.enrolments, status: :ok
     end
 
     def associate_teacher
@@ -41,6 +49,15 @@ module V1
 
     def associate_teacher_params
       params.require(:teacher_course).permit(:teacher_id, :teaching_position)
+    end
+
+    def teacher_course_exist
+      TeacherCourse.exists?(course: course, teacher: @current_user)
+    end
+
+    def wrong_course_for_teacher
+      render json: { error: 'El docente no se relaciona con el curso seleccionado' },
+             status: :unprocessable_entity
     end
   end
 end

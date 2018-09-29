@@ -9,7 +9,7 @@ Rails.application.routes.draw do
     resources :department_staff_sessions, only: [:create]
     resources :student_sessions, only: [:create]
     resources :teacher_sessions, only: [:create]
-    resources :course_of_studies, only: [] do
+    resources :course_of_studies, only: [:index] do
       resources :subjects, only: [:index] do
         resources :courses, only: [:index] do
           resources :enrolments, only: [:create]
@@ -20,6 +20,9 @@ Rails.application.routes.draw do
       collection do
         scope :me do
           get :courses, to: 'teachers#my_courses'
+          resources :courses, only: [] do
+            get :enrolments
+          end
         end
       end
     end
