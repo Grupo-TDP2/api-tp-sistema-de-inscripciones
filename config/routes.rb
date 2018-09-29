@@ -26,5 +26,16 @@ Rails.application.routes.draw do
         end
       end
     end
+    resources :departments, only: [] do
+      collection do
+        scope :me do
+          resources :subjects, only: [] do
+            resources :courses, only: [] do
+              post :teachers, to: 'courses#associate_teacher'
+            end
+          end
+        end
+      end
+    end
   end
 end
