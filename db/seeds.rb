@@ -30,7 +30,7 @@ past_school_term = SchoolTerm.create!(term: 0, year: '2018', date_start: '2018-0
 
 course_1 = Course.create!(name: '001', vacancies: 2, subject: subject_1, school_term: school_term)
 course_2 = Course.create!(name: '002', vacancies: 2, subject: subject_2, school_term: school_term)
-course_3 = Course.create!(name: '003', vacancies: 2, subject: subject_3, school_term: school_term)
+course_3 = Course.create!(name: '003', vacancies: 0, subject: subject_3, school_term: school_term)
 course_4 = Course.create!(name: '004', vacancies: 2, subject: subject_4, school_term: school_term)
 course_5 = Course.create!(name: '005', vacancies: 2, subject: subject_3, school_term: school_term)
 course_6 = Course.create!(name: '006', vacancies: 2, subject: subject_3,
@@ -45,6 +45,24 @@ teacher_2 = Teacher.create!(email: 'teacher2@example.com', password: '12345678',
                             first_name: 'Luis', last_name: 'Argerich',
                             personal_document_number: '30000001', birthdate: '1970-01-01',
                             phone_number: '44444445', address: 'Some address 1234')
+
+student_1 = Student.create!(email: 'leandro.masello@example.com', password: '12345678',
+                            first_name: 'Leandro', last_name: 'Masello',
+                            personal_document_number: '35000000', school_document_number: '93106',
+                            phone_number: '12345678', birthdate: '1991-08-06',
+                            address: 'Abbey Road 123')
+
+student_2 = Student.create!(email: 'juan.costamagna@example.com', password: '12345678',
+                            first_name: 'Juan', last_name: 'Costamagna',
+                            personal_document_number: '35000001', school_document_number: '93107',
+                            phone_number: '12345679', birthdate: '1991-08-08',
+                            address: 'Abbey Road 1234')
+
+student_3 = Student.create!(email: 'enzo.perez@example.com', password: '12345678',
+                            first_name: 'Enzo', last_name: 'Perez',
+                            personal_document_number: '35000002', school_document_number: '93108',
+                            phone_number: '12345670', birthdate: '1991-08-09',
+                            address: 'Abbey Road 12345')
 
 course_of_study_1.subjects << subject_1
 course_of_study_1.subjects << subject_2
@@ -64,3 +82,8 @@ course_of_study_4.subjects << subject_2
 TeacherCourse.create!(course_id: 3, teacher_id: 1, teaching_position: :course_chief)
 TeacherCourse.create!(course_id: 2, teacher_id: 1, teaching_position: :course_chief)
 TeacherCourse.create!(course_id: 3, teacher_id: 2, teaching_position: :practice_chief)
+
+Enrolment.create!(course: course_3, student: student_1, type: :normal)
+Enrolment.create!(course: course_3, student: student_2, type: :normal)
+Enrolment.create!(course: course_3, student: student_3, type: :conditional)
+Enrolment.create!(course: course_2, student: student_1, type: :normal)
