@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  devise_for :department_staffs
   root to: 'application#index'
   devise_for :admins
   devise_for :students
