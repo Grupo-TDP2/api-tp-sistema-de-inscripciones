@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   devise_for :teachers
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   api_version(module: 'v1', path: { value: 'api/v1' }, defaults: { format: :json }) do
+    resources :department_staff_sessions, only: [:create]
     resources :student_sessions, only: [:create]
     resources :teacher_sessions, only: [:create]
     resources :course_of_studies, only: [] do
