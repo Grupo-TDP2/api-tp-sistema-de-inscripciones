@@ -9,6 +9,7 @@ Rails.application.routes.draw do
     resources :department_staff_sessions, only: [:create]
     resources :student_sessions, only: [:create]
     resources :teacher_sessions, only: [:create]
+    resources :school_terms
     resources :course_of_studies, only: [:index] do
       resources :subjects, only: [:index] do
         resources :courses, only: [:index] do
