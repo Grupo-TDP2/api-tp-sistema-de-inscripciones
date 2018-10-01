@@ -41,6 +41,17 @@ es:
       month_long: '%d de %B'
   activerecord:
     attributes:
+      lesson_schedule:
+        days:
+          Monday: Lunes
+          Tuesday: Martes
+          Wednesday: Miércoles
+          Thursday: Jueves
+          Friday: Viernes
+          Saturday: Sábado
+        types:
+          practice: práctica
+          theory: teoría
       school_term:
         term: Cuatrimestre
         terms:
@@ -51,6 +62,12 @@ es:
         date_end: Fecha de finalización
         created_at: Creado
         updated_at: Modificado
+    errors:
+      messages:
+        record_invalid: "La validación falló: %{errors}"
+        restrict_dependent_destroy:
+          has_one: No se puede eliminar el registro porque existe un %{record} dependiente
+          has_many: No se puede eliminar el registro porque existen %{record} dependientes
     models:
       school_term:
         one: Período lectivo
