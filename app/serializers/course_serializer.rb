@@ -3,7 +3,7 @@ class CourseSerializer < ActiveModel::Serializer
   attribute :inscribed?, if: :inscribed_student?
   belongs_to :subject
   belongs_to :school_term
-  has_many :teachers
+  has_many :teacher_courses
   has_many :students
   has_many :lesson_schedules
 

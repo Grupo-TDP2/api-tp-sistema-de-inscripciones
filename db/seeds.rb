@@ -112,7 +112,6 @@ course_of_study_3.subjects << subject_4
 course_of_study_4.subjects << subject_1
 course_of_study_4.subjects << subject_2
 
-TeacherCourse.create!(course: course_3, teacher: teacher_1, teaching_position: :course_chief)
 TeacherCourse.create!(course: course_2, teacher: teacher_1, teaching_position: :course_chief)
 TeacherCourse.create!(course: course_3, teacher: teacher_2, teaching_position: :practice_chief)
 
