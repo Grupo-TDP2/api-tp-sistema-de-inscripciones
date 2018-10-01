@@ -185,6 +185,7 @@ GEM
       railties (>= 3.2.16)
     json (2.1.0)
     jsonapi-renderer (0.2.0)
+    jwt (2.1.0)
     kaminari (1.1.1)
       activesupport (>= 4.1.0)
       kaminari-actionview (= 1.1.1)
@@ -197,7 +198,6 @@ GEM
       activerecord
       kaminari-core (= 1.1.1)
     kaminari-core (1.1.1)
-    jwt (2.1.0)
     launchy (2.4.3)
       addressable (~> 2.3)
     libv8 (3.16.14.19)
