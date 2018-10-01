@@ -4,8 +4,9 @@ module V1
 
     def my_courses
       render json: @current_user.department.subjects,
-             include: ['courses', 'courses.teachers', 'lesson_schedules.classroom',
-                       'lesson_schedules.classroom.building', 'subject'], status: :ok
+             include: ['courses', 'courses.teacher_courses', 'courses.teacher_courses.teacher',
+                       'courses.lesson_schedules.classroom',
+                       'courses.lesson_schedules.classroom.building', 'subject'], status: :ok
     end
   end
 end
