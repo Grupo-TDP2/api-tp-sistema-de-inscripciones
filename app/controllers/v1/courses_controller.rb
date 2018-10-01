@@ -6,8 +6,7 @@ module V1
     def index
       render json: subject.courses.current_school_term,
              include: ['lesson_schedules', 'lesson_schedules.classroom',
-                       'lesson_schedules.classroom.building', 'subject',
-                       'enrolment_exist'], status: :ok
+                       'lesson_schedules.classroom.building', 'subject'], status: :ok
     end
 
     def enrolments
@@ -35,8 +34,8 @@ module V1
       @course ||= Course.find(course_students_params[:course_id])
     end
 
-    def enrolment_exist
-      Enrolment.exists?(course: course, student: @current_user)
+    def inscribed?
+      Enrolment.exists?(course: id, student: @current_user)
     end
 
     def staff_from_department?
