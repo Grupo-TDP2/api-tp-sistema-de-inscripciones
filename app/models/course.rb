@@ -18,6 +18,10 @@ class Course < ApplicationRecord
     vacancies.zero?
   end
 
+  def inscribed?
+    Enrolment.exists?(course: id, student: @current_user)
+  end
+
   def decrease_vacancies!
     update(vacancies: vacancies - 1) if vacancies.positive?
   end

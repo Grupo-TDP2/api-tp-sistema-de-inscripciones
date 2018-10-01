@@ -34,10 +34,6 @@ module V1
       @course ||= Course.find(course_students_params[:course_id])
     end
 
-    def inscribed?
-      Enrolment.exists?(course: id, student: @current_user)
-    end
-
     def staff_from_department?
       @current_user.department == course.subject.department
     end
