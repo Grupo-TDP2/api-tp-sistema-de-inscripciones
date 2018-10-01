@@ -1,7 +1,9 @@
 module V1
   class CoursesController < ApplicationController
+    serialization_scope :current_user
     before_action -> { authenticate_user!('DepartmentStaff') }, only: [:associate_teacher]
     before_action -> { authenticate_user!('Teacher') }, only: [:enrolments]
+    before_action -> { authenticate_user!('Student') }, only: [:index]
 
     def index
       render json: subject.courses.current_school_term,

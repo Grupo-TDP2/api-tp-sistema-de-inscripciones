@@ -4,6 +4,7 @@ describe V1::CoursesController do
   describe '#index' do
     let(:course_of_study_subject) { create(:course_of_study_subject) }
     let(:test_subject) { course_of_study_subject.subject }
+    let(:current_student) { create(:student) }
     let(:index_request) do
       get :index, params: { course_of_study_id: course_of_study_subject.course_of_study.id,
                             subject_id: test_subject.id }
@@ -21,6 +22,7 @@ describe V1::CoursesController do
       before do
         create(:lesson_schedule, course: course_1)
         create(:course, name: '002', school_term: current_term, subject: test_subject)
+        sign_in current_student
       end
 
       it 'returns http status ok' do
@@ -31,7 +33,8 @@ describe V1::CoursesController do
       it 'returns the right keys' do
         index_request
         expect(response_body.first.keys)
-          .to match_array(%w[id name vacancies subject lesson_schedules teacher_courses])
+          .to match_array(%w[id name vacancies inscribed? subject lesson_schedules
+                             teacher_courses])
       end
 
       context 'with courses from other school terms' do
