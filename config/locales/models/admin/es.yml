@@ -1,0 +1,9 @@
+es:
+  admin:
+    sign_in:
+      email:
+        label: Email
+      password:
+        label: Contraseña
+      submit: Ingresar
+      title: Sistema de inscripciones

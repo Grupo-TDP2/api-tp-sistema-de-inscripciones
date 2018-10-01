@@ -1,0 +1,15 @@
+.main.column.center
+  h2.title-5.quicksand.bold
+    = t('admin.sign_in.title')
+  .sign-in-form.box.margin-top-50
+    = form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
+      .row.margin-top-30
+        .form-group.column.full-width
+          = f.label :email, t('admin.sign_in.email.label'), class: 'text-3 quicksand bold margin-left-10 margin-bottom-5'
+          = f.email_field :email, class: 'text-field-1 text-1 quicksand bold', placeholder: t('admin.sign_in.email.label'), autocomplete: "off"
+      .row.margin-top-30
+        .form-group.column.full-width
+          = f.label :password, t('admin.sign_in.password.label'), class: 'text-3 quicksand bold margin-left-10 margin-bottom-5'
+          = f.password_field :password, class: 'text-field-1 text-1 quicksand bold', placeholder: t('admin.sign_in.password.label'), autocomplete: "off"
+      .row.end.margin-top-30
+        = f.submit t('admin.sign_in.submit'), class: 'button-1 submit-button text-1 quicksand bold'

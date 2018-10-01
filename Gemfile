@@ -14,16 +14,51 @@ gem 'pg', '>= 0.18', '< 2.0'
 gem 'puma', '~> 3.7'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
+# Use fontawesome for common icons
+gem 'font-awesome-rails'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
-# See https://github.com/rails/execjs#readme for more supported runtimes
-# gem 'therubyracer', platforms: :ruby
+# Use CoffeeScript for .coffee assets and views
+gem 'coffee-rails', '~> 4.2'
+
+gem 'therubyracer', platforms: :ruby
+
+# JSON Web Token
+gem 'jwt', '~> 2.1.0'
+
+# Use jquery as the JavaScript library
+gem 'jquery-rails'
+# Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
+gem 'turbolinks', '~> 5'
+# Use for versioning apis (api_version in routes)
+gem 'versionist'
+# Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
+gem 'jbuilder', '~> 2.5'
+# Use autoprefixer to avoid writing css prefixes
+gem 'autoprefixer-rails'
+
+gem 'bootstrap-sass'
+
+# Enables Slim templates
+gem 'slim-rails'
+
+# Rails admin
+gem 'rails_admin', '~> 1.3'
 
 # Authentication
 gem 'devise'
 gem 'devise-async', '~> 0.7.0'
 # devise-i18n support
 gem 'devise-i18n'
+
+# CORS support
+gem 'rack-cors', '~> 1.0.2', require: 'rack/cors'
+
+# SEO Meta Tags
+gem 'meta-tags'
+gem 'metamagic'
+
+gem 'active_model_serializers'
 
 # Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails', '~> 4.2'
@@ -36,8 +71,6 @@ gem 'jbuilder', '~> 2.5'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
-# Use Capistrano for deployment
-# gem 'capistrano-rails', group: :development
 
 group :development, :test do
   gem 'awesome_print'
@@ -49,11 +82,11 @@ group :development, :test do
   gem 'byebug', platform: :mri
 
   gem 'factory_bot_rails'
-  gem 'faker'
+  gem 'faker', :git => 'https://github.com/stympy/faker.git', :branch => 'master'
 
   # Lints
-  gem 'rubocop', '0.50.0'
-  gem 'rubocop-rspec', '1.10.0'
+  gem 'rubocop', '0.55.0'
+  gem 'rubocop-rspec', '1.25.1'
 
   gem 'scss_lint', require: false
 

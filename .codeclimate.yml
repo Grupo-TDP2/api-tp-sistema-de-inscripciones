@@ -1,0 +1,13 @@
+exclude_patterns:
+- 'app/assets/'
+- 'app/authentication/'
+- 'app/channels/'
+- 'app/controllers/application_controller.rb'
+- 'app/errors/'
+- 'app/views/'
+- 'config/'
+- 'db/'
+- 'log/'
+- 'public/'
+- 'spec/'
+- 'vendor/'
