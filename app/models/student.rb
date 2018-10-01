@@ -1,4 +1,5 @@
 class Student < ApplicationRecord
+  AUTHENTICATION_TOKEN_EXPIRATION_DAYS = Rails.application.secrets.expiration_date_days
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -13,4 +14,8 @@ class Student < ApplicationRecord
 
   has_many :enrolments, dependent: :destroy
   has_many :courses, through: :enrolments
+
+  def authentication_token
+    AuthenticationToken.generate_for(id, Time.zone.now + AUTHENTICATION_TOKEN_EXPIRATION_DAYS.days)
+  end
 end

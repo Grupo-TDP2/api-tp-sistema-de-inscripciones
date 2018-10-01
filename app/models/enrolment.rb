@@ -1,6 +1,6 @@
 class Enrolment < ApplicationRecord
   self.inheritance_column = :_type_disabled # So that we can use the :type column
-  validates :type, :valid_enrolment_datetime, presence: true
+  validates :type, presence: true
 
   belongs_to :student
   belongs_to :course
