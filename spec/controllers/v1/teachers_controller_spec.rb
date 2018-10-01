@@ -62,7 +62,8 @@ describe V1::TeachersController do
         it 'returns the right keys' do
           courses_request
           expect(response_body.first.keys)
-            .to match_array(%w[id name lesson_schedules vacancies subject school_term teachers])
+            .to match_array(%w[id name lesson_schedules vacancies subject school_term
+                               teacher_courses])
         end
       end
     end

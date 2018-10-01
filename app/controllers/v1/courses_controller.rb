@@ -6,7 +6,8 @@ module V1
     def index
       render json: subject.courses.current_school_term,
              include: ['lesson_schedules', 'lesson_schedules.classroom',
-                       'lesson_schedules.classroom.building', 'subject'], status: :ok
+                       'lesson_schedules.classroom.building', 'subject', 'teacher_courses',
+                       'teacher_courses.teacher'], status: :ok
     end
 
     def enrolments

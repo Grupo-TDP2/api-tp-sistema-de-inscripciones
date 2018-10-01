@@ -25,7 +25,8 @@ describe V1::SubjectsController do
 
       it 'returns the right keys' do
         index_request
-        expect(response_body.first.keys).to match_array(%w[id name code credits department])
+        expect(response_body.first.keys).to match_array(%w[id name code credits department
+                                                           courses])
       end
     end
   end
