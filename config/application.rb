@@ -15,9 +15,11 @@ module ApiTpSistemaDeInscripciones
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
     config.i18n.default_locale = :es
-    config.action_dispatch.default_headers = {
-        'Access-Control-Allow-Origin' => '*',
-        'Access-Control-Request-Method' => %w{GET POST OPTIONS}.join(",")
-      }
+    config.middleware.insert_before 0, Rack::Cors do
+      allow do
+        origins '*'
+        resource '*', headers: :any, methods: [:get, :post, :options]
+      end
+    end
   end
 end
