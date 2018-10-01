@@ -5,4 +5,5 @@ class Department < ApplicationRecord
   validates :code, uniqueness: { case_sensitive: false }
 
   has_many :department_staffs, dependent: :destroy
+  has_many :subjects, dependent: :destroy
 end

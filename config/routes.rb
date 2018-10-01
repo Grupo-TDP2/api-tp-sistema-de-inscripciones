@@ -30,6 +30,7 @@ Rails.application.routes.draw do
     resources :departments, only: [] do
       collection do
         scope :me do
+          get :courses, to: 'departments#my_courses'
           resources :subjects, only: [] do
             resources :courses, only: [] do
               post :teachers, to: 'courses#associate_teacher'
