@@ -37,10 +37,13 @@ describe V1::TeachersController do
     end
 
     context 'when there is a teacher signed in' do
-      let(:term) { create(:school_term) }
-      let(:course_1) { create(:course, school_term: term) }
-      let(:course_2) { create(:course, school_term: term) }
-      let(:course_3) { create(:course, school_term: term) }
+      let!(:current_term) do
+        create(:school_term, year: '2018', term: :second_semester, date_start: '2018-08-01',
+                             date_end: '2018-12-01')
+      end
+      let(:course_1) { create(:course, school_term: current_term) }
+      let(:course_2) { create(:course, school_term: current_term) }
+      let(:course_3) { create(:course, school_term: current_term) }
 
       before { sign_in current_teacher }
 
@@ -59,8 +62,7 @@ describe V1::TeachersController do
         it 'returns the right keys' do
           courses_request
           expect(response_body.first.keys)
-            .to match_array(%w[id name lesson_schedules vacancies subject school_term teachers
-                               students])
+            .to match_array(%w[id name lesson_schedules vacancies subject school_term teachers])
         end
       end
     end
