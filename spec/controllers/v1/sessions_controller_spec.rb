@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe V1::StudentSessionsController do
+describe V1::SessionsController do
   describe '#create' do
     let(:create_request) do
       post :create, params: { email: email, password: password }
