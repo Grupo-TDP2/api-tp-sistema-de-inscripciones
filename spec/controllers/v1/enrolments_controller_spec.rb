@@ -21,10 +21,19 @@ describe V1::EnrolmentsController do
     end
 
     context 'when the student is logged in' do
-      before { sign_in current_student }
+      let(:date_start) { Date.new(2018, 8, 16) }
+      let(:term) do
+        create(:school_term, year: Date.current.year, date_start: date_start,
+                             date_end: date_start + 4.months, term: SchoolTerm.current_term)
+      end
+
+      before do
+        Timecop.freeze(date_start - 8.days)
+        sign_in current_student
+      end
 
       context 'when the course has one vacancy' do
-        let(:course) { create(:course, vacancies: 1) }
+        let(:course) { create(:course, vacancies: 1, school_term: term) }
 
         it 'returns http status created' do
           enrolment_request
@@ -46,7 +55,7 @@ describe V1::EnrolmentsController do
       end
 
       context 'when the course has zero vacancies' do
-        let(:course) { create(:course, vacancies: 0) }
+        let(:course) { create(:course, vacancies: 0, school_term: term) }
 
         it 'creates an enrolment' do
           expect { enrolment_request }.to change(Enrolment, :count).by(1)

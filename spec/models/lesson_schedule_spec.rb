@@ -5,6 +5,7 @@ describe LessonSchedule do
   it { is_expected.to validate_presence_of(:day) }
   it { is_expected.to validate_presence_of(:hour_start) }
   it { is_expected.to validate_presence_of(:hour_end) }
+
   context 'when inserting an hour start after an hour end' do
     let(:start) { '12:00' }
     let(:h_end) { '10:00' }

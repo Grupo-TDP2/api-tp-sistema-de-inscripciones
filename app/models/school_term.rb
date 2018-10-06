@@ -11,11 +11,15 @@ class SchoolTerm < ApplicationRecord
   scope :current_school_term, -> { find_by(year: Time.current.year, term: current_term) }
 
   def self.current_term
-    Date.current > Date.new(Time.current.year, 7, 1) ? :second_semester : beginning_of_year
+    term(Date.current)
   end
 
-  def self.beginning_of_year
-    Date.current > Date.new(Time.current.year, 3, 1) ? :first_semester : :summer_school
+  def self.term(date)
+    date > Date.new(date.year, 7, 1) ? :second_semester : beginning_of_year(date)
+  end
+
+  def self.beginning_of_year(date)
+    date > Date.new(date.year, 3, 1) ? :first_semester : :summer_school
   end
 
   private
