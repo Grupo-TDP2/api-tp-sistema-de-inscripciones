@@ -1,6 +1,13 @@
 require 'rails_helper'
 describe LessonSchedule do
-  before { create(:lesson_schedule) }
+  let(:date_start) { Date.new(2018, 8, 16) }
+  let(:term) do
+    create(:school_term, year: Date.current.year, date_start: date_start,
+                         date_end: date_start + 4.months, term: SchoolTerm.current_term)
+  end
+  let(:course) { create(:course, school_term: term) }
+
+  before { create(:lesson_schedule, course: course) }
   it { is_expected.to validate_presence_of(:type) }
   it { is_expected.to validate_presence_of(:day) }
   it { is_expected.to validate_presence_of(:hour_start) }
