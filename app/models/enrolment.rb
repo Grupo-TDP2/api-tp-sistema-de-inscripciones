@@ -1,6 +1,7 @@
 class Enrolment < ApplicationRecord
   self.inheritance_column = :_type_disabled # So that we can use the :type column
   validates :type, presence: true
+  validates :student_id, uniqueness: { scope: :course_id, case_sensitive: false }
   validate :valid_enrolment_date
   validate :unique_student_enrolment
 

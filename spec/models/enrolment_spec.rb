@@ -22,6 +22,10 @@ describe Enrolment do
       before { Timecop.freeze(date_start - 8.days) }
 
       it { is_expected.to validate_presence_of(:type) }
+      it do
+        is_expected.to validate_uniqueness_of(:student_id).ignoring_case_sensitivity
+                                                          .scoped_to(:course_id)
+      end
 
       it 'creates the enrolment' do
         enrolment = build(:enrolment)
