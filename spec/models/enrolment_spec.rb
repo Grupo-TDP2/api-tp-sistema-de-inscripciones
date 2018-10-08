@@ -22,10 +22,28 @@ describe Enrolment do
       before { Timecop.freeze(date_start - 8.days) }
 
       it { is_expected.to validate_presence_of(:type) }
+      it do
+        is_expected.to validate_uniqueness_of(:student_id).ignoring_case_sensitivity
+                                                          .scoped_to(:course_id)
+      end
 
       it 'creates the enrolment' do
         enrolment = build(:enrolment)
         expect(enrolment.valid?).to be true
+      end
+
+      context 'when the student has another enrolment for the same subject' do
+        let(:student) { create(:student) }
+        let(:subject) { create(:subject) }
+        let(:course_1) { create(:course, subject: subject) }
+        let(:course_2) { create(:course, subject: subject) }
+
+        before { create(:enrolment, student: student, course: course_1) }
+
+        it 'raises error' do
+          enrolment = build(:enrolment, student: student, course: course_2)
+          expect { enrolment.save! }.to raise_error(ActiveRecord::RecordInvalid)
+        end
       end
     end
   end
