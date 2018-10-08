@@ -1,5 +1,5 @@
-class Teacher < ApplicationRecord
-  AUTHENTICATION_TOKEN_EXPIRATION_DAYS = Rails.application.secrets.expiration_date_days
+class Teacher < User
+  self.table_name = 'teachers'
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -10,11 +10,14 @@ class Teacher < ApplicationRecord
   validates :phone_number, numericality: true, length: { minimum: 8, maximum: 10 }
   validates :personal_document_number, numericality: true, length: { is: 8 }
   validates :email, uniqueness: { case_sensitive: false }
+  validate :unique_email
 
   has_many :teacher_courses, dependent: :destroy
   has_many :courses, through: :teacher_courses
 
-  def authentication_token
-    AuthenticationToken.generate_for(id, Time.zone.now + AUTHENTICATION_TOKEN_EXPIRATION_DAYS.days)
+  def unique_email
+    errors.add(:email, 'is already taken') if Student.exists?(email: email) ||
+                                              DepartmentStaff.exists?(email: email) ||
+                                              Admin.exists?(email: email)
   end
 end

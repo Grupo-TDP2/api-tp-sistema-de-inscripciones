@@ -1,5 +1,6 @@
 module V1
   class TeachersController < ApplicationController
+    before_action -> { authenticate_user!('DepartmentStaff') }, only: [:index]
     before_action -> { authenticate_user!('Teacher') }, only: [:my_courses]
 
     def index

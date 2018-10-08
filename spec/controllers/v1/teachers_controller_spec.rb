@@ -4,22 +4,35 @@ describe V1::TeachersController do
   describe '#index' do
     let(:index_request) { get :index }
 
-    context 'when there are two teachers' do
-      before { create_list(:teacher, 2) }
-
-      it 'returns two teachers' do
+    context 'when there is no department staff logged in' do
+      it 'returns http status unauthorized' do
         index_request
-        expect(response_body.size).to eq 2
+        expect(response).to have_http_status :unauthorized
       end
+    end
 
-      it 'returns http status ok' do
-        index_request
-        expect(response).to have_http_status :ok
-      end
+    context 'when there is a department staff logged in' do
+      let(:current_staff) { create(:department_staff) }
 
-      it 'returns the right keys' do
-        index_request
-        expect(response_body.first.keys).to match_array(%w[id first_name last_name])
+      before { sign_in current_staff }
+
+      context 'when there are two teachers' do
+        before { create_list(:teacher, 2) }
+
+        it 'returns two teachers' do
+          index_request
+          expect(response_body.size).to eq 2
+        end
+
+        it 'returns http status ok' do
+          index_request
+          expect(response).to have_http_status :ok
+        end
+
+        it 'returns the right keys' do
+          index_request
+          expect(response_body.first.keys).to match_array(%w[id first_name last_name])
+        end
       end
     end
   end
