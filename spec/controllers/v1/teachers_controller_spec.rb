@@ -44,9 +44,15 @@ describe V1::TeachersController do
       let(:department) { create(:department) }
       let(:subject_1) { create(:subject, department: department) }
       let(:subject_2) { create(:subject, department: department) }
-      let(:course_1) { create(:course, school_term: current_term, subject: subject_1) }
-      let(:course_2) { create(:course, school_term: current_term, subject: subject_2) }
-      let(:course_3) { create(:course, school_term: current_term, subject: subject_1) }
+      let(:course_1) do
+        create(:course, school_term: current_term, name: '00', subject: subject_1)
+      end
+      let(:course_2) do
+        create(:course, school_term: current_term, name: '01', subject: subject_2)
+      end
+      let(:course_3) do
+        create(:course, school_term: current_term, name: '02', subject: subject_1)
+      end
 
       before { sign_in current_teacher }
 
