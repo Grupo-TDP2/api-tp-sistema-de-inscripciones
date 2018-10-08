@@ -41,9 +41,12 @@ describe V1::TeachersController do
         create(:school_term, year: '2018', term: :second_semester, date_start: '2018-08-01',
                              date_end: '2018-12-01')
       end
-      let(:course_1) { create(:course, school_term: current_term) }
-      let(:course_2) { create(:course, school_term: current_term) }
-      let(:course_3) { create(:course, school_term: current_term) }
+      let(:department) { create(:department) }
+      let(:subject_1) { create(:subject, department: department) }
+      let(:subject_2) { create(:subject, department: department) }
+      let(:course_1) { create(:course, school_term: current_term, subject: subject_1) }
+      let(:course_2) { create(:course, school_term: current_term, subject: subject_2) }
+      let(:course_3) { create(:course, school_term: current_term, subject: subject_1) }
 
       before { sign_in current_teacher }
 
