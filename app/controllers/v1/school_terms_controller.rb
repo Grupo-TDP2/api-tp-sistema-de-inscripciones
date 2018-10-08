@@ -1,5 +1,6 @@
 module V1
   class SchoolTermsController < ApplicationController
+    before_action -> { authenticate_user!('Admin') }
     def index
       render json: school_terms, status: :ok
     end
@@ -7,6 +8,7 @@ module V1
     def create
       @school_term = SchoolTerm.new(school_term_params)
       @school_term.save
+      render json: @school_term, status: :created
     end
 
     def show
@@ -22,7 +24,7 @@ module V1
     private
 
     def school_term_params
-      params.require(:school_term).permit(:term, :year, :date_start, :date_end)
+      params.permit(:school_term).permit(:term, :year, :date_start, :date_end)
     end
 
     def school_terms
