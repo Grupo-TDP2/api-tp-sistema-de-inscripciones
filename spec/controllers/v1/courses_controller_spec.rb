@@ -101,9 +101,14 @@ describe V1::CoursesController do
   end
 
   describe '#enrolments' do
-    let(:teacher_course) { create(:teacher_course) }
-    let(:course) { teacher_course.course }
-    let(:enrolments_request) { get :enrolments, params: { course_id: course.id } }
+    let(:date_start) { Date.new(2018, 8, 16) }
+    let(:term) do
+      create(:school_term, year: Date.current.year, date_start: date_start,
+                           date_end: date_start + 4.months, term: SchoolTerm.current_term)
+    end
+    let(:course_1) { create(:course, school_term: term) }
+    let(:teacher_course) { create(:teacher_course, course: course_1) }
+    let(:enrolments_request) { get :enrolments, params: { course_id: course_1.id } }
 
     context 'when there is no teacher signed in' do
       it 'returns unauthorized' do
@@ -113,7 +118,10 @@ describe V1::CoursesController do
     end
 
     context 'when there is a teacher logged in' do
-      before { sign_in teacher_course.teacher }
+      before do
+        Timecop.freeze(date_start - 8.days)
+        sign_in teacher_course.teacher
+      end
 
       context 'when the course has two enrolments' do
         before { create_list(:enrolment, 2, course: teacher_course.course) }
@@ -132,7 +140,8 @@ describe V1::CoursesController do
       context 'when the course does not belong to the teacher' do
         let(:department) { create(:department, code: '99') }
         let(:subject) { create(:subject, department: department) }
-        let(:course) { create(:course, subject: subject) }
+        let(:course_2) { create(:course, subject: subject, school_term: term) }
+        let(:enrolments_request) { get :enrolments, params: { course_id: course_2.id } }
 
         it 'returns unprocessable entity' do
           enrolments_request
