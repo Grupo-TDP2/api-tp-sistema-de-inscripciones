@@ -9,7 +9,7 @@ class TeacherCourse < ApplicationRecord
   belongs_to :course
 
   enum teaching_position: { course_chief: 0, practice_chief: 1, first_assistant: 2,
-                            second_assistant: 3 }
+                            second_assistant: 3, ad_honorem: 4 }
 
   private
 
