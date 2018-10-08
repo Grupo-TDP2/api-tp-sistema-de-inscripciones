@@ -23,7 +23,11 @@ describe V1::SubjectsController do
         let(:another_department) { create(:department, code: '00') }
         let(:another_subject) { create(:subject, name: 'Another', department: another_department) }
 
-        before { course_of_study_subject.course_of_study.subjects << another_subject }
+        before do
+          SchoolTerm.create(term: :second_semester, date_start: '2018-08-16',
+                            date_end: '2018-12-12', year: '2018')
+          course_of_study_subject.course_of_study.subjects << another_subject
+        end
 
         it 'returns two subjects' do
           index_request
