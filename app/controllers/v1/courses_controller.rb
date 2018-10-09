@@ -1,12 +1,15 @@
 module V1
   class CoursesController < ApplicationController
+    serialization_scope :current_user
     before_action -> { authenticate_user!('DepartmentStaff') }, only: [:associate_teacher]
     before_action -> { authenticate_user!('Teacher') }, only: [:enrolments]
+    before_action -> { authenticate_user!('Student') }, only: [:index]
 
     def index
       render json: subject.courses.current_school_term,
              include: ['lesson_schedules', 'lesson_schedules.classroom',
-                       'lesson_schedules.classroom.building', 'subject'], status: :ok
+                       'lesson_schedules.classroom.building', 'subject', 'teacher_courses',
+                       'teacher_courses.teacher'], status: :ok
     end
 
     def enrolments

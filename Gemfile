@@ -42,6 +42,9 @@ gem 'bootstrap-sass'
 # Enables Slim templates
 gem 'slim-rails'
 
+# Rails admin
+gem 'rails_admin', '~> 1.3'
+
 # Authentication
 gem 'devise'
 gem 'devise-async', '~> 0.7.0'

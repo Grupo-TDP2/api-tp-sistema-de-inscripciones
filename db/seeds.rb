@@ -65,6 +65,27 @@ LessonSchedule.create!(course: course_3, classroom: classroom_1, type: :theory, 
                        hour_start: '17:00', hour_end: '19:00')
 LessonSchedule.create!(course: course_3, classroom: classroom_2, type: :practice, day: :Monday,
                        hour_start: '19:00', hour_end: '23:00')
+LessonSchedule.create!(course: course_1, classroom: classroom_3, type: :theory, day: :Tuesday,
+                      hour_start: '17:00', hour_end: '19:00')
+LessonSchedule.create!(course: course_1, classroom: classroom_4, type: :practice, day: :Wednesday,
+                      hour_start: '19:00', hour_end: '23:00')
+LessonSchedule.create!(course: course_2, classroom: classroom_1, type: :theory, day: :Thursday,
+                       hour_start: '17:00', hour_end: '19:00')
+LessonSchedule.create!(course: course_2, classroom: classroom_2, type: :practice, day: :Thursday,
+                       hour_start: '19:00', hour_end: '23:00')
+LessonSchedule.create!(course: course_4, classroom: classroom_3, type: :theory, day: :Friday,
+                      hour_start: '17:00', hour_end: '19:00')
+LessonSchedule.create!(course: course_4, classroom: classroom_4, type: :practice, day: :Friday,
+                      hour_start: '19:00', hour_end: '23:00')
+LessonSchedule.create!(course: course_5, classroom: classroom_1, type: :theory, day: :Saturday,
+                       hour_start: '7:00', hour_end: '10:00')
+LessonSchedule.create!(course: course_5, classroom: classroom_2, type: :practice, day: :Saturday,
+                       hour_start: '10:00', hour_end: '13:00')
+LessonSchedule.create!(course: course_6, classroom: classroom_3, type: :theory, day: :Monday,
+                      hour_start: '17:00', hour_end: '19:00')
+LessonSchedule.create!(course: course_6, classroom: classroom_4, type: :practice, day: :Tuesday,
+                      hour_start: '19:00', hour_end: '23:00')
+
 
 teacher_1 = Teacher.create!(email: 'teacher1@example.com', password: '12345678',
                             first_name: 'Carlos', last_name: 'Fontela',
@@ -112,7 +133,6 @@ course_of_study_3.subjects << subject_4
 course_of_study_4.subjects << subject_1
 course_of_study_4.subjects << subject_2
 
-TeacherCourse.create!(course: course_3, teacher: teacher_1, teaching_position: :course_chief)
 TeacherCourse.create!(course: course_2, teacher: teacher_1, teaching_position: :course_chief)
 TeacherCourse.create!(course: course_3, teacher: teacher_2, teaching_position: :practice_chief)
 

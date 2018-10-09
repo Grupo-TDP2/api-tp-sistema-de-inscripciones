@@ -4,22 +4,35 @@ describe V1::TeachersController do
   describe '#index' do
     let(:index_request) { get :index }
 
-    context 'when there are two teachers' do
-      before { create_list(:teacher, 2) }
-
-      it 'returns two teachers' do
+    context 'when there is no department staff logged in' do
+      it 'returns http status unauthorized' do
         index_request
-        expect(response_body.size).to eq 2
+        expect(response).to have_http_status :unauthorized
       end
+    end
 
-      it 'returns http status ok' do
-        index_request
-        expect(response).to have_http_status :ok
-      end
+    context 'when there is a department staff logged in' do
+      let(:current_staff) { create(:department_staff) }
 
-      it 'returns the right keys' do
-        index_request
-        expect(response_body.first.keys).to match_array(%w[id first_name last_name])
+      before { sign_in current_staff }
+
+      context 'when there are two teachers' do
+        before { create_list(:teacher, 2) }
+
+        it 'returns two teachers' do
+          index_request
+          expect(response_body.size).to eq 2
+        end
+
+        it 'returns http status ok' do
+          index_request
+          expect(response).to have_http_status :ok
+        end
+
+        it 'returns the right keys' do
+          index_request
+          expect(response_body.first.keys).to match_array(%w[id first_name last_name])
+        end
       end
     end
   end
@@ -37,10 +50,22 @@ describe V1::TeachersController do
     end
 
     context 'when there is a teacher signed in' do
-      let(:term) { create(:school_term) }
-      let(:course_1) { create(:course, school_term: term) }
-      let(:course_2) { create(:course, school_term: term) }
-      let(:course_3) { create(:course, school_term: term) }
+      let!(:current_term) do
+        create(:school_term, year: '2018', term: :second_semester, date_start: '2018-08-01',
+                             date_end: '2018-12-01')
+      end
+      let(:department) { create(:department) }
+      let(:subject_1) { create(:subject, department: department) }
+      let(:subject_2) { create(:subject, department: department) }
+      let(:course_1) do
+        create(:course, school_term: current_term, name: '00', subject: subject_1)
+      end
+      let(:course_2) do
+        create(:course, school_term: current_term, name: '01', subject: subject_2)
+      end
+      let(:course_3) do
+        create(:course, school_term: current_term, name: '02', subject: subject_1)
+      end
 
       before { sign_in current_teacher }
 
@@ -59,8 +84,8 @@ describe V1::TeachersController do
         it 'returns the right keys' do
           courses_request
           expect(response_body.first.keys)
-            .to match_array(%w[id name lesson_schedules vacancies subject school_term teachers
-                               students])
+            .to match_array(%w[id name lesson_schedules vacancies subject school_term
+                               teacher_courses])
         end
       end
     end
