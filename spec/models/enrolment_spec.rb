@@ -6,7 +6,7 @@ describe Enrolment do
   context 'when there is a current school term' do
     before do
       create(:school_term, year: Date.current.year, date_start: date_start,
-                           date_end: date_start + 4.months, term: SchoolTerm.current_term)
+                           term: SchoolTerm.current_term)
     end
 
     context 'when trying to enrol with a date lower than 7 days before the next term' do

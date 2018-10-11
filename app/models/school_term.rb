@@ -3,12 +3,18 @@ class SchoolTerm < ApplicationRecord
   validates :year, numericality: { only_integer: true, greater_than: 2017, less_than: 2050 }
   validates :term, uniqueness: { scope: :year, case_sensitive: false }
   validate :validate_year_start_end, :validate_start_end, if: %i[date_start date_end]
+  validate :validate_semester_length, if: %i[date_start date_end term]
+  validate :validate_start_month, if: :date_start
 
   enum term: { first_semester: 0, second_semester: 1, summer_school: 2 }
 
   has_many :courses, dependent: :destroy
 
   scope :current_school_term, -> { find_by(year: Time.current.year, term: current_term) }
+
+  REGULAR_SEMESTER_WEEKS = 16
+  SHORT_SEMESTER_WEEKS = 8
+  ONE_WEEK = 7
 
   def self.current_term
     term(Date.current)
@@ -23,6 +29,30 @@ class SchoolTerm < ApplicationRecord
   end
 
   private
+
+  def validate_semester_length
+    length_weeks = ((date_end - date_start) / ONE_WEEK).to_i
+    if first_semester? || second_semester?
+      return if length_weeks == REGULAR_SEMESTER_WEEKS
+      errors.add(:date_start, 'The semester must have 16 weeks.')
+    elsif summer_school?
+      return if length_weeks == SHORT_SEMESTER_WEEKS
+      errors.add(:date_start, 'The semester must have 8 weeks.')
+    end
+  end
+
+  def validate_start_month # rubocop:disable Metrics/AbcSize
+    if first_semester?
+      return if date_start.month == 3
+      errors.add(:date_start, 'The semester must begin in March.')
+    elsif second_semester?
+      return if date_start.month == 8
+      errors.add(:date_start, 'The semester must begin in August.')
+    else
+      return if date_start.month == 1
+      errors.add(:date_start, 'The semester must begin in January.')
+    end
+  end
 
   def validate_year_start_end
     return if date_start.year == year && date_end.year == year
