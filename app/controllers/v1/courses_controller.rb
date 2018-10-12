@@ -1,9 +1,10 @@
 module V1
   class CoursesController < ApplicationController
     serialization_scope :current_user
-    before_action -> { authenticate_user!('DepartmentStaff') }, only: [:associate_teacher]
-    before_action -> { authenticate_user!('Teacher') }, only: [:enrolments]
-    before_action -> { authenticate_user!('Student') }, only: [:index]
+    before_action -> { authenticate_user!(['DepartmentStaff']) }, only: [:associate_teacher]
+    before_action -> { authenticate_user!(['Teacher']) }, only: [:enrolments]
+    before_action -> { authenticate_user!(['Student']) }, only: [:index]
+    before_action -> { authenticate_user!(%w[Student Teacher DepartmentStaff]) }, only: [:exams]
 
     def index
       render json: subject.courses.current_school_term,
@@ -25,6 +26,10 @@ module V1
       else
         render json: { error: teacher_course.errors.full_messages }, status: :unprocessable_entity
       end
+    end
+
+    def exams
+      render json: course.exams
     end
 
     private

@@ -148,4 +148,8 @@ describe V1::CoursesController do
       end
     end
   end
+
+  describe '#exams' do
+    
+  end
 end

@@ -11,6 +11,7 @@ Rails.application.routes.draw do
     resources :course_of_studies, only: [:index] do
       resources :subjects, only: [:index] do
         resources :courses, only: [:index] do
+          get :exams
           resources :enrolments, only: [:create]
         end
       end
@@ -21,6 +22,7 @@ Rails.application.routes.draw do
           get :courses, to: 'teachers#my_courses'
           resources :courses, only: [] do
             get :enrolments
+            get :exams
           end
         end
       end
@@ -29,6 +31,9 @@ Rails.application.routes.draw do
       collection do
         scope :me do
           get :courses, to: 'departments#my_courses'
+          resources :courses, only: [] do
+            get :exams
+          end
           resources :subjects, only: [] do
             resources :courses, only: [] do
               post :teachers, to: 'courses#associate_teacher'
