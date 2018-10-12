@@ -119,7 +119,7 @@ describe V1::CoursesController do
 
     context 'when there is a teacher logged in' do
       before do
-        Timecop.freeze(date_start - 8.days)
+        Timecop.freeze(date_start - 4.days)
         sign_in teacher_course.teacher
       end
 
