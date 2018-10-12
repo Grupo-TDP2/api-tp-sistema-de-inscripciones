@@ -1,11 +1,12 @@
 class Exam < ApplicationRecord
-  validates :exam_type, :final_exam_week_id, :course_id, :date_time, presence: true
+  validates :exam_type, :final_exam_week_id, :course_id, :classroom_id, :date_time, presence: true
   validates :final_exam_week_id, uniqueness: { scope: :course_id, case_sensitive: false }
   validate :validate_hour_range, if: :date_time
   validate :validate_right_week, if: %i[date_time final_exam_week_id]
 
   belongs_to :course
   belongs_to :final_exam_week
+  belongs_to :classroom
 
   enum exam_type: { final: 0, partial: 1 }
 

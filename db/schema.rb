@@ -118,9 +118,11 @@ ActiveRecord::Schema.define(version: 20181012144813) do
     t.integer "exam_type", default: 0, null: false
     t.bigint "final_exam_week_id", null: false
     t.bigint "course_id", null: false
+    t.bigint "classroom_id", null: false
     t.datetime "date_time", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["classroom_id"], name: "index_exams_on_classroom_id"
     t.index ["course_id"], name: "index_exams_on_course_id"
     t.index ["final_exam_week_id"], name: "index_exams_on_final_exam_week_id"
   end
