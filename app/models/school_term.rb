@@ -34,20 +34,18 @@ class SchoolTerm < ApplicationRecord
   private
 
   def validate_semester_length
-    if first_semester? || second_semester?
-      errors.add(:date_start, 'The semester must have 16 weeks.') unless
-        right_length?(REGULAR_SEMESTER_WEEKS)
-    elsif summer_school?
-      errors.add(:date_start, 'The semester must have 8 weeks.') unless
-        right_length?(SHORT_SEMESTER_WEEKS)
+    if (first_semester? || second_semester?) && !right_length?(REGULAR_SEMESTER_WEEKS)
+      errors.add(:date_start, 'The semester must have 16 weeks.')
+    elsif summer_school? && !right_length?(SHORT_SEMESTER_WEEKS)
+      errors.add(:date_start, 'The semester must have 8 weeks.')
     end
   end
 
   def validate_start_month
-    if first_semester?
-      errors.add(:date_start, 'The semester must begin in March.') unless expected_month?(MARCH)
-    elsif second_semester?
-      errors.add(:date_start, 'The semester must begin in August.') unless expected_month?(AUGUST)
+    if first_semester? && !expected_month?(MARCH)
+      errors.add(:date_start, 'The semester must begin in March.')
+    elsif second_semester? && !expected_month?(AUGUST)
+      errors.add(:date_start, 'The semester must begin in August.')
     else
       errors.add(:date_start, 'The semester must begin in January.') unless
         expected_month?(JANUARY)
