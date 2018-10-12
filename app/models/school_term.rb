@@ -42,14 +42,18 @@ class SchoolTerm < ApplicationRecord
   end
 
   def validate_start_month
-    if first_semester? && !expected_month?(MARCH)
-      errors.add(:date_start, 'The semester must begin in March.')
-    elsif second_semester? && !expected_month?(AUGUST)
-      errors.add(:date_start, 'The semester must begin in August.')
-    else
-      errors.add(:date_start, 'The semester must begin in January.') unless
-        expected_month?(JANUARY)
+    if first_semester?
+      validate_month(MARCH)
+    elsif second_semester?
+      validate_month(AUGUST)
+    elsif summer_school?
+      validate_month(JANUARY)
     end
+  end
+
+  def validate_month(month)
+    errors.add(:date_start, "The semester must begin in month #{month}.") unless
+      expected_month?(month)
   end
 
   def validate_year_start_end

@@ -151,7 +151,7 @@ describe SchoolTerm do
       it 'returns the right error' do
         wrong_school_term.save
         expect(wrong_school_term.errors.full_messages.last)
-          .to match(/The semester must begin in March/)
+          .to match(/The semester must begin in month 3/)
       end
     end
 
@@ -167,7 +167,7 @@ describe SchoolTerm do
       it 'returns the right error' do
         wrong_school_term.save
         expect(wrong_school_term.errors.full_messages.last)
-          .to match(/The semester must begin in August/)
+          .to match(/The semester must begin in month 8/)
       end
     end
 
@@ -183,7 +183,7 @@ describe SchoolTerm do
       it 'returns the right error' do
         wrong_school_term.save
         expect(wrong_school_term.errors.full_messages.last)
-          .to match(/The semester must begin in January/)
+          .to match(/The semester must begin in month 1/)
       end
     end
   end
