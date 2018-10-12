@@ -8,6 +8,8 @@ Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   api_version(module: 'v1', path: { value: 'api/v1' }, defaults: { format: :json }) do
     resources :sessions, only: [:create]
+    resources :classrooms, only: [:index]
+    resources :final_exam_weeks, only: [:index]
     resources :course_of_studies, only: [:index] do
       resources :subjects, only: [:index] do
         resources :courses, only: [:index] do
