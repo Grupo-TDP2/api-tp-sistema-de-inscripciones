@@ -34,7 +34,7 @@ describe V1::CoursesController do
         index_request
         expect(response_body.first.keys)
           .to match_array(%w[id name vacancies inscribed? subject lesson_schedules
-                             teacher_courses])
+                             teacher_courses accept_free_condition_exam])
       end
 
       context 'with courses from other school terms' do
@@ -96,6 +96,35 @@ describe V1::CoursesController do
           associate_teacher_request
           expect(response).to have_http_status :created
         end
+      end
+    end
+  end
+
+  describe '#update' do
+    let(:date_start) { Date.new(2018, 8, 16) }
+    let(:term) do
+      create(:school_term, year: Date.current.year, date_start: date_start,
+                           date_end: date_start + 4.months, term: SchoolTerm.current_term)
+    end
+    let(:course_1) { create(:course, school_term: term, accept_free_condition_exam: false) }
+    let(:teacher_course) { create(:teacher_course, course: course_1) }
+    let(:update_request) do
+      patch :update, params: { id: course_1.id, course: { accept_free_condition_exam: true } }
+    end
+
+    context 'when no teacher is logged in' do
+      it 'returns unauthorized' do
+        update_request
+        expect(response).to have_http_status :unauthorized
+      end
+    end
+
+    context 'when a teacher is logged in' do
+      before { sign_in teacher_course.teacher }
+
+      it 'changes the free_condition attribute' do
+        update_request
+        expect(course_1.reload.accept_free_condition_exam).to be true
       end
     end
   end
