@@ -67,7 +67,7 @@ course_6 = Course.create!(name: '006', vacancies: 2, subject: subject_3,
                           school_term: past_school_term)
 
 Exam.create!(course: course_3, final_exam_week: week_1,
-             date_time: Time.zone.parse('2018-12-12 17:00:00'))
+             date_time: Time.zone.parse('2018-12-12 17:00:00'), classroom: classroom_1)
 
 LessonSchedule.create!(course: course_3, classroom: classroom_1, type: :theory, day: :Monday,
                        hour_start: '17:00', hour_end: '19:00')

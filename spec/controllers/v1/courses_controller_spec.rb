@@ -180,8 +180,7 @@ describe V1::CoursesController do
         it 'returns the right keys' do
           exams_request
           expect(response_body.first.keys)
-            .to match_array(%w[id exam_type date_time final_exam_week_id course_id
-                               created_at updated_at])
+            .to match_array(%w[id exam_type date_time final_exam_week course classroom])
         end
       end
     end

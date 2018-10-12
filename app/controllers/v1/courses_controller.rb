@@ -29,7 +29,8 @@ module V1
     end
 
     def exams
-      render json: course.exams
+      render json: course.exams, include: ['classroom', 'classroom.building', 'final_exam_week',
+                                           'course']
     end
 
     private
