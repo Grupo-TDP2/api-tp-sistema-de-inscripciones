@@ -15,6 +15,9 @@ class SchoolTerm < ApplicationRecord
   REGULAR_SEMESTER_WEEKS = 16
   SHORT_SEMESTER_WEEKS = 8
   ONE_WEEK = 7
+  MARCH = 3
+  AUGUST = 8
+  JANUARY = 1
 
   def self.current_term
     term(Date.current)
@@ -31,26 +34,23 @@ class SchoolTerm < ApplicationRecord
   private
 
   def validate_semester_length
-    length_weeks = ((date_end - date_start) / ONE_WEEK).to_i
     if first_semester? || second_semester?
-      return if length_weeks == REGULAR_SEMESTER_WEEKS
-      errors.add(:date_start, 'The semester must have 16 weeks.')
+      errors.add(:date_start, 'The semester must have 16 weeks.') unless
+        right_length?(REGULAR_SEMESTER_WEEKS)
     elsif summer_school?
-      return if length_weeks == SHORT_SEMESTER_WEEKS
-      errors.add(:date_start, 'The semester must have 8 weeks.')
+      errors.add(:date_start, 'The semester must have 8 weeks.') unless
+        right_length?(SHORT_SEMESTER_WEEKS)
     end
   end
 
-  def validate_start_month # rubocop:disable Metrics/AbcSize
+  def validate_start_month
     if first_semester?
-      return if date_start.month == 3
-      errors.add(:date_start, 'The semester must begin in March.')
+      errors.add(:date_start, 'The semester must begin in March.') unless expected_month?(MARCH)
     elsif second_semester?
-      return if date_start.month == 8
-      errors.add(:date_start, 'The semester must begin in August.')
+      errors.add(:date_start, 'The semester must begin in August.') unless expected_month?(AUGUST)
     else
-      return if date_start.month == 1
-      errors.add(:date_start, 'The semester must begin in January.')
+      errors.add(:date_start, 'The semester must begin in January.') unless
+        expected_month?(JANUARY)
     end
   end
 
@@ -66,5 +66,14 @@ class SchoolTerm < ApplicationRecord
 
   def year_error(attribute)
     errors.add(attribute, 'must have the same input year')
+  end
+
+  def right_length?(expected_weeks)
+    length_weeks = ((date_end - date_start) / ONE_WEEK).to_i
+    length_weeks == expected_weeks
+  end
+
+  def expected_month?(month)
+    date_start.month == month
   end
 end
