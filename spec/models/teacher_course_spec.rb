@@ -29,8 +29,9 @@ describe TeacherCourse do
   context 'when the teacher has another course for the same subject' do
     let(:teacher) { create(:teacher) }
     let(:subject) { create(:subject) }
-    let(:course_1) { create(:course, subject: subject) }
-    let(:course_2) { create(:course, subject: subject) }
+    let(:school_term) { create(:school_term) }
+    let(:course_1) { create(:course, subject: subject, school_term: school_term) }
+    let(:course_2) { create(:course, subject: subject, school_term: school_term) }
 
     before { create(:teacher_course, teacher: teacher, course: course_1) }
 

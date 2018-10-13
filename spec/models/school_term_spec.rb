@@ -47,7 +47,7 @@ describe SchoolTerm do
 
       it 'returns the right error' do
         wrong_school_term.save
-        expect(wrong_school_term.errors.full_messages.first)
+        expect(wrong_school_term.errors.full_messages.last)
           .to match(/The semester must have 16 weeks/)
       end
     end
@@ -63,7 +63,7 @@ describe SchoolTerm do
 
       it 'returns the right error' do
         wrong_school_term.save
-        expect(wrong_school_term.errors.full_messages.first)
+        expect(wrong_school_term.errors.full_messages.last)
           .to match(/The semester must have 16 weeks/)
       end
     end
@@ -79,7 +79,7 @@ describe SchoolTerm do
 
       it 'returns the right error' do
         wrong_school_term.save
-        expect(wrong_school_term.errors.full_messages.first)
+        expect(wrong_school_term.errors.full_messages.last)
           .to match(/The semester must have 16 weeks/)
       end
     end
@@ -95,7 +95,7 @@ describe SchoolTerm do
 
       it 'returns the right error' do
         wrong_school_term.save
-        expect(wrong_school_term.errors.full_messages.first)
+        expect(wrong_school_term.errors.full_messages.last)
           .to match(/The semester must have 16 weeks/)
       end
     end
@@ -111,7 +111,7 @@ describe SchoolTerm do
 
       it 'returns the right error' do
         wrong_school_term.save
-        expect(wrong_school_term.errors.full_messages.first)
+        expect(wrong_school_term.errors.full_messages.last)
           .to match(/The semester must have 8 weeks/)
       end
     end
@@ -127,7 +127,7 @@ describe SchoolTerm do
 
       it 'returns the right error' do
         wrong_school_term.save
-        expect(wrong_school_term.errors.full_messages.first)
+        expect(wrong_school_term.errors.full_messages.last)
           .to match(/The semester must have 8 weeks/)
       end
     end

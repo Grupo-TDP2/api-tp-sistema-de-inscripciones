@@ -6,6 +6,8 @@ class FinalExamWeek < ApplicationRecord
   validate :validate_week_school_term, if: :date_start_week
   validate :validate_same_year, if: %i[date_start_week year]
 
+  has_many :exams, dependent: :destroy
+
   private
 
   def validate_start_week

@@ -35,8 +35,9 @@ describe Enrolment do
       context 'when the student has another enrolment for the same subject' do
         let(:student) { create(:student) }
         let(:subject) { create(:subject) }
-        let(:course_1) { create(:course, subject: subject) }
-        let(:course_2) { create(:course, subject: subject) }
+        let(:school_term) { create(:school_term) }
+        let(:course_1) { create(:course, subject: subject, school_term: school_term) }
+        let(:course_2) { create(:course, subject: subject, school_term: school_term) }
 
         before { create(:enrolment, student: student, course: course_1) }
 
