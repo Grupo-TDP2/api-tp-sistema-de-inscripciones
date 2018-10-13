@@ -12,8 +12,7 @@ describe V1::CoursesController do
 
     context 'when the subject contains two courses' do
       let!(:current_term) do
-        create(:school_term, year: '2018', term: :second_semester, date_start: '2018-08-01',
-                             date_end: '2018-12-01')
+        create(:school_term, year: '2018', term: :second_semester)
       end
       let(:course_1) do
         create(:course, name: '001', school_term: current_term, subject: test_subject)
@@ -39,8 +38,7 @@ describe V1::CoursesController do
 
       context 'with courses from other school terms' do
         let(:past_term) do
-          create(:school_term, year: '2018', term: :first_semester, date_start: '2018-03-01',
-                               date_end: '2018-07-01')
+          create(:school_term, year: '2018', term: :first_semester)
         end
 
         before { create(:course, name: '003', school_term: past_term, subject: test_subject) }
@@ -104,7 +102,7 @@ describe V1::CoursesController do
     let(:date_start) { Date.new(2018, 8, 16) }
     let(:term) do
       create(:school_term, year: Date.current.year, date_start: date_start,
-                           date_end: date_start + 4.months, term: SchoolTerm.current_term)
+                           term: SchoolTerm.current_term)
     end
     let(:course_1) { create(:course, school_term: term) }
     let(:teacher_course) { create(:teacher_course, course: course_1) }

@@ -18,7 +18,7 @@ Teacher.delete_all
 Student.delete_all
 TeacherCourse.delete_all
 Enrolment.delete_all
-
+FinalExamWeek.delete_all
 
 course_of_study_1 = CourseOfStudy.create!(name: 'Ingeniería en Informática', required_credits: 240)
 course_of_study_2 = CourseOfStudy.create!(name: 'Ingeniería Química', required_credits: 240)
@@ -48,10 +48,15 @@ subject_3 = Subject.create!(name: 'Taller de desarrollo de proyectos informátic
 subject_4 = Subject.create!(name: 'Estructura del computador', code: '70', credits: 6,
                             department: department_3)
 
-school_term = SchoolTerm.create!(term: 1, year: '2018', date_start: '2018-08-18',
-                                 date_end: '2018-12-01')
-past_school_term = SchoolTerm.create!(term: 0, year: '2018', date_start: '2018-03-18',
-                                      date_end: '2018-07-01')
+school_term = FactoryBot::create(:school_term, term: :second_semester, year: '2018')
+past_school_term = FactoryBot::create(:school_term, term: :first_semester, year: '2018')
+
+FinalExamWeek.create!(date_start_week: Date.new(2018, 12, 10), year: '2018')
+FinalExamWeek.create!(date_start_week: Date.new(2018, 12, 17), year: '2018')
+FinalExamWeek.create!(date_start_week: Date.new(2019, 2, 4), year: '2019')
+FinalExamWeek.create!(date_start_week: Date.new(2019, 2, 11), year: '2019')
+FinalExamWeek.create!(date_start_week: Date.new(2019, 2, 18), year: '2019')
+FinalExamWeek.create!(date_start_week: Date.new(2019, 2, 25), year: '2019')
 
 course_1 = Course.create!(name: '001', vacancies: 2, subject: subject_1, school_term: school_term)
 course_2 = Course.create!(name: '002', vacancies: 2, subject: subject_2, school_term: school_term)

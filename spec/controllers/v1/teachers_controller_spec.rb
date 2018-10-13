@@ -50,9 +50,10 @@ describe V1::TeachersController do
     end
 
     context 'when there is a teacher signed in' do
+      let(:date_start) { Date.new(2018, 8, 1) }
       let!(:current_term) do
-        create(:school_term, year: '2018', term: :second_semester, date_start: '2018-08-01',
-                             date_end: '2018-12-01')
+        create(:school_term, year: '2018', term: :second_semester, date_start: date_start,
+                             date_end: date_start + 16.weeks)
       end
       let(:department) { create(:department) }
       let(:subject_1) { create(:subject, department: department) }
