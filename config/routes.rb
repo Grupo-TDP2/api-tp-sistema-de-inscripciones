@@ -19,7 +19,7 @@ Rails.application.routes.draw do
       collection do
         scope :me do
           get :courses, to: 'teachers#my_courses'
-          resources :courses, only: [] do
+          resources :courses, only: [:update] do
             get :enrolments
           end
         end
