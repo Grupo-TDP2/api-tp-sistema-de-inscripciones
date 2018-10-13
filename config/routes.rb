@@ -25,6 +25,7 @@ Rails.application.routes.draw do
           resources :courses, only: [:update] do
             get :enrolments
             get :exams
+            post :exams, to: 'exams#create'
           end
         end
       end
