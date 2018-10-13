@@ -86,7 +86,7 @@ describe V1::TeachersController do
           courses_request
           expect(response_body.first.keys)
             .to match_array(%w[id name lesson_schedules vacancies subject school_term
-                               teacher_courses])
+                               teacher_courses accept_free_condition_exam])
         end
       end
     end

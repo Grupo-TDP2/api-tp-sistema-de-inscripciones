@@ -1,5 +1,5 @@
 class CourseSerializer < ActiveModel::Serializer
-  attributes :id, :name, :vacancies
+  attributes :id, :name, :vacancies, :accept_free_condition_exam
   attribute :inscribed?, if: :inscribed_student?
   belongs_to :subject
   belongs_to :school_term

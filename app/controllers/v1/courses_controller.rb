@@ -2,7 +2,7 @@ module V1
   class CoursesController < ApplicationController
     serialization_scope :current_user
     before_action -> { authenticate_user!(['DepartmentStaff']) }, only: [:associate_teacher]
-    before_action -> { authenticate_user!(['Teacher']) }, only: [:enrolments]
+    before_action -> { authenticate_user!(['Teacher']) }, only: %i[enrolments update]
     before_action -> { authenticate_user!(['Student']) }, only: [:index]
     before_action -> { authenticate_user!(%w[Student Teacher DepartmentStaff]) }, only: [:exams]
 
@@ -11,6 +11,15 @@ module V1
              include: ['lesson_schedules', 'lesson_schedules.classroom',
                        'lesson_schedules.classroom.building', 'subject', 'teacher_courses',
                        'teacher_courses.teacher'], status: :ok
+    end
+
+    def update
+      return wrong_course_for_teacher unless teacher_course_exist
+      if course.update(update_free_condition_params)
+        render json: course
+      else
+        render json: course.errors.full_messages, status: :unprocessable_entity
+      end
     end
 
     def enrolments
@@ -40,7 +49,7 @@ module V1
     end
 
     def course
-      @course ||= Course.find(course_students_params[:course_id])
+      @course ||= Course.find(params[:course_id].presence || params[:id])
     end
 
     def staff_from_department?
@@ -52,8 +61,12 @@ module V1
              status: :forbidden
     end
 
+    def update_free_condition_params
+      params.require(:course).permit(:accept_free_condition_exam)
+    end
+
     def course_students_params
-      params.permit(:course_id)
+      params.permit(:course_id, :id)
     end
 
     def associate_teacher_params
