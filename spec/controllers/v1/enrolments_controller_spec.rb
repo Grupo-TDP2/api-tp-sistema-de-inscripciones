@@ -28,7 +28,7 @@ describe V1::EnrolmentsController do
       end
 
       before do
-        Timecop.freeze(date_start - 8.days)
+        Timecop.freeze(date_start - 4.days)
         sign_in current_student
       end
 

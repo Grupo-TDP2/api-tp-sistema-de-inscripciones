@@ -102,7 +102,7 @@ describe V1::CoursesController do
     let(:date_start) { Date.new(2018, 8, 16) }
     let(:term) do
       create(:school_term, year: Date.current.year, date_start: date_start,
-                           date_end: date_start + 4.months, term: SchoolTerm.current_term)
+                           term: SchoolTerm.current_term)
     end
     let(:course_1) { create(:course, school_term: term, accept_free_condition_exam: false) }
     let(:teacher_course) { create(:teacher_course, course: course_1) }
@@ -146,7 +146,7 @@ describe V1::CoursesController do
 
     context 'when there is a teacher logged in' do
       before do
-        Timecop.freeze(date_start - 8.days)
+        Timecop.freeze(date_start - 4.days)
         sign_in teacher_course.teacher
       end
 
