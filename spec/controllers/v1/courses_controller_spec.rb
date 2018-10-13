@@ -177,4 +177,41 @@ describe V1::CoursesController do
       end
     end
   end
+
+  describe '#exams' do
+    let(:date_start) { Date.new(2018, 8, 16) }
+    let(:term) do
+      create(:school_term, year: Date.current.year, date_start: date_start,
+                           term: SchoolTerm.current_term)
+    end
+    let(:course_1) { create(:course, school_term: term) }
+    let(:student) { create(:student) }
+    let(:exams_request) { get :exams, params: { course_id: course_1.id } }
+
+    before { create(:exam, course: course_1) }
+
+    context 'when there is no user logged in' do
+      it 'returns unauthorized' do
+        exams_request
+        expect(response).to have_http_status :unauthorized
+      end
+    end
+
+    context 'when there is a student logged in' do
+      before { sign_in student }
+
+      context 'with a course with exams' do
+        it 'returns an array with exams' do
+          exams_request
+          expect(response_body.size).to eq 1
+        end
+
+        it 'returns the right keys' do
+          exams_request
+          expect(response_body.first.keys)
+            .to match_array(%w[id exam_type date_time final_exam_week course classroom])
+        end
+      end
+    end
+  end
 end

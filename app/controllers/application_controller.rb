@@ -25,8 +25,8 @@ class ApplicationController < ActionController::Base
 
   private
 
-  def authenticate_user!(entity)
-    @current_user = AuthenticationToken.new(authentication_token).user(entity)
+  def authenticate_user!(entities)
+    @current_user = AuthenticationToken.new(authentication_token).user(entities)
   end
 
   def authentication_token
