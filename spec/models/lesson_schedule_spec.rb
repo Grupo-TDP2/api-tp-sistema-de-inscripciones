@@ -3,7 +3,7 @@ describe LessonSchedule do
   let(:date_start) { Date.new(2018, 8, 16) }
   let(:term) do
     create(:school_term, year: Date.current.year, date_start: date_start,
-                         date_end: date_start + 4.months, term: SchoolTerm.current_term)
+                         term: SchoolTerm.current_term)
   end
   let(:course) { create(:course, school_term: term) }
 
@@ -16,7 +16,9 @@ describe LessonSchedule do
   context 'when inserting an hour start after an hour end' do
     let(:start) { '12:00' }
     let(:h_end) { '10:00' }
-    let(:wrong_lesson_schedule) { build(:lesson_schedule, hour_start: start, hour_end: h_end) }
+    let(:wrong_lesson_schedule) do
+      build(:lesson_schedule, hour_start: start, hour_end: h_end, course: course)
+    end
 
     it 'does not create a lesson schedule' do
       expect { wrong_lesson_schedule.save }.not_to change(described_class, :count)

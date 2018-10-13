@@ -6,7 +6,7 @@ describe Enrolment do
   context 'when there is a current school term' do
     before do
       create(:school_term, year: Date.current.year, date_start: date_start,
-                           date_end: date_start + 4.months, term: SchoolTerm.current_term)
+                           term: SchoolTerm.current_term)
     end
 
     context 'when trying to enrol with a date lower than 7 days before the next term' do
@@ -71,8 +71,9 @@ describe Enrolment do
       context 'when the student has another enrolment for the same subject' do
         let(:student) { create(:student) }
         let(:subject) { create(:subject) }
-        let(:course_1) { create(:course, subject: subject) }
-        let(:course_2) { create(:course, subject: subject) }
+        let(:school_term) { create(:school_term) }
+        let(:course_1) { create(:course, subject: subject, school_term: school_term) }
+        let(:course_2) { create(:course, subject: subject, school_term: school_term) }
 
         before { create(:enrolment, student: student, course: course_1) }
 

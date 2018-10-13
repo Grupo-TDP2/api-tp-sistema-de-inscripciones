@@ -4,4 +4,5 @@ class Classroom < ApplicationRecord
 
   belongs_to :building
   has_many :lesson_schedules, dependent: :destroy
+  has_many :exams, dependent: :nullify
 end

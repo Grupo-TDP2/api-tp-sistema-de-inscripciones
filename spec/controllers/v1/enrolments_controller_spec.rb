@@ -24,7 +24,7 @@ describe V1::EnrolmentsController do
       let(:date_start) { Date.new(2018, 8, 16) }
       let(:term) do
         create(:school_term, year: Date.current.year, date_start: date_start,
-                             date_end: date_start + 4.months, term: SchoolTerm.current_term)
+                             term: SchoolTerm.current_term)
       end
 
       before do
