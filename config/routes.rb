@@ -21,7 +21,7 @@ Rails.application.routes.draw do
     resources :students, only: [] do
       collection do
         scope :me do
-          resources :student_exams, only: %i[index create]
+          resources :student_exams, only: %i[index create destroy]
         end
       end
     end
@@ -32,6 +32,7 @@ Rails.application.routes.draw do
           resources :courses, only: [:update] do
             get :enrolments
             get :exams
+            resources :exams, only: [:destroy]
           end
         end
       end
