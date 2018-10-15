@@ -1,9 +1,19 @@
 module V1
   class ExamsController < ApplicationController
-    before_action -> { authenticate_user!(['Teacher']) }
+    before_action -> { authenticate_user!(['Teacher']) }, only: %i[create destroy]
+
+    def destroy
+      return invalid_course unless teacher_course_exist
+      exam = Exam.find(params[:id])
+      if exam.delete
+        head :ok
+      else
+        head :unprocessable_entity
+      end
+    end
 
     def create
-      return wrong_course_for_teacher unless teacher_course_exist
+      return invalid_course unless teacher_course_exist
       exam = Exam.new(exam_params.merge(course_id: course.id))
       if exam.save
         render json: exam, status: :created
@@ -13,6 +23,11 @@ module V1
     end
 
     private
+
+    def invalid_course
+      render json: { error: 'El docente no puede eliminar un examen que no sea de su curso' },
+             status: :unprocessable_entity
+    end
 
     def course
       @course ||= Course.find(params[:course_id])

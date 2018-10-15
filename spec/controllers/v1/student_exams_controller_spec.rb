@@ -95,4 +95,25 @@ describe V1::StudentExamsController do
       end
     end
   end
+
+  describe '#destroy' do
+    let(:student_exam) { create(:student_exam) }
+
+    let(:destroy_request) { delete :destroy, params: { id: student_exam.id } }
+
+    context 'with no student logged in' do
+      it 'returns unauthorized' do
+        destroy_request
+        expect(response).to have_http_status :unauthorized
+      end
+    end
+
+    context 'with a student logged in' do
+      before { sign_in student_exam.student }
+
+      it 'deletes the student exam' do
+        expect { destroy_request }.to change(StudentExam, :count).by(-1)
+      end
+    end
+  end
 end

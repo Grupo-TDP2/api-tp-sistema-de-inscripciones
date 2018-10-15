@@ -155,3 +155,5 @@ Enrolment.new(course: course_3, student: student_1, type: :normal).save(validate
 Enrolment.new(course: course_3, student: student_2, type: :normal).save(validate: false)
 Enrolment.new(course: course_3, student: student_3, type: :conditional).save(validate: false)
 Enrolment.new(course: course_2, student: student_1, type: :normal).save(validate: false)
+
+StudentExam.new(exam: Exam.first, student: student_1).save(validate: false)

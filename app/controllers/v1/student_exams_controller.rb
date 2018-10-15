@@ -1,9 +1,10 @@
 module V1
   class StudentExamsController < ApplicationController
-    before_action -> { authenticate_user!(['Student']) }, only: %i[index create]
+    before_action -> { authenticate_user!(['Student']) }, only: %i[index create destroy]
 
     def index
-      render json: @current_user.exams, status: :ok
+      render json: @current_user.student_exams, include: ['student', 'exam.classroom',
+                                                          'exam.classroom.building'], status: :ok
     end
 
     def create
@@ -16,6 +17,15 @@ module V1
       end
     end
 
+    def destroy
+      return invalid_date if close_to_exam_date?
+      if StudentExam.find(params[:id]).delete
+        head :ok
+      else
+        head :unprocessable_entity
+      end
+    end
+
     private
 
     def student_exam_params
@@ -23,8 +33,15 @@ module V1
     end
 
     def close_to_exam_date?
-      exam = Exam.find(student_exam_params[:exam_id])
       Time.current > exam.date_time - 2.days
+    end
+
+    def exam
+      if params[:student_exam].present?
+        Exam.find(student_exam_params[:exam_id])
+      else
+        StudentExam.find(params[:id]).exam
+      end
     end
 
     def invalid_date
