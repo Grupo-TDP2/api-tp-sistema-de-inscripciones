@@ -50,11 +50,10 @@ describe V1::SchoolTermsController do
   end
 
   describe '#index' do
-    let(:school_term) { create(:school_term,
-                                year: '2018',
-                                term: :second_semester,
-                                date_start: '2018-08-19',
-                                date_end: '2018-12-09') }
+    let(:school_term) do
+      create(:school_term, year: '2018', term: :second_semester,
+                           date_start: '2018-08-19', date_end: '2018-12-09')
+    end
     let(:current_admin) { create(:admin) }
     let(:index_request) do
       get :index
