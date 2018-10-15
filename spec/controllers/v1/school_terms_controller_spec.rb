@@ -9,6 +9,12 @@ describe V1::SchoolTermsController do
                                               date_start: '2020-03-01',
                                               date_end: '2020-07-01' } }
     end
+    let(:wrong_school_term_request) do
+      post :create, params:  { school_term: { term: :first_semester,
+                                              year: 2020,
+                                              date_start: '2020-07-01',
+                                              date_end: '2020-03-01' } }
+    end
 
     context 'with no admin logged in' do
       it 'returns unauthorized' do
@@ -28,6 +34,16 @@ describe V1::SchoolTermsController do
 
         it 'creates an school term' do
           expect { school_term_request }.to change(SchoolTerm, :count).by(1)
+        end
+      end
+      context 'when we create a wrong school term' do
+        it 'returns http status not created' do
+          wrong_school_term_request
+          expect(response).to have_http_status :unprocessable_entity
+        end
+
+        it 'does not creates an school term' do
+          expect { wrong_school_term_request }.to change(SchoolTerm, :count).by(0)
         end
       end
     end
