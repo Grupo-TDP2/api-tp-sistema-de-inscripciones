@@ -1,3 +1,4 @@
+
 class Admin < User
   self.table_name = 'admins'
   # Include default devise modules. Others available are:
