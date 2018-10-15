@@ -3,7 +3,7 @@ module V1
     before_action -> { authenticate_user!(['Teacher']) }, only: %i[create destroy]
 
     def destroy
-      return invalid_course unless teacher_course_exist?
+      return invalid_course unless teacher_course_exist
       exam = Exam.find(params[:id])
       if exam.delete
         head :ok
@@ -13,7 +13,7 @@ module V1
     end
 
     def create
-      return wrong_course_for_teacher unless teacher_course_exist
+      return invalid_course unless teacher_course_exist
       exam = Exam.new(exam_params.merge(course_id: course.id))
       if exam.save
         render json: exam, status: :created
