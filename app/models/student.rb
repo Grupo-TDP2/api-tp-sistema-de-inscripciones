@@ -16,6 +16,9 @@ class Student < User
   has_many :enrolments, dependent: :destroy
   has_many :courses, through: :enrolments
 
+  has_many :student_exams, dependent: :destroy
+  has_many :exams, through: :student_exams
+
   def unique_email
     errors.add(:email, 'is already taken') if Teacher.exists?(email: email) ||
                                               DepartmentStaff.exists?(email: email) ||
