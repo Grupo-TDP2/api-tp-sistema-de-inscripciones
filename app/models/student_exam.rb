@@ -1,7 +1,7 @@
 class StudentExam < ApplicationRecord
   validates :student, :exam, :condition, presence: true
   validates :student_id, uniqueness: { scope: :exam_id, case_sensitive: false }
-  validate :validate_able_to_take_the_exam, if: %i[exam student]
+  validate :validate_able_to_take_the_exam, if: %i[exam student regular?]
   validate :valid_free_condition, if: :exam
 
   belongs_to :student
@@ -17,7 +17,6 @@ class StudentExam < ApplicationRecord
   end
 
   def validate_able_to_take_the_exam
-    return unless regular?
     return errors.add(:student, 'doesnt have courses for that subject') if
       student_subject_courses.empty?
     return errors.add(:student, 'has taken all chances') if course_disapproved?
