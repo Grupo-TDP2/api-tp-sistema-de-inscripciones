@@ -7,6 +7,8 @@ class Exam < ApplicationRecord
   belongs_to :course
   belongs_to :final_exam_week
   belongs_to :classroom
+  has_many :student_exams, dependent: :destroy
+  has_many :students, through: :student_exams
 
   enum exam_type: { final: 0, partial: 1 }
 

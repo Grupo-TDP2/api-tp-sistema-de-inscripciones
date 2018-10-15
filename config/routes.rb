@@ -18,6 +18,13 @@ Rails.application.routes.draw do
         end
       end
     end
+    resources :students, only: [] do
+      collection do
+        scope :me do
+          resources :student_exams, only: %i[index create]
+        end
+      end
+    end
     resources :teachers, only: [:index] do
       collection do
         scope :me do

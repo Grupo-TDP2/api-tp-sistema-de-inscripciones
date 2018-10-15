@@ -44,7 +44,7 @@ describe Enrolment do
 
       context 'when it is evaluated and has no qualification' do
         it 'cannot be updated' do
-          enrolment = build(:enrolment, status: :approved)
+          enrolment = build(:enrolment, status: :approved, partial_qualification: nil)
           enrolment.save
           expect(enrolment.errors.full_messages.last)
             .to match(/Partial qualification no puede estar en blanco/)
