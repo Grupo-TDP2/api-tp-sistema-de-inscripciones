@@ -33,6 +33,7 @@ Rails.application.routes.draw do
             get :enrolments
             get :exams
             resources :exams, only: [:destroy]
+            post :exams, to: 'exams#create'
           end
         end
       end
