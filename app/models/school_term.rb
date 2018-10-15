@@ -1,6 +1,6 @@
 class SchoolTerm < ApplicationRecord
   validates :term, :year, :date_start, :date_end, presence: true
-  validates :year, numericality: { only_integer: true, greater_than: 2017, less_than: 2050 }
+  validates :year, numericality: { only_integer: true, greater_than: 2015, less_than: 2050 }
   validates :term, uniqueness: { scope: :year, case_sensitive: false }
   validate :validate_year_start_end, :validate_start_end, if: %i[date_start date_end]
   validate :validate_semester_length, if: %i[date_start date_end term]

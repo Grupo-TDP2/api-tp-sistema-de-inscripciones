@@ -20,6 +20,7 @@ TeacherCourse.delete_all
 Enrolment.delete_all
 FinalExamWeek.delete_all
 Exam.delete_all
+Admin.delete_all
 
 course_of_study_1 = CourseOfStudy.create!(name: 'Ingeniería en Informática', required_credits: 240)
 course_of_study_2 = CourseOfStudy.create!(name: 'Ingeniería Química', required_credits: 240)
@@ -130,6 +131,7 @@ student_3 = Student.create!(email: 'enzo.perez@example.com', password: '12345678
 
 DepartmentStaff.create!(email: 'staff_informatica@example.com', password: '12345678',
                         department: department_1)
+Admin.create!(email: 'admin@example.com', password: '12345678')
 
 course_of_study_1.subjects << subject_1
 course_of_study_1.subjects << subject_2
