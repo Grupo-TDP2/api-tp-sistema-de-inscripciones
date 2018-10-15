@@ -19,6 +19,8 @@ Student.delete_all
 TeacherCourse.delete_all
 Enrolment.delete_all
 FinalExamWeek.delete_all
+Exam.delete_all
+Admin.delete_all
 
 course_of_study_1 = CourseOfStudy.create!(name: 'Ingeniería en Informática', required_credits: 240)
 course_of_study_2 = CourseOfStudy.create!(name: 'Ingeniería Química', required_credits: 240)
@@ -48,8 +50,12 @@ subject_3 = Subject.create!(name: 'Taller de desarrollo de proyectos informátic
 subject_4 = Subject.create!(name: 'Estructura del computador', code: '70', credits: 6,
                             department: department_3)
 
-school_term = FactoryBot::create(:school_term, term: :second_semester, year: '2018')
-past_school_term = FactoryBot::create(:school_term, term: :first_semester, year: '2018')
+school_term = SchoolTerm.create!(term: :second_semester, year: '2018',
+                                 date_start: Date.new(2018, 8, 10).next_week,
+                                 date_end: Date.new(2018, 8, 10).next_week + 16.weeks)
+past_school_term = SchoolTerm.create!(term: :first_semester, year: '2018',
+                                      date_start: Date.new(2018, 3, 10).next_week,
+                                      date_end: Date.new(2018, 3, 10).next_week + 16.weeks)
 
 week_1 = FinalExamWeek.create!(date_start_week: Date.new(2018, 12, 10), year: '2018')
 week_2 = FinalExamWeek.create!(date_start_week: Date.new(2018, 12, 17), year: '2018')
@@ -125,6 +131,7 @@ student_3 = Student.create!(email: 'enzo.perez@example.com', password: '12345678
 
 DepartmentStaff.create!(email: 'staff_informatica@example.com', password: '12345678',
                         department: department_1)
+Admin.create!(email: 'admin@example.com', password: '12345678')
 
 course_of_study_1.subjects << subject_1
 course_of_study_1.subjects << subject_2

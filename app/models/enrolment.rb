@@ -1,9 +1,14 @@
 class Enrolment < ApplicationRecord
   self.inheritance_column = :_type_disabled # So that we can use the :type column
   validates :type, presence: true
-  validates :final_qualification, presence: true, if: :evaluated?
+  validates :partial_qualification, presence: true, if: :evaluated?
   validates :student_id, uniqueness: { scope: :course_id, case_sensitive: false }
-  validates :final_qualification, numericality: { only_integer: true, greater_than_or_equal_to: 2,
+  validates :partial_qualification, numericality: { only_integer: true,
+                                                    greater_than_or_equal_to: 4,
+                                                    less_than_or_equal_to: 10 },
+                                    if: :partial_qualification
+  validates :final_qualification, numericality: { only_integer: true,
+                                                  greater_than_or_equal_to: 2,
                                                   less_than_or_equal_to: 10 },
                                   if: :final_qualification
   validate :valid_enrolment_date
@@ -24,7 +29,7 @@ class Enrolment < ApplicationRecord
   end
 
   def unique_student_enrolment
-    subject_courses_ids = course&.subject&.courses&.map(&:id)
+    subject_courses_ids = course&.subject&.courses&.current_school_term&.map(&:id)
     student_enrolments = Enrolment.where(student: student)
     errors.add(:student_id, 'cannot be enrolled in more than one course per subject') if
       student_enrolments.any? { |enrolment| subject_courses_ids.include?(enrolment.course_id) }
