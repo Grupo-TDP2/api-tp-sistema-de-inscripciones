@@ -22,7 +22,7 @@ describe V1::ExamsController do
 
       context 'when there is an exam' do
         it 'deletes the exam' do
-          expect{ destroy_request }.to change(Exam, :count).by(-1)
+          expect { destroy_request }.to change(Exam, :count).by(-1)
         end
       end
     end
@@ -33,7 +33,7 @@ describe V1::ExamsController do
       before { sign_in current_teacher }
 
       it 'does not delete the exam' do
-        expect{ destroy_request }.not_to change(Exam, :count)
+        expect { destroy_request }.not_to change(Exam, :count)
       end
     end
   end
