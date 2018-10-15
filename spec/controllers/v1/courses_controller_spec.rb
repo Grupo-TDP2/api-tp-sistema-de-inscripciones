@@ -12,8 +12,7 @@ describe V1::CoursesController do
 
     context 'when the subject contains two courses' do
       let!(:current_term) do
-        create(:school_term, year: '2018', term: :second_semester, date_start: '2018-08-01',
-                             date_end: '2018-12-01')
+        create(:school_term, year: '2018', term: :second_semester)
       end
       let(:course_1) do
         create(:course, name: '001', school_term: current_term, subject: test_subject)
@@ -34,13 +33,12 @@ describe V1::CoursesController do
         index_request
         expect(response_body.first.keys)
           .to match_array(%w[id name vacancies inscribed? subject lesson_schedules
-                             teacher_courses])
+                             teacher_courses accept_free_condition_exam])
       end
 
       context 'with courses from other school terms' do
         let(:past_term) do
-          create(:school_term, year: '2018', term: :first_semester, date_start: '2018-03-01',
-                               date_end: '2018-07-01')
+          create(:school_term, year: '2018', term: :first_semester)
         end
 
         before { create(:course, name: '003', school_term: past_term, subject: test_subject) }
@@ -100,11 +98,40 @@ describe V1::CoursesController do
     end
   end
 
+  describe '#update' do
+    let(:date_start) { Date.new(2018, 8, 16) }
+    let(:term) do
+      create(:school_term, year: Date.current.year, date_start: date_start,
+                           term: SchoolTerm.current_term)
+    end
+    let(:course_1) { create(:course, school_term: term, accept_free_condition_exam: false) }
+    let(:teacher_course) { create(:teacher_course, course: course_1) }
+    let(:update_request) do
+      patch :update, params: { id: course_1.id, course: { accept_free_condition_exam: true } }
+    end
+
+    context 'when no teacher is logged in' do
+      it 'returns unauthorized' do
+        update_request
+        expect(response).to have_http_status :unauthorized
+      end
+    end
+
+    context 'when a teacher is logged in' do
+      before { sign_in teacher_course.teacher }
+
+      it 'changes the free_condition attribute' do
+        update_request
+        expect(course_1.reload.accept_free_condition_exam).to be true
+      end
+    end
+  end
+
   describe '#enrolments' do
     let(:date_start) { Date.new(2018, 8, 16) }
     let(:term) do
       create(:school_term, year: Date.current.year, date_start: date_start,
-                           date_end: date_start + 4.months, term: SchoolTerm.current_term)
+                           term: SchoolTerm.current_term)
     end
     let(:course_1) { create(:course, school_term: term) }
     let(:teacher_course) { create(:teacher_course, course: course_1) }
@@ -119,7 +146,7 @@ describe V1::CoursesController do
 
     context 'when there is a teacher logged in' do
       before do
-        Timecop.freeze(date_start - 8.days)
+        Timecop.freeze(date_start - 4.days)
         sign_in teacher_course.teacher
       end
 
@@ -146,6 +173,43 @@ describe V1::CoursesController do
         it 'returns unprocessable entity' do
           enrolments_request
           expect(response).to have_http_status :unprocessable_entity
+        end
+      end
+    end
+  end
+
+  describe '#exams' do
+    let(:date_start) { Date.new(2018, 8, 16) }
+    let(:term) do
+      create(:school_term, year: Date.current.year, date_start: date_start,
+                           term: SchoolTerm.current_term)
+    end
+    let(:course_1) { create(:course, school_term: term) }
+    let(:student) { create(:student) }
+    let(:exams_request) { get :exams, params: { course_id: course_1.id } }
+
+    before { create(:exam, course: course_1) }
+
+    context 'when there is no user logged in' do
+      it 'returns unauthorized' do
+        exams_request
+        expect(response).to have_http_status :unauthorized
+      end
+    end
+
+    context 'when there is a student logged in' do
+      before { sign_in student }
+
+      context 'with a course with exams' do
+        it 'returns an array with exams' do
+          exams_request
+          expect(response_body.size).to eq 1
+        end
+
+        it 'returns the right keys' do
+          exams_request
+          expect(response_body.first.keys)
+            .to match_array(%w[id exam_type date_time final_exam_week course classroom])
         end
       end
     end

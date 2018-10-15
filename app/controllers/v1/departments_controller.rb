@@ -1,6 +1,6 @@
 module V1
   class DepartmentsController < ApplicationController
-    before_action -> { authenticate_user!('DepartmentStaff') }, only: [:my_courses]
+    before_action -> { authenticate_user!(['DepartmentStaff']) }, only: [:my_courses]
 
     def my_courses
       render json: @current_user.department.subjects,

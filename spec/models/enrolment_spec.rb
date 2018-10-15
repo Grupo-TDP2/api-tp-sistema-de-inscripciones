@@ -6,11 +6,20 @@ describe Enrolment do
   context 'when there is a current school term' do
     before do
       create(:school_term, year: Date.current.year, date_start: date_start,
-                           date_end: date_start + 4.months, term: SchoolTerm.current_term)
+                           term: SchoolTerm.current_term)
     end
 
     context 'when trying to enrol with a date lower than 7 days before the next term' do
-      before { Timecop.freeze(date_start - 5.days) }
+      before { Timecop.freeze(date_start - 8.days) }
+
+      it 'raises error' do
+        enrolment = build(:enrolment)
+        expect { enrolment.save! }.to raise_error(ActiveRecord::RecordInvalid)
+      end
+    end
+
+    context 'when trying to enrol after the term has started' do
+      before { Timecop.freeze(date_start + 1.day) }
 
       it 'raises error' do
         enrolment = build(:enrolment)
@@ -19,7 +28,7 @@ describe Enrolment do
     end
 
     context 'when trying to enrol with a date greater than 7 days before the next term' do
-      before { Timecop.freeze(date_start - 8.days) }
+      before { Timecop.freeze(date_start - 4.days) }
 
       it { is_expected.to validate_presence_of(:type) }
       it do
@@ -32,11 +41,39 @@ describe Enrolment do
         expect(enrolment.valid?).to be true
       end
 
+      context 'when it is evaluated and has no qualification' do
+        it 'cannot be updated' do
+          enrolment = build(:enrolment, status: :approved)
+          enrolment.save
+          expect(enrolment.errors.full_messages.last)
+            .to match(/Final qualification no puede estar en blanco/)
+        end
+      end
+
+      context 'with a qualification higher than 10' do
+        it 'cannot be updated' do
+          enrolment = build(:enrolment, final_qualification: 11)
+          enrolment.save
+          expect(enrolment.errors.full_messages.last)
+            .to match(/Final qualification debe ser menor que o igual a 10/)
+        end
+      end
+
+      context 'with a qualification less than 2' do
+        it 'cannot be updated' do
+          enrolment = build(:enrolment, final_qualification: 1)
+          enrolment.save
+          expect(enrolment.errors.full_messages.last)
+            .to match(/Final qualification debe ser mayor que o igual a 2/)
+        end
+      end
+
       context 'when the student has another enrolment for the same subject' do
         let(:student) { create(:student) }
         let(:subject) { create(:subject) }
-        let(:course_1) { create(:course, subject: subject) }
-        let(:course_2) { create(:course, subject: subject) }
+        let(:school_term) { create(:school_term) }
+        let(:course_1) { create(:course, subject: subject, school_term: school_term) }
+        let(:course_2) { create(:course, subject: subject, school_term: school_term) }
 
         before { create(:enrolment, student: student, course: course_1) }
 

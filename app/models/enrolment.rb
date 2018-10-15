@@ -1,7 +1,11 @@
 class Enrolment < ApplicationRecord
   self.inheritance_column = :_type_disabled # So that we can use the :type column
   validates :type, presence: true
+  validates :final_qualification, presence: true, if: :evaluated?
   validates :student_id, uniqueness: { scope: :course_id, case_sensitive: false }
+  validates :final_qualification, numericality: { only_integer: true, greater_than_or_equal_to: 2,
+                                                  less_than_or_equal_to: 10 },
+                                  if: :final_qualification
   validate :valid_enrolment_date
   validate :unique_student_enrolment
 
@@ -9,12 +13,14 @@ class Enrolment < ApplicationRecord
   belongs_to :course
 
   enum type: { normal: 0, conditional: 1 }
+  enum status: { not_evaluated: 0, approved: 1, disapproved: 2 }
 
   def valid_enrolment_date
     errors.add(:created_at, 'must belong to some school term') if
       SchoolTerm.current_school_term.blank?
-    errors.add(:created_at, 'cannot be less than 7 days before the next school term.') if
-      SchoolTerm.current_school_term.date_start - 7.days < Time.current
+    start_term = SchoolTerm.current_school_term.date_start
+    errors.add(:created_at, 'must be in the previous week of the start of the school term.') unless
+      Time.current.between?(start_term - 1.week, start_term)
   end
 
   def unique_student_enrolment
@@ -22,5 +28,9 @@ class Enrolment < ApplicationRecord
     student_enrolments = Enrolment.where(student: student)
     errors.add(:student_id, 'cannot be enrolled in more than one course per subject') if
       student_enrolments.any? { |enrolment| subject_courses_ids.include?(enrolment.course_id) }
+  end
+
+  def evaluated?
+    approved? || disapproved?
   end
 end
