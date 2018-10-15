@@ -1,6 +1,6 @@
 module V1
   class SchoolTermsController < ApplicationController
-    before_action -> { authenticate_user!('Admin') }
+    before_action -> { authenticate_user!(['Admin']) }
     def index
       render json: school_terms, status: :ok
     end

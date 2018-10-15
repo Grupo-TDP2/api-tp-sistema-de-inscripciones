@@ -6,8 +6,8 @@ describe V1::SchoolTermsController do
     let(:school_term_request) do
       post :create, params:  { school_term: { term: :first_semester,
                                               year: 2020,
-                                              date_start: '2020-03-01',
-                                              date_end: '2020-07-01' } }
+                                              date_start: '2020-03-13',
+                                              date_end: '2020-07-03' } }
     end
     let(:wrong_school_term_request) do
       post :create, params:  { school_term: { term: :first_semester,
@@ -50,7 +50,11 @@ describe V1::SchoolTermsController do
   end
 
   describe '#index' do
-    let(:school_term) { create(:school_term) }
+    let(:school_term) { create(:school_term,
+                                year: '2018',
+                                term: :second_semester,
+                                date_start: '2018-08-19',
+                                date_end: '2018-12-09') }
     let(:current_admin) { create(:admin) }
     let(:index_request) do
       get :index
@@ -68,8 +72,8 @@ describe V1::SchoolTermsController do
 
       context 'when there is one school term' do
         before do
-          create(:school_term, year: '2018', term: :second_semester, date_start: '2018-08-01',
-                               date_end: '2018-12-01')
+          create(:school_term, year: '2018', term: :second_semester, date_start: '2018-08-19',
+                               date_end: '2018-12-09')
         end
         it 'returns http status ok' do
           index_request
@@ -89,10 +93,10 @@ describe V1::SchoolTermsController do
 
       context 'when there are two school terms' do
         before do
-          create(:school_term, year: '2018', term: :second_semester, date_start: '2018-08-01',
-                               date_end: '2018-12-01')
-          create(:school_term, year: '2018', term: :first_semester, date_start: '2018-03-01',
-                               date_end: '2018-07-01')
+          create(:school_term, year: '2018', term: :second_semester, date_start: '2018-08-19',
+                               date_end: '2018-12-09')
+          create(:school_term, year: '2018', term: :first_semester, date_start: '2018-03-13',
+                               date_end: '2018-07-03')
         end
         it 'returns http status ok' do
           index_request
@@ -114,8 +118,8 @@ describe V1::SchoolTermsController do
 
   describe '#show' do
     let(:school_term) do
-      create(:school_term, year: '2018', term: :first_semester,
-                           date_start: '2018-08-01', date_end: '2018-12-01')
+      create(:school_term, year: '2018', term: :first_semester, date_start: '2018-03-13',
+                           date_end: '2018-07-03')
     end
     let(:current_admin) { create(:admin) }
     let(:show_request) do
@@ -134,8 +138,8 @@ describe V1::SchoolTermsController do
 
       context 'when there is one school term' do
         before do
-          create(:school_term, year: '2018', term: :second_semester, date_start: '2018-08-01',
-                               date_end: '2018-12-01')
+          create(:school_term, year: '2018', term: :second_semester, date_start: '2018-08-19',
+                               date_end: '2018-12-09')
         end
 
         it 'returns http status ok' do
@@ -151,8 +155,8 @@ describe V1::SchoolTermsController do
       end
       context 'when there are two school terms' do
         before do
-          create(:school_term, year: '2019', term: :second_semester, date_start: '2019-08-01',
-                               date_end: '2019-12-01')
+          create(:school_term, year: '2019', term: :second_semester, date_start: '2019-08-19',
+                               date_end: '2019-12-09')
         end
         it 'returns the rigth school term' do
           show_request
@@ -200,8 +204,8 @@ describe V1::SchoolTermsController do
       context 'when there are two school terms' do
         before do
           school_term
-          create(:school_term, year: '2018', term: :first_semester, date_start: '2018-03-01',
-                               date_end: '2018-07-01')
+          create(:school_term, year: '2018', term: :first_semester, date_start: '2018-03-13',
+                               date_end: '2018-07-03')
         end
         it 'returns http status ok' do
           delete_request
