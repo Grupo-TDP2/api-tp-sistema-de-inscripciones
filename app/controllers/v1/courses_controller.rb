@@ -36,6 +36,7 @@ module V1
     def destroy
       return no_permissions unless staff_from_department?
       course = Course.find(params[:id])
+      byebug
       if course.destroy
         head :ok
       else
@@ -75,7 +76,7 @@ module V1
     private
 
     def subject
-      @subject ||= Subject.find(params[:subject_id])
+      @subject ||= Subject.find(params[:subject_id] || params[:course][:subject_id])
     end
 
     def course
@@ -122,7 +123,7 @@ module V1
     end
 
     def course_params
-      params.require(:course).require(:name, :vacancies, :subject_id, :school_term_id)
+      params.require(:course).permit(:name, :vacancies, :subject_id, :school_term_id)
     end
   end
 end
