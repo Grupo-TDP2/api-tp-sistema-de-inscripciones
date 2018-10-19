@@ -15,6 +15,7 @@ module V1
     end
 
     def create
+      return wrong_subject_for_department unless subject_from_department?
       course = Course.new(course_params)
       if course.save
         render json: course, status: :created
@@ -85,6 +86,10 @@ module V1
       @current_user.department == course.subject.department
     end
 
+    def subject_from_department?
+      @current_user.department == subject.department
+    end
+
     def no_permissions
       render json: { error: 'No se puede modificar un curso de otro departamento' },
              status: :forbidden
@@ -111,8 +116,13 @@ module V1
              status: :unprocessable_entity
     end
 
+    def wrong_subject_for_department
+      render json: { error: 'No es posible crear un curso con una materia de otro departamento' },
+             status: :unprocessable_entity
+    end
+
     def course_params
-      params.require(:course).permit(:name, :vacancies)
+      params.require(:course).require(:name, :vacancies, :subject_id, :school_term_id)
     end
   end
 end
