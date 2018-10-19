@@ -1,6 +1,37 @@
 require 'rails_helper'
 
 describe V1::ImportFilesController do
+  describe '#index' do
+    let(:index_request) { get :index }
+
+    context 'when there is no admin logged in' do
+      it 'returns http status unauthorized' do
+        index_request
+        expect(response).to have_http_status :unauthorized
+      end
+    end
+
+    context 'when there is an admin logged in' do
+      before do
+        ImportFile.create(model: :student, filename: 'test.csv', rows_successfuly_processed: 0,
+                          rows_unsuccessfuly_processed: 0)
+        sign_in create(:admin)
+      end
+
+      it 'returns the import files' do
+        index_request
+        expect(response_body.length).to eq 1
+      end
+
+      it 'returns the right keys' do
+        index_request
+        expect(response_body.first.keys)
+          .to match_array(%w[id model filename rows_successfuly_processed
+                             rows_unsuccessfuly_processed created_at updated_at])
+      end
+    end
+  end
+
   describe '#create' do
     let(:admin) { create(:admin) }
     let(:create_request) do
