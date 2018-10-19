@@ -19,7 +19,7 @@ module V1
       if course.save
         render json: course, status: :created
       else
-        render json: course.errors.full_messages, status: :unprocessable_entity
+        render json: { errors: course.errors.full_messages }, status: :unprocessable_entity
       end
     end
 
