@@ -28,7 +28,7 @@ module V1
       if course
         render json: course, status: :ok
       else
-        render json: course.errors.full_messages, status: :unprocessable_entity
+        render json: { errors: course.errors.full_messages }, status: :unprocessable_entity
       end
     end
 
@@ -38,7 +38,7 @@ module V1
       if course.destroy
         head :ok
       else
-        render json: course.errors.full_messages, status: :unprocessable_entity
+        render json: { errors: course.errors.full_messages }, status: :unprocessable_entity
       end
     end
 
