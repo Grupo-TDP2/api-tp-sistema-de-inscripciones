@@ -11,8 +11,8 @@ class Enrolment < ApplicationRecord
                                                   greater_than_or_equal_to: 2,
                                                   less_than_or_equal_to: 10 },
                                   if: :final_qualification
-  validate :valid_enrolment_date
-  validate :unique_student_enrolment
+  validate :valid_enrolment_date, on: :create
+  validate :unique_student_enrolment, on: :create
 
   belongs_to :student
   belongs_to :course

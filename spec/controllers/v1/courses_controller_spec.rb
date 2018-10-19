@@ -160,7 +160,9 @@ describe V1::CoursesController do
 
         it 'returns the right keys' do
           enrolments_request
-          expect(response_body.first.keys).to match_array(%w[id type created_at student course])
+          expect(response_body.first.keys)
+            .to match_array(%w[id type status partial_qualification final_qualification
+                               created_at student course])
         end
       end
 
