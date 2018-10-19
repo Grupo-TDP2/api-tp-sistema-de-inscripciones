@@ -1,7 +1,8 @@
 module V1
   class CoursesController < ApplicationController
     serialization_scope :current_user
-    before_action -> { authenticate_user!(['DepartmentStaff']) }, only: %i[associate_teacher create show destroy]
+    before_action -> { authenticate_user!(['DepartmentStaff']) }, only: %i[associate_teacher
+                                                                           create show destroy]
     before_action -> { authenticate_user!(['Teacher']) }, only: %i[enrolments update]
     before_action -> { authenticate_user!(['Student']) }, only: [:index]
     before_action -> { authenticate_user!(%w[Student Teacher DepartmentStaff]) }, only: [:exams]
