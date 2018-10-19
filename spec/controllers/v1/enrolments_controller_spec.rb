@@ -72,4 +72,39 @@ describe V1::EnrolmentsController do
       end
     end
   end
+
+  describe '#update' do
+    let(:date_start) { Date.new(2018, 8, 16) }
+    let(:term) do
+      create(:school_term, year: Date.current.year, date_start: date_start,
+                           term: SchoolTerm.current_term)
+    end
+    let(:course_1) { create(:course, school_term: term) }
+    let(:teacher_course) { create(:teacher_course, course: course_1) }
+    let(:enrolment) do
+      Timecop.freeze(date_start - 4.days) do
+        create(:enrolment, course: course_1, status: :not_evaluated)
+      end
+    end
+    let(:teacher) { teacher_course.teacher }
+    let(:enrolment_request) do
+      patch :update, params: { course_id: course_1.id, id: enrolment.id,
+                               enrolment: { status: :approved, partial_qualification: 8 } }
+    end
+
+    context 'when there is no teacher logged in' do
+      it 'returns unauthorized' do
+        enrolment_request
+        expect(response).to have_http_status :unauthorized
+      end
+    end
+
+    context 'when there is a teacher logged in' do
+      before { sign_in teacher }
+      it 'updates the enrolment' do
+        enrolment_request
+        expect(response_body['status']).to eq 'approved'
+      end
+    end
+  end
 end

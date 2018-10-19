@@ -32,6 +32,7 @@ Rails.application.routes.draw do
           get :courses, to: 'teachers#my_courses'
           resources :courses, only: [:update] do
             get :enrolments
+            resources :enrolments, only: [:update]
             get :exams
             resources :exams, only: [:destroy]
             post :exams, to: 'exams#create'
