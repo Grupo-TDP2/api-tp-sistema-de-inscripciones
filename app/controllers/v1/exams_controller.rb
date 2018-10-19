@@ -1,5 +1,6 @@
 module V1
   class ExamsController < ApplicationController
+    serialization_scope :current_user
     before_action -> { authenticate_user!(['Teacher']) }, only: %i[create destroy]
 
     def destroy

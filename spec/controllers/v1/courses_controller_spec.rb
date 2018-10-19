@@ -33,7 +33,7 @@ describe V1::CoursesController do
         index_request
         expect(response_body.first.keys)
           .to match_array(%w[id name vacancies inscribed? subject lesson_schedules
-                             teacher_courses accept_free_condition_exam])
+                             teacher_courses accept_free_condition_exam enrolment])
       end
 
       context 'with courses from other school terms' do
@@ -211,7 +211,7 @@ describe V1::CoursesController do
         it 'returns the right keys' do
           exams_request
           expect(response_body.first.keys)
-            .to match_array(%w[id exam_type date_time final_exam_week course classroom])
+            .to match_array(%w[id exam_type date_time final_exam_week course inscribed? classroom])
         end
       end
     end
