@@ -3,8 +3,9 @@ module V1
     before_action -> { authenticate_user!(['Student']) }, only: %i[index create destroy]
 
     def index
-      render json: @current_user.student_exams, include: ['student', 'exam.classroom',
-                                                          'exam.classroom.building'], status: :ok
+      render json: @current_user.student_exams,
+             include: ['student', 'exam.classroom', 'exam.classroom.building', 'exam.course',
+                       'exam.course.subject'], status: :ok
     end
 
     def create
