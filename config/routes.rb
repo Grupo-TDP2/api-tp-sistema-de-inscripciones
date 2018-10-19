@@ -43,7 +43,7 @@ Rails.application.routes.draw do
       collection do
         scope :me do
           get :courses, to: 'departments#my_courses'
-          resources :courses, only: [] do
+          resources :courses, only: %i[create show destroy] do
             get :exams
           end
           resources :subjects, only: [] do
