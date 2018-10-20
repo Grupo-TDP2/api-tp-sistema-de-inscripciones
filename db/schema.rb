@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181015153720) do
+ActiveRecord::Schema.define(version: 20181019153258) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -133,6 +133,15 @@ ActiveRecord::Schema.define(version: 20181015153720) do
   create_table "final_exam_weeks", force: :cascade do |t|
     t.date "date_start_week", null: false
     t.string "year", default: "2018", null: false
+  end
+
+  create_table "import_files", force: :cascade do |t|
+    t.string "filename", null: false
+    t.integer "model", null: false
+    t.integer "rows_successfuly_processed", null: false
+    t.integer "rows_unsuccessfuly_processed", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "lesson_schedules", force: :cascade do |t|
