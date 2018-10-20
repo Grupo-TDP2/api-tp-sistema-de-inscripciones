@@ -36,6 +36,6 @@ class Enrolment < ApplicationRecord
   end
 
   def evaluated?
-    approved? || disapproved?
+    approved?
   end
 end
