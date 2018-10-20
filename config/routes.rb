@@ -11,6 +11,7 @@ Rails.application.routes.draw do
     resources :sessions, only: [:create]
     resources :classrooms, only: [:index]
     resources :final_exam_weeks, only: [:index]
+    resources :import_files, only: [:create]
     resources :course_of_studies, only: [:index] do
       resources :subjects, only: [:index] do
         resources :courses, only: [:index] do

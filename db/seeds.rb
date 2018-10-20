@@ -113,21 +113,18 @@ teacher_2 = Teacher.create!(email: 'teacher2@example.com', password: '12345678',
 
 student_1 = Student.create!(email: 'leandro.masello@example.com', password: '12345678',
                             first_name: 'Leandro', last_name: 'Masello',
-                            personal_document_number: '35000000', school_document_number: '93106',
-                            phone_number: '12345678', birthdate: '1991-08-06',
-                            address: 'Abbey Road 123')
+                            school_document_number: '93106', username: 'leandro.masello',
+                            priority: 1)
 
 student_2 = Student.create!(email: 'juan.costamagna@example.com', password: '12345678',
                             first_name: 'Juan', last_name: 'Costamagna',
-                            personal_document_number: '35000001', school_document_number: '93107',
-                            phone_number: '12345679', birthdate: '1991-08-08',
-                            address: 'Abbey Road 1234')
+                            school_document_number: '93107', username: 'juan.costamagna',
+                            priority: 1)
 
 student_3 = Student.create!(email: 'enzo.perez@example.com', password: '12345678',
                             first_name: 'Enzo', last_name: 'Perez',
-                            personal_document_number: '35000002', school_document_number: '93108',
-                            phone_number: '12345670', birthdate: '1991-08-09',
-                            address: 'Abbey Road 12345')
+                            school_document_number: '93108', username: 'enzo.perez',
+                            priority: 2)
 
 DepartmentStaff.create!(email: 'staff_informatica@example.com', password: '12345678',
                         department: department_1)
