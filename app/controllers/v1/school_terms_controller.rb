@@ -10,7 +10,7 @@ module V1
       if school_term.save
         render json: school_term, status: :created
       else
-        render json: school_term.errors.full_messages, status: :unprocessable_entity
+        render json: { errors: school_term.errors.full_messages }, status: :unprocessable_entity
       end
     end
 
@@ -24,7 +24,7 @@ module V1
       if school_term.destroy
         head :ok
       else
-        render json: school_term.errors.full_messages, status: :unprocessable_entity
+        render json: { errors: school_term.errors.full_messages }, status: :unprocessable_entity
       end
     end
 

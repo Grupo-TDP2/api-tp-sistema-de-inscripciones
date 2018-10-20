@@ -1,7 +1,8 @@
 module V1
-  class CoursesController < ApplicationController
+  class CoursesController < ApplicationController # rubocop:disable Metrics/ClassLength
     serialization_scope :current_user
-    before_action -> { authenticate_user!(['DepartmentStaff']) }, only: [:associate_teacher]
+    before_action -> { authenticate_user!(['DepartmentStaff']) }, only: %i[associate_teacher
+                                                                           create show destroy]
     before_action -> { authenticate_user!(['Teacher']) }, only: %i[enrolments update]
     before_action -> { authenticate_user!(['Student']) }, only: [:index]
     before_action -> { authenticate_user!(%w[Student Teacher DepartmentStaff]) }, only: [:exams]
@@ -11,6 +12,35 @@ module V1
              include: ['lesson_schedules', 'lesson_schedules.classroom',
                        'lesson_schedules.classroom.building', 'subject', 'teacher_courses',
                        'teacher_courses.teacher'], status: :ok
+    end
+
+    def create
+      return wrong_subject_for_department unless subject_from_department?
+      course = Course.new(course_params)
+      if course.save
+        render json: course, status: :created
+      else
+        render json: { errors: course.errors.full_messages }, status: :unprocessable_entity
+      end
+    end
+
+    def show
+      return no_permissions unless staff_from_department?
+      if course
+        render json: course, status: :ok
+      else
+        render json: { errors: course.errors.full_messages }, status: :unprocessable_entity
+      end
+    end
+
+    def destroy
+      return no_permissions unless staff_from_department?
+      course = Course.find(params[:id])
+      if course.delete
+        head :ok
+      else
+        render json: { errors: course.errors.full_messages }, status: :unprocessable_entity
+      end
     end
 
     def update
@@ -45,7 +75,7 @@ module V1
     private
 
     def subject
-      @subject ||= Subject.find(params[:subject_id])
+      @subject ||= Subject.find(params[:subject_id] || params[:course][:subject_id])
     end
 
     def course
@@ -54,6 +84,10 @@ module V1
 
     def staff_from_department?
       @current_user.department == course.subject.department
+    end
+
+    def subject_from_department?
+      @current_user.department == subject.department
     end
 
     def no_permissions
@@ -80,6 +114,15 @@ module V1
     def wrong_course_for_teacher
       render json: { error: 'El docente no se relaciona con el curso seleccionado' },
              status: :unprocessable_entity
+    end
+
+    def wrong_subject_for_department
+      render json: { error: 'No es posible crear un curso con una materia de otro departamento' },
+             status: :unprocessable_entity
+    end
+
+    def course_params
+      params.require(:course).permit(:name, :vacancies, :subject_id, :school_term_id)
     end
   end
 end
