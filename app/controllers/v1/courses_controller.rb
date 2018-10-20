@@ -1,5 +1,5 @@
 module V1
-  class CoursesController < ApplicationController
+  class CoursesController < ApplicationController # rubocop:disable Metrics/ClassLength
     serialization_scope :current_user
     before_action -> { authenticate_user!(['DepartmentStaff']) }, only: %i[associate_teacher
                                                                            create show destroy]
@@ -35,8 +35,9 @@ module V1
 
     def destroy
       return no_permissions unless staff_from_department?
+      byebug
       course = Course.find(params[:id])
-      if course.destroy
+      if course.delete
         head :ok
       else
         render json: { errors: course.errors.full_messages }, status: :unprocessable_entity

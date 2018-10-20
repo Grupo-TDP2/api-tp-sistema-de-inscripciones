@@ -332,7 +332,7 @@ describe V1::CoursesController do
     context 'when the department is logged in' do
       before do
         sign_in current_department
-        create(:course, subject: test_subject)
+        course_test
       end
 
       context 'when we delete course' do
