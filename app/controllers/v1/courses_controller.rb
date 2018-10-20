@@ -39,7 +39,7 @@ module V1
 
     def exams
       render json: course.exams, include: ['classroom', 'classroom.building', 'final_exam_week',
-                                           'course']
+                                           'course', 'course.teacher_courses.teacher']
     end
 
     private

@@ -5,7 +5,8 @@ module V1
     def index
       render json: @current_user.student_exams,
              include: ['student', 'exam.classroom', 'exam.classroom.building', 'exam.course',
-                       'exam.course.subject'], status: :ok
+                       'exam.course.subject', 'exam.course.subject.department',
+                       'exam.course.teacher_courses', 'exam.course.teacher_courses.teacher']
     end
 
     def create
