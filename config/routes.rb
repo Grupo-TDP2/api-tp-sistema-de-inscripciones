@@ -47,7 +47,7 @@ Rails.application.routes.draw do
           resources :courses, only: [] do
             get :exams
           end
-          resources :subjects, only: [] do
+          resources :subjects, only: [:index] do
             resources :courses, only: [] do
               post :teachers, to: 'courses#associate_teacher'
             end

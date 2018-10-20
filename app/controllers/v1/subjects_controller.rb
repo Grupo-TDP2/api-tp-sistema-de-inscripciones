@@ -1,9 +1,14 @@
 module V1
   class SubjectsController < ApplicationController
-    before_action -> { authenticate_user!(['Student']) }, only: [:index]
+    before_action -> { authenticate_user!(%w[Student DepartmentStaff]) }, only: [:index]
 
     def index
-      render json: course_of_study.subjects, status: :ok
+      subjects = if @current_user.is_a? Student
+                   course_of_study.subjects
+                 else
+                   @current_user.department.subjects
+                 end
+      render json: subjects, status: :ok
     end
 
     private
