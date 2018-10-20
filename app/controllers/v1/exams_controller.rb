@@ -1,7 +1,7 @@
 module V1
   class ExamsController < ApplicationController
     serialization_scope :current_user
-    before_action -> { authenticate_user!(['Teacher']) }, only: %i[create destroy]
+    before_action -> { authenticate_user!(%w[Admin Teacher]) }, only: %i[create destroy]
 
     def destroy
       return invalid_course unless teacher_course_exist
@@ -39,6 +39,7 @@ module V1
     end
 
     def teacher_course_exist
+      return true if @current_user.is_a? Admin
       TeacherCourse.exists?(course: course, teacher: @current_user)
     end
   end

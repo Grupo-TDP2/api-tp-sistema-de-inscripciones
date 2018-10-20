@@ -1,7 +1,7 @@
 module V1
   class EnrolmentsController < ApplicationController
     before_action -> { authenticate_user!(['Student']) }, only: [:create]
-    before_action -> { authenticate_user!(['Teacher']) }, only: [:update]
+    before_action -> { authenticate_user!(%w[Admin Teacher]) }, only: [:update]
 
     def create
       enrolment = Enrolment.new(course: course, student: @current_user)
@@ -40,6 +40,7 @@ module V1
     end
 
     def teacher_course_exist
+      return true if @current_user.is_a? Admin
       TeacherCourse.exists?(course: course, teacher: @current_user)
     end
 

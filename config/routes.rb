@@ -41,7 +41,12 @@ Rails.application.routes.draw do
         end
       end
     end
-    resources :departments, only: [] do
+    resources :departments, only: [:index] do
+      resources :subjects, only: [:index]
+      resources :courses, only: [] do
+        resources :enrolments, only: [:update]
+        resources :exams, only: %i[create destroy]
+      end
       collection do
         scope :me do
           get :courses, to: 'departments#my_courses'

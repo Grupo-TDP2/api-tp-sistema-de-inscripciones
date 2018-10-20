@@ -24,10 +24,10 @@ module V1
     end
 
     def user
-      @user ||= Teacher.find_by(email: authenticate_params[:email]) ||
-                Student.find_by(email: authenticate_params[:email]) ||
+      @user ||= Admin.find_by(email: authenticate_params[:email]) ||
                 DepartmentStaff.find_by(email: authenticate_params[:email]) ||
-                Admin.find_by(email: authenticate_params[:email])
+                Teacher.find_by(email: authenticate_params[:email]) ||
+                Student.find_by(email: authenticate_params[:email])
     end
   end
 end
