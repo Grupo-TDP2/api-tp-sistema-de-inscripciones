@@ -32,7 +32,7 @@ describe V1::CoursesController do
       it 'returns the right keys' do
         index_request
         expect(response_body.first.keys)
-          .to match_array(%w[id name vacancies inscribed? subject lesson_schedules
+          .to match_array(%w[id name vacancies inscribed? subject lesson_schedules able_to_enrol?
                              teacher_courses accept_free_condition_exam enrolment])
       end
 
