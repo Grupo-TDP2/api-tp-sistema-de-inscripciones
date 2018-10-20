@@ -4,8 +4,7 @@ describe V1::ImportFilesController do
   describe '#create' do
     let(:admin) { create(:admin) }
     let(:create_request) do
-      post :create, params: { import_file: { file: 'abc.csv', filename: 'abc.csv',
-                                             model: model } }
+      post :create, params: { file: 'abc.csv', filename: 'abc.csv', model: model }
     end
 
     context 'when there is no admin logged in' do

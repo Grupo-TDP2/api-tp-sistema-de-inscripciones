@@ -15,7 +15,7 @@ module V1
     private
 
     def import_file_params
-      params.require(:import_file).permit(:file, :filename, :model)
+      params.permit(:file, :filename, :model)
     end
   end
 end
