@@ -36,7 +36,6 @@ module V1
     def destroy
       return no_permissions unless staff_from_department?
       course = Course.find(params[:id])
-      byebug
       if course.destroy
         head :ok
       else
