@@ -1,6 +1,59 @@
 require 'rails_helper'
 
 describe V1::EnrolmentsController do
+  describe '#index' do
+    let(:date_start) { Date.new(2018, 8, 16) }
+    let(:term) do
+      create(:school_term, year: Date.current.year, date_start: date_start,
+                           term: SchoolTerm.current_term)
+    end
+    let(:course_1) { create(:course, school_term: term) }
+    let(:teacher_course) { create(:teacher_course, course: course_1) }
+    let(:index_request) { get :index, params: { course_id: course_1.id } }
+
+    context 'when there is no teacher signed in' do
+      it 'returns unauthorized' do
+        index_request
+        expect(response).to have_http_status :unauthorized
+      end
+    end
+
+    context 'when there is a teacher logged in' do
+      before do
+        Timecop.freeze(date_start - 4.days)
+        sign_in teacher_course.teacher
+      end
+
+      context 'when the course has two enrolments' do
+        before { create_list(:enrolment, 2, course: teacher_course.course) }
+
+        it 'returns two enrolments' do
+          index_request
+          expect(response_body.size).to eq 2
+        end
+
+        it 'returns the right keys' do
+          index_request
+          expect(response_body.first.keys)
+            .to match_array(%w[id type status partial_qualification final_qualification
+                               created_at student course])
+        end
+      end
+
+      context 'when the course does not belong to the teacher' do
+        let(:department) { create(:department, code: '99') }
+        let(:subject) { create(:subject, department: department) }
+        let(:course_2) { create(:course, subject: subject, school_term: term) }
+        let(:index_request) { get :index, params: { course_id: course_2.id } }
+
+        it 'returns unprocessable entity' do
+          index_request
+          expect(response).to have_http_status :unprocessable_entity
+        end
+      end
+    end
+  end
+
   describe '#create' do
     let(:current_student) { create(:student) }
     let(:course_of_study) { create(:course_of_study) }

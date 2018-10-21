@@ -16,7 +16,8 @@ describe Exam do
   context 'when creating an exam with hour lower than 8 in the morning' do
     let(:final_exam_week) { FinalExamWeek.last.presence || create(:final_exam_week) }
     let!(:school_term) do
-      create(:school_term, year: Date.current.year, term: SchoolTerm.current_term)
+      SchoolTerm.last.presence || create(:school_term, year: Date.current.year,
+                                                       term: SchoolTerm.current_term)
     end
     let(:course) { create(:course, school_term: school_term) }
     let(:exam) do
