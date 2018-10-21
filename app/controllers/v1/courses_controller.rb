@@ -15,12 +15,13 @@ module V1
     end
 
     def create
-      return wrong_subject_for_department unless subject_from_department?
+      return no_permissions unless subject_from_department?
       course = Course.new(course_params)
-      if course.save
+      begin
+        course.save_with_additional_info(course_additional_params)
         render json: course, status: :created
-      else
-        render json: { errors: course.errors.full_messages }, status: :unprocessable_entity
+      rescue ActiveRecord::RecordInvalid => exception
+        render json: { errors: exception }, status: :unprocessable_entity
       end
     end
 
@@ -36,7 +37,7 @@ module V1
     def destroy
       return no_permissions unless staff_from_department?
       course = Course.find(params[:id])
-      if course.delete
+      if course.destroy
         head :ok
       else
         render json: { errors: course.errors.full_messages }, status: :unprocessable_entity
@@ -90,25 +91,13 @@ module V1
       @current_user.department == subject.department
     end
 
+    def teacher_course_exist
+      TeacherCourse.exists?(course: course, teacher: @current_user)
+    end
+
     def no_permissions
       render json: { error: 'No se puede modificar un curso de otro departamento' },
              status: :forbidden
-    end
-
-    def update_free_condition_params
-      params.require(:course).permit(:accept_free_condition_exam)
-    end
-
-    def course_students_params
-      params.permit(:course_id, :id)
-    end
-
-    def associate_teacher_params
-      params.require(:teacher_course).permit(:teacher_id, :teaching_position)
-    end
-
-    def teacher_course_exist
-      TeacherCourse.exists?(course: course, teacher: @current_user)
     end
 
     def wrong_course_for_teacher
@@ -116,13 +105,21 @@ module V1
              status: :unprocessable_entity
     end
 
-    def wrong_subject_for_department
-      render json: { error: 'No es posible crear un curso con una materia de otro departamento' },
-             status: :unprocessable_entity
+    def course_params
+      params.permit(:name, :vacancies, :subject_id, :school_term_id)
     end
 
-    def course_params
-      params.require(:course).permit(:name, :vacancies, :subject_id, :school_term_id)
+    def course_additional_params
+      params.permit(lesson_schedules: %i[type day hour_start hour_end classroom_id],
+                    teacher_courses: %i[teaching_position teacher_id])
+    end
+
+    def update_free_condition_params
+      params.require(:course).permit(:accept_free_condition_exam)
+    end
+
+    def associate_teacher_params
+      params.require(:teacher_course).permit(:teacher_id, :teaching_position)
     end
   end
 end
