@@ -22,4 +22,16 @@ class Course < ApplicationRecord
   def decrease_vacancies!
     update(vacancies: vacancies - 1) if vacancies.positive?
   end
+
+  def save_with_additional_info(info_params)
+    Course.transaction do
+      save!
+      info_params[:lesson_schedules].map do |lesson_schedule|
+        LessonSchedule.create!(lesson_schedule.merge(course_id: id))
+      end
+      info_params[:teacher_courses].map do |teacher_course|
+        TeacherCourse.create!(teacher_course.merge(course_id: id))
+      end
+    end
+  end
 end

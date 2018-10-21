@@ -43,12 +43,12 @@ es:
     attributes:
       lesson_schedule:
         days:
-          Monday: Lunes
-          Tuesday: Martes
-          Wednesday: Miércoles
-          Thursday: Jueves
-          Friday: Viernes
-          Saturday: Sábado
+          monday: Lunes
+          tuesday: Martes
+          wednesday: Miércoles
+          thursday: Jueves
+          friday: Viernes
+          saturday: Sábado
         types:
           practice: práctica
           theory: teoría

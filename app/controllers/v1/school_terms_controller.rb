@@ -1,6 +1,7 @@
 module V1
   class SchoolTermsController < ApplicationController
-    before_action -> { authenticate_user!(['Admin']) }
+    before_action -> { authenticate_user!(%w[Admin DepartmentStaff]) }, only: [:index]
+    before_action -> { authenticate_user!(%w[Admin]) }, only: %i[create show destroy]
     def index
       render json: school_terms, status: :ok
     end

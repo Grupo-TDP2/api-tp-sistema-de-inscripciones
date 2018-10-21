@@ -75,29 +75,29 @@ course_6 = Course.create!(name: '006', vacancies: 2, subject: subject_3,
 Exam.create!(course: course_3, final_exam_week: week_1,
              date_time: Time.zone.parse('2018-12-12 17:00:00'), classroom: classroom_1)
 
-LessonSchedule.create!(course: course_3, classroom: classroom_1, type: :theory, day: :Monday,
+LessonSchedule.create!(course: course_3, classroom: classroom_1, type: :theory, day: :monday,
                        hour_start: '17:00', hour_end: '19:00')
-LessonSchedule.create!(course: course_3, classroom: classroom_2, type: :practice, day: :Monday,
+LessonSchedule.create!(course: course_3, classroom: classroom_2, type: :practice, day: :monday,
                        hour_start: '19:00', hour_end: '23:00')
-LessonSchedule.create!(course: course_1, classroom: classroom_3, type: :theory, day: :Tuesday,
+LessonSchedule.create!(course: course_1, classroom: classroom_3, type: :theory, day: :tuesday,
                       hour_start: '17:00', hour_end: '19:00')
-LessonSchedule.create!(course: course_1, classroom: classroom_4, type: :practice, day: :Wednesday,
+LessonSchedule.create!(course: course_1, classroom: classroom_4, type: :practice, day: :wednesday,
                       hour_start: '19:00', hour_end: '23:00')
-LessonSchedule.create!(course: course_2, classroom: classroom_1, type: :theory, day: :Thursday,
+LessonSchedule.create!(course: course_2, classroom: classroom_1, type: :theory, day: :thursday,
                        hour_start: '17:00', hour_end: '19:00')
-LessonSchedule.create!(course: course_2, classroom: classroom_2, type: :practice, day: :Thursday,
+LessonSchedule.create!(course: course_2, classroom: classroom_2, type: :practice, day: :thursday,
                        hour_start: '19:00', hour_end: '23:00')
-LessonSchedule.create!(course: course_4, classroom: classroom_3, type: :theory, day: :Friday,
+LessonSchedule.create!(course: course_4, classroom: classroom_3, type: :theory, day: :friday,
                       hour_start: '17:00', hour_end: '19:00')
-LessonSchedule.create!(course: course_4, classroom: classroom_4, type: :practice, day: :Friday,
+LessonSchedule.create!(course: course_4, classroom: classroom_4, type: :practice, day: :friday,
                       hour_start: '19:00', hour_end: '23:00')
-LessonSchedule.create!(course: course_5, classroom: classroom_1, type: :theory, day: :Saturday,
+LessonSchedule.create!(course: course_5, classroom: classroom_1, type: :theory, day: :saturday,
                        hour_start: '7:00', hour_end: '10:00')
-LessonSchedule.create!(course: course_5, classroom: classroom_2, type: :practice, day: :Saturday,
+LessonSchedule.create!(course: course_5, classroom: classroom_2, type: :practice, day: :saturday,
                        hour_start: '10:00', hour_end: '13:00')
-LessonSchedule.create!(course: course_6, classroom: classroom_3, type: :theory, day: :Monday,
+LessonSchedule.create!(course: course_6, classroom: classroom_3, type: :theory, day: :monday,
                       hour_start: '17:00', hour_end: '19:00')
-LessonSchedule.create!(course: course_6, classroom: classroom_4, type: :practice, day: :Tuesday,
+LessonSchedule.create!(course: course_6, classroom: classroom_4, type: :practice, day: :tuesday,
                       hour_start: '19:00', hour_end: '23:00')
 
 

@@ -175,17 +175,25 @@ describe V1::CoursesController do
     let(:another_department) { create(:department) }
     let(:wrong_subject) { create(:subject, name: 'Wrong', department: another_department) }
     let(:school_term) { create(:school_term) }
+    let(:classroom) { create(:classroom) }
+    let(:teacher) { create(:teacher) }
     let(:create_course_request) do
-      post :create, params:  { course: { name: 'Cátedra',
-                                         vacancies: 50,
-                                         school_term_id: school_term.id,
-                                         subject_id: test_subject.id } }
+      post :create, params: {
+        name: 'Cátedra', vacancies: 50, school_term_id: school_term.id,
+        subject_id: test_subject.id,
+        lesson_schedules: [{ type: 'theory', day: 'monday', hour_start: '17:00',
+                             hour_end: '19:00', classroom_id: classroom.id }],
+        teacher_courses: [{ teaching_position: 'course_chief', teacher_id: teacher.id }]
+      }
     end
     let(:wrong_create_course_request) do
-      post :create, params:  { course: { name: 'Cátedra',
-                                         vacancies: 50,
-                                         school_term_id: school_term.id,
-                                         subject_id: wrong_subject.id } }
+      post :create, params: {
+        name: 'Cátedra', vacancies: 50, school_term_id: school_term.id,
+        subject_id: test_subject.id,
+        lesson_schedules: [{ type: 'theory', day: 'monday', hour_start: '20:00',
+                             hour_end: '19:00', classroom_id: classroom.id }],
+        teacher_courses: [{ teaching_position: 'course_chief', teacher_id: teacher.id }]
+      }
     end
 
     context 'with no dept logged in' do
@@ -208,6 +216,7 @@ describe V1::CoursesController do
           expect { create_course_request }.to change(Course, :count).by(1)
         end
       end
+
       context 'when we create a wrong course' do
         it 'returns http status not created' do
           wrong_create_course_request
