@@ -1,11 +1,10 @@
 module V1
-  class CoursesController < ApplicationController # rubocop:disable Metrics/ClassLength
+  class CoursesController < ApplicationController
     serialization_scope :current_user
-    before_action -> { authenticate_user!(['DepartmentStaff']) }, only: %i[associate_teacher
-                                                                           create show destroy]
-    before_action -> { authenticate_user!(['Teacher']) }, only: %i[enrolments update]
+    before_action -> { authenticate_user!(%w[Admin DepartmentStaff]) },
+                  only: %i[associate_teacher create show destroy]
+    before_action -> { authenticate_user!(%w[Admin DepartmentStaff Teacher]) }, only: %i[update]
     before_action -> { authenticate_user!(['Student']) }, only: [:index]
-    before_action -> { authenticate_user!(%w[Student Teacher DepartmentStaff]) }, only: [:exams]
 
     def index
       render json: subject.courses.current_school_term,
@@ -15,7 +14,7 @@ module V1
     end
 
     def create
-      return no_permissions unless subject_from_department?
+      return no_permissions unless subject_from_department? || @current_user.is_a?(Admin)
       course = Course.new(course_params)
       begin
         course.save_with_additional_info(course_additional_params)
@@ -26,7 +25,7 @@ module V1
     end
 
     def show
-      return no_permissions unless staff_from_department?
+      return no_permissions unless staff_from_department? || @current_user.is_a?(Admin)
       if course
         render json: course, status: :ok
       else
@@ -35,7 +34,7 @@ module V1
     end
 
     def destroy
-      return no_permissions unless staff_from_department?
+      return no_permissions unless staff_from_department? || @current_user.is_a?(Admin)
       course = Course.find(params[:id])
       if course.destroy
         head :ok
@@ -45,7 +44,7 @@ module V1
     end
 
     def update
-      return wrong_course_for_teacher unless teacher_course_exist
+      return wrong_course_for_teacher unless teacher_course_exist || @current_user.is_a?(Admin)
       if course.update(update_free_condition_params)
         render json: course
       else
@@ -53,24 +52,14 @@ module V1
       end
     end
 
-    def enrolments
-      return wrong_course_for_teacher unless teacher_course_exist
-      render json: course.enrolments, status: :ok
-    end
-
     def associate_teacher
-      return no_permissions unless staff_from_department?
+      return no_permissions unless staff_from_department? || @current_user.is_a?(Admin)
       teacher_course = TeacherCourse.new(associate_teacher_params.merge(course: course))
       if teacher_course.save
         head :created
       else
         render json: { error: teacher_course.errors.full_messages }, status: :unprocessable_entity
       end
-    end
-
-    def exams
-      render json: course.exams, include: ['classroom', 'classroom.building', 'final_exam_week',
-                                           'course', 'course.teacher_courses.teacher']
     end
 
     private
@@ -88,6 +77,7 @@ module V1
     end
 
     def subject_from_department?
+      return true if @current_user.is_a? Admin
       @current_user.department == subject.department
     end
 

@@ -1,6 +1,6 @@
 module V1
   class ClassroomsController < ApplicationController
-    before_action -> { authenticate_user!(%w[Teacher DepartmentStaff]) }, only: [:index]
+    before_action -> { authenticate_user!(%w[Admin DepartmentStaff Teacher]) }, only: [:index]
 
     def index
       render json: Classroom.all, include: ['building'], status: :ok

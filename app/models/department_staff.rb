@@ -6,12 +6,5 @@ class DepartmentStaff < User
          :recoverable, :rememberable, :validatable
 
   validates :email, :department_id, presence: true
-  validate :unique_email
   belongs_to :department
-
-  def unique_email
-    errors.add(:email, 'is already taken') if Teacher.exists?(email: email) ||
-                                              Student.exists?(email: email) ||
-                                              Admin.exists?(email: email)
-  end
 end
