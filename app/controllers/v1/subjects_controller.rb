@@ -13,7 +13,9 @@ module V1
     private
 
     def source
-      if params[:department_id]
+      if params[:department_id] == 'me'
+        my_department
+      elsif params[:department_id]
         department
       elsif params[:course_of_study_id]
         course_of_study
@@ -22,6 +24,10 @@ module V1
 
     def department
       @department ||= Department.find(params[:department_id])
+    end
+
+    def my_department
+      @department ||= Department.find(@current_user.department.id)
     end
 
     def course_of_study
