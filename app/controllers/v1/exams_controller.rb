@@ -2,7 +2,8 @@ module V1
   class ExamsController < ApplicationController
     serialization_scope :current_user
     before_action -> { authenticate_user!(%w[Admin Teacher]) }, only: %i[create destroy]
-    before_action -> { authenticate_user!(%w[Student Teacher DepartmentStaff]) }, only: [:index]
+    before_action -> { authenticate_user!(%w[Admin Student Teacher DepartmentStaff]) },
+                  only: [:index]
 
     def index
       render json: course.exams, include: ['classroom', 'classroom.building', 'final_exam_week',
