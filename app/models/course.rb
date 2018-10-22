@@ -12,8 +12,8 @@ class Course < ApplicationRecord
   has_many :teacher_courses, dependent: :destroy
   has_many :teachers, through: :teacher_courses
   has_many :exams, dependent: :destroy
-
-  scope :current_school_term, -> { where(school_term_id: SchoolTerm.current_school_term.id) }
+  byebug
+  scope :current_school_term, -> { where(school_term_id: SchoolTerm.current_school_term.id).first }
 
   def without_vacancies?
     vacancies.zero?
