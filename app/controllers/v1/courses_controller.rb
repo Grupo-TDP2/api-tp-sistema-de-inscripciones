@@ -73,6 +73,7 @@ module V1
     end
 
     def staff_from_department?
+      return false unless @current_user.is_a?(DepartmentStaff)
       @current_user.department == course.subject.department
     end
 
