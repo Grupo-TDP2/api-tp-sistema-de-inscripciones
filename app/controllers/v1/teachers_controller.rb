@@ -1,8 +1,8 @@
 module V1
   class TeachersController < ApplicationController
-    before_action -> { authenticate_user!(%w[DepartmentStaff]) }, only: [:index]
-    before_action -> { authenticate_user!(%w[Teacher]) }, only: [:my_courses]
-    before_action -> { authenticate_user!(%w[Admin]) }, only: [:courses]
+    before_action -> { authenticate_user!(['DepartmentStaff']) }, only: [:index]
+    before_action -> { authenticate_user!(['Teacher']) }, only: [:my_courses]
+    before_action -> { authenticate_user!(['Admin']) }, only: %i[courses index]
 
     def index
       render json: Teacher.all, status: :ok
