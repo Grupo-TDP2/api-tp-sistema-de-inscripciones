@@ -24,6 +24,7 @@ Rails.application.routes.draw do
       end
     end
     resources :teachers, only: [:index] do
+      get :courses, to: 'teachers#courses'
       collection do
         scope :me do
           get :courses, to: 'teachers#my_courses'
