@@ -2,8 +2,8 @@ class AuthenticationToken
   HMAC_SECRET = Rails.application.secrets.hmac_secret
 
   class << self
-    def generate_for(id, expiration)
-      payload = { data: { id: id }, exp: expiration.to_i }
+    def generate_for(email, expiration)
+      payload = { data: { email: email }, exp: expiration.to_i }
       JWT.encode(payload, HMAC_SECRET, 'HS256')
     end
   end
@@ -12,10 +12,12 @@ class AuthenticationToken
     @payload = decode(token)
   end
 
-  def user(entity)
-    entity.constantize.find_by(id: @payload.dig('data', 'id')).tap do |user|
-      raise UnauthorizedUserException if user.blank?
+  def user(entities)
+    users = entities.map do |entity|
+      entity.constantize.find_by(email: @payload.dig('data', 'email'))
     end
+    raise UnauthorizedUserException unless users.any?
+    users.compact.first
   end
 
   private

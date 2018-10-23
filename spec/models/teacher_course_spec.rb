@@ -25,4 +25,19 @@ describe TeacherCourse do
                                                                    .scoped_to(:course_id)
     end
   end
+
+  context 'when the teacher has another course for the same subject' do
+    let(:teacher) { create(:teacher) }
+    let(:subject) { create(:subject) }
+    let(:school_term) { create(:school_term) }
+    let(:course_1) { create(:course, subject: subject, school_term: school_term) }
+    let(:course_2) { create(:course, subject: subject, school_term: school_term) }
+
+    before { create(:teacher_course, teacher: teacher, course: course_1) }
+
+    it 'raises error' do
+      teacher_course = build(:teacher_course, teacher: teacher, course: course_2)
+      expect { teacher_course.save! }.to raise_error(ActiveRecord::RecordInvalid)
+    end
+  end
 end

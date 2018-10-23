@@ -1,6 +1,13 @@
 module V1
   class EnrolmentsController < ApplicationController
-    before_action -> { authenticate_user!('Student') }
+    before_action -> { authenticate_user!(['Student']) }, only: [:create]
+    before_action -> { authenticate_user!(%w[Admin Teacher]) }, only: [:update]
+    before_action -> { authenticate_user!(%w[Admin DepartmentStaff Teacher]) }, only: %i[index]
+
+    def index
+      return wrong_course_for_teacher unless teacher_course_exist || admin_role?
+      render json: course.enrolments, status: :ok
+    end
 
     def create
       enrolment = Enrolment.new(course: course, student: @current_user)
@@ -13,15 +20,42 @@ module V1
       end
     end
 
+    def update
+      return wrong_course_for_teacher unless teacher_course_exist || admin_role?
+      enrolment = Enrolment.find(params[:id])
+      if enrolment.update(enrolment_update_params)
+        render json: enrolment
+      else
+        render json: { errors: enrolment.errors.full_messages }, status: :unprocessable_entity
+      end
+    end
+
     private
 
     def course
       @course ||= Course.find(params[:course_id])
     end
 
+    def admin_role?
+      @current_user.is_a?(Admin) || @current_user.is_a?(DepartmentStaff)
+    end
+
     def enrolment_type(enrolment)
       return enrolment.assign_attributes(type: :conditional) if course.without_vacancies?
       enrolment.assign_attributes(type: :normal)
+    end
+
+    def enrolment_update_params
+      params.require(:enrolment).permit(:status, :partial_qualification)
+    end
+
+    def teacher_course_exist
+      TeacherCourse.exists?(course: course, teacher: @current_user)
+    end
+
+    def wrong_course_for_teacher
+      render json: { error: 'El docente no se relaciona con el curso seleccionado' },
+             status: :unprocessable_entity
     end
   end
 end

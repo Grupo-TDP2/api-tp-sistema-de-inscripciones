@@ -4,6 +4,8 @@ module V1
       if authenticated_user?
         render json: {
           access_token: user.authentication_token,
+          role: user.class.name,
+          user: user,
           expires_in: Rails.application.secrets.expiration_date_days.days.seconds
         }, status: :ok
       else
@@ -19,6 +21,13 @@ module V1
 
     def authenticate_params
       params.permit(:email, :password)
+    end
+
+    def user
+      @user ||= Admin.find_by(email: authenticate_params[:email]) ||
+                DepartmentStaff.find_by(email: authenticate_params[:email]) ||
+                Teacher.find_by(email: authenticate_params[:email]) ||
+                Student.find_by(email: authenticate_params[:email])
     end
   end
 end

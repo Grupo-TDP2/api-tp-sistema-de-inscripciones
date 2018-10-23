@@ -1,6 +1,59 @@
 require 'rails_helper'
 
 describe V1::EnrolmentsController do
+  describe '#index' do
+    let(:date_start) { Date.new(2018, 8, 16) }
+    let(:term) do
+      create(:school_term, year: Date.current.year, date_start: date_start,
+                           term: SchoolTerm.current_term)
+    end
+    let(:course_1) { create(:course, school_term: term) }
+    let(:teacher_course) { create(:teacher_course, course: course_1) }
+    let(:index_request) { get :index, params: { course_id: course_1.id } }
+
+    context 'when there is no teacher signed in' do
+      it 'returns unauthorized' do
+        index_request
+        expect(response).to have_http_status :unauthorized
+      end
+    end
+
+    context 'when there is a teacher logged in' do
+      before do
+        Timecop.freeze(date_start - 4.days)
+        sign_in teacher_course.teacher
+      end
+
+      context 'when the course has two enrolments' do
+        before { create_list(:enrolment, 2, course: teacher_course.course) }
+
+        it 'returns two enrolments' do
+          index_request
+          expect(response_body.size).to eq 2
+        end
+
+        it 'returns the right keys' do
+          index_request
+          expect(response_body.first.keys)
+            .to match_array(%w[id type status partial_qualification final_qualification
+                               created_at student course])
+        end
+      end
+
+      context 'when the course does not belong to the teacher' do
+        let(:department) { create(:department, code: '99') }
+        let(:subject) { create(:subject, department: department) }
+        let(:course_2) { create(:course, subject: subject, school_term: term) }
+        let(:index_request) { get :index, params: { course_id: course_2.id } }
+
+        it 'returns unprocessable entity' do
+          index_request
+          expect(response).to have_http_status :unprocessable_entity
+        end
+      end
+    end
+  end
+
   describe '#create' do
     let(:current_student) { create(:student) }
     let(:course_of_study) { create(:course_of_study) }
@@ -21,10 +74,19 @@ describe V1::EnrolmentsController do
     end
 
     context 'when the student is logged in' do
-      before { sign_in current_student }
+      let(:date_start) { Date.new(2018, 8, 16) }
+      let(:term) do
+        create(:school_term, year: Date.current.year, date_start: date_start,
+                             term: SchoolTerm.current_term)
+      end
+
+      before do
+        Timecop.freeze(date_start - 4.days)
+        sign_in current_student
+      end
 
       context 'when the course has one vacancy' do
-        let(:course) { create(:course, vacancies: 1) }
+        let(:course) { create(:course, vacancies: 1, school_term: term) }
 
         it 'returns http status created' do
           enrolment_request
@@ -46,7 +108,7 @@ describe V1::EnrolmentsController do
       end
 
       context 'when the course has zero vacancies' do
-        let(:course) { create(:course, vacancies: 0) }
+        let(:course) { create(:course, vacancies: 0, school_term: term) }
 
         it 'creates an enrolment' do
           expect { enrolment_request }.to change(Enrolment, :count).by(1)
@@ -60,6 +122,41 @@ describe V1::EnrolmentsController do
           enrolment_request
           expect(response_body['type']).to eq 'conditional'
         end
+      end
+    end
+  end
+
+  describe '#update' do
+    let(:date_start) { Date.new(2018, 8, 16) }
+    let(:term) do
+      create(:school_term, year: Date.current.year, date_start: date_start,
+                           term: SchoolTerm.current_term)
+    end
+    let(:course_1) { create(:course, school_term: term) }
+    let(:teacher_course) { create(:teacher_course, course: course_1) }
+    let(:enrolment) do
+      Timecop.freeze(date_start - 4.days) do
+        create(:enrolment, course: course_1, status: :not_evaluated)
+      end
+    end
+    let(:teacher) { teacher_course.teacher }
+    let(:enrolment_request) do
+      patch :update, params: { course_id: course_1.id, id: enrolment.id,
+                               enrolment: { status: :approved, partial_qualification: 8 } }
+    end
+
+    context 'when there is no teacher logged in' do
+      it 'returns unauthorized' do
+        enrolment_request
+        expect(response).to have_http_status :unauthorized
+      end
+    end
+
+    context 'when there is a teacher logged in' do
+      before { sign_in teacher }
+      it 'updates the enrolment' do
+        enrolment_request
+        expect(response_body['status']).to eq 'approved'
       end
     end
   end

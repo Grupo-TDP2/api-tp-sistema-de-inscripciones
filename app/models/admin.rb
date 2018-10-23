@@ -1,4 +1,6 @@
-class Admin < ApplicationRecord
+
+class Admin < User
+  self.table_name = 'admins'
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,

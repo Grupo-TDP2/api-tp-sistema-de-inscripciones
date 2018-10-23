@@ -18,7 +18,9 @@ Teacher.delete_all
 Student.delete_all
 TeacherCourse.delete_all
 Enrolment.delete_all
-
+FinalExamWeek.delete_all
+Exam.delete_all
+Admin.delete_all
 
 course_of_study_1 = CourseOfStudy.create!(name: 'Ingeniería en Informática', required_credits: 240)
 course_of_study_2 = CourseOfStudy.create!(name: 'Ingeniería Química', required_credits: 240)
@@ -48,10 +50,19 @@ subject_3 = Subject.create!(name: 'Taller de desarrollo de proyectos informátic
 subject_4 = Subject.create!(name: 'Estructura del computador', code: '70', credits: 6,
                             department: department_3)
 
-school_term = SchoolTerm.create!(term: 1, year: '2018', date_start: '2018-08-18',
-                                 date_end: '2018-12-01')
-past_school_term = SchoolTerm.create!(term: 0, year: '2018', date_start: '2018-03-18',
-                                      date_end: '2018-07-01')
+school_term = SchoolTerm.create!(term: :second_semester, year: '2018',
+                                 date_start: Date.new(2018, 8, 10).next_week,
+                                 date_end: Date.new(2018, 8, 10).next_week + 16.weeks)
+past_school_term = SchoolTerm.create!(term: :first_semester, year: '2018',
+                                      date_start: Date.new(2018, 3, 10).next_week,
+                                      date_end: Date.new(2018, 3, 10).next_week + 16.weeks)
+
+week_1 = FinalExamWeek.create!(date_start_week: Date.new(2018, 12, 10), year: '2018')
+week_2 = FinalExamWeek.create!(date_start_week: Date.new(2018, 12, 17), year: '2018')
+week_3 = FinalExamWeek.create!(date_start_week: Date.new(2019, 2, 4), year: '2019')
+week_4 = FinalExamWeek.create!(date_start_week: Date.new(2019, 2, 11), year: '2019')
+week_5 = FinalExamWeek.create!(date_start_week: Date.new(2019, 2, 18), year: '2019')
+week_6 = FinalExamWeek.create!(date_start_week: Date.new(2019, 2, 25), year: '2019')
 
 course_1 = Course.create!(name: '001', vacancies: 2, subject: subject_1, school_term: school_term)
 course_2 = Course.create!(name: '002', vacancies: 2, subject: subject_2, school_term: school_term)
@@ -61,10 +72,34 @@ course_5 = Course.create!(name: '005', vacancies: 2, subject: subject_3, school_
 course_6 = Course.create!(name: '006', vacancies: 2, subject: subject_3,
                           school_term: past_school_term)
 
-LessonSchedule.create!(course: course_3, classroom: classroom_1, type: :theory, day: :Monday,
+Exam.create!(course: course_3, final_exam_week: week_1,
+             date_time: Time.zone.parse('2018-12-12 17:00:00'), classroom: classroom_1)
+
+LessonSchedule.create!(course: course_3, classroom: classroom_1, type: :theory, day: :monday,
                        hour_start: '17:00', hour_end: '19:00')
-LessonSchedule.create!(course: course_3, classroom: classroom_2, type: :practice, day: :Monday,
+LessonSchedule.create!(course: course_3, classroom: classroom_2, type: :practice, day: :monday,
                        hour_start: '19:00', hour_end: '23:00')
+LessonSchedule.create!(course: course_1, classroom: classroom_3, type: :theory, day: :tuesday,
+                      hour_start: '17:00', hour_end: '19:00')
+LessonSchedule.create!(course: course_1, classroom: classroom_4, type: :practice, day: :wednesday,
+                      hour_start: '19:00', hour_end: '23:00')
+LessonSchedule.create!(course: course_2, classroom: classroom_1, type: :theory, day: :thursday,
+                       hour_start: '17:00', hour_end: '19:00')
+LessonSchedule.create!(course: course_2, classroom: classroom_2, type: :practice, day: :thursday,
+                       hour_start: '19:00', hour_end: '23:00')
+LessonSchedule.create!(course: course_4, classroom: classroom_3, type: :theory, day: :friday,
+                      hour_start: '17:00', hour_end: '19:00')
+LessonSchedule.create!(course: course_4, classroom: classroom_4, type: :practice, day: :friday,
+                      hour_start: '19:00', hour_end: '23:00')
+LessonSchedule.create!(course: course_5, classroom: classroom_1, type: :theory, day: :saturday,
+                       hour_start: '7:00', hour_end: '10:00')
+LessonSchedule.create!(course: course_5, classroom: classroom_2, type: :practice, day: :saturday,
+                       hour_start: '10:00', hour_end: '13:00')
+LessonSchedule.create!(course: course_6, classroom: classroom_3, type: :theory, day: :monday,
+                      hour_start: '17:00', hour_end: '19:00')
+LessonSchedule.create!(course: course_6, classroom: classroom_4, type: :practice, day: :tuesday,
+                      hour_start: '19:00', hour_end: '23:00')
+
 
 teacher_1 = Teacher.create!(email: 'teacher1@example.com', password: '12345678',
                             first_name: 'Carlos', last_name: 'Fontela',
@@ -78,24 +113,22 @@ teacher_2 = Teacher.create!(email: 'teacher2@example.com', password: '12345678',
 
 student_1 = Student.create!(email: 'leandro.masello@example.com', password: '12345678',
                             first_name: 'Leandro', last_name: 'Masello',
-                            personal_document_number: '35000000', school_document_number: '93106',
-                            phone_number: '12345678', birthdate: '1991-08-06',
-                            address: 'Abbey Road 123')
+                            school_document_number: '93106', username: 'leandro.masello',
+                            priority: 1)
 
 student_2 = Student.create!(email: 'juan.costamagna@example.com', password: '12345678',
                             first_name: 'Juan', last_name: 'Costamagna',
-                            personal_document_number: '35000001', school_document_number: '93107',
-                            phone_number: '12345679', birthdate: '1991-08-08',
-                            address: 'Abbey Road 1234')
+                            school_document_number: '93107', username: 'juan.costamagna',
+                            priority: 1)
 
 student_3 = Student.create!(email: 'enzo.perez@example.com', password: '12345678',
                             first_name: 'Enzo', last_name: 'Perez',
-                            personal_document_number: '35000002', school_document_number: '93108',
-                            phone_number: '12345670', birthdate: '1991-08-09',
-                            address: 'Abbey Road 12345')
+                            school_document_number: '93108', username: 'enzo.perez',
+                            priority: 2)
 
 DepartmentStaff.create!(email: 'staff_informatica@example.com', password: '12345678',
                         department: department_1)
+Admin.create!(email: 'admin@example.com', password: '12345678')
 
 course_of_study_1.subjects << subject_1
 course_of_study_1.subjects << subject_2
@@ -115,7 +148,9 @@ course_of_study_4.subjects << subject_2
 TeacherCourse.create!(course: course_2, teacher: teacher_1, teaching_position: :course_chief)
 TeacherCourse.create!(course: course_3, teacher: teacher_2, teaching_position: :practice_chief)
 
-Enrolment.create!(course: course_3, student: student_1, type: :normal)
-Enrolment.create!(course: course_3, student: student_2, type: :normal)
-Enrolment.create!(course: course_3, student: student_3, type: :conditional)
-Enrolment.create!(course: course_2, student: student_1, type: :normal)
+Enrolment.new(course: course_3, student: student_1, type: :normal).save(validate: false)
+Enrolment.new(course: course_3, student: student_2, type: :normal).save(validate: false)
+Enrolment.new(course: course_3, student: student_3, type: :conditional).save(validate: false)
+Enrolment.new(course: course_2, student: student_1, type: :normal).save(validate: false)
+
+StudentExam.new(exam: Exam.first, student: student_1).save(validate: false)

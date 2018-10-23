@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180929164355) do
+ActiveRecord::Schema.define(version: 20181019154301) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -78,6 +78,7 @@ ActiveRecord::Schema.define(version: 20180929164355) do
     t.bigint "school_term_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "accept_free_condition_exam", default: false, null: false
     t.index ["school_term_id"], name: "index_courses_on_school_term_id"
     t.index ["subject_id"], name: "index_courses_on_subject_id"
   end
@@ -109,8 +110,38 @@ ActiveRecord::Schema.define(version: 20180929164355) do
     t.bigint "course_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "status", default: 0, null: false
+    t.integer "final_qualification"
+    t.integer "partial_qualification"
     t.index ["course_id"], name: "index_enrolments_on_course_id"
     t.index ["student_id"], name: "index_enrolments_on_student_id"
+  end
+
+  create_table "exams", force: :cascade do |t|
+    t.integer "exam_type", default: 0, null: false
+    t.bigint "final_exam_week_id", null: false
+    t.bigint "course_id", null: false
+    t.bigint "classroom_id", null: false
+    t.datetime "date_time", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["classroom_id"], name: "index_exams_on_classroom_id"
+    t.index ["course_id"], name: "index_exams_on_course_id"
+    t.index ["final_exam_week_id"], name: "index_exams_on_final_exam_week_id"
+  end
+
+  create_table "final_exam_weeks", force: :cascade do |t|
+    t.date "date_start_week", null: false
+    t.string "year", default: "2018", null: false
+  end
+
+  create_table "import_files", force: :cascade do |t|
+    t.string "filename", null: false
+    t.integer "model", null: false
+    t.integer "rows_successfuly_processed", null: false
+    t.integer "rows_unsuccessfuly_processed", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "lesson_schedules", force: :cascade do |t|
@@ -135,14 +166,21 @@ ActiveRecord::Schema.define(version: 20180929164355) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "student_exams", force: :cascade do |t|
+    t.bigint "exam_id", null: false
+    t.bigint "student_id", null: false
+    t.integer "qualification"
+    t.integer "condition", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["exam_id"], name: "index_student_exams_on_exam_id"
+    t.index ["student_id"], name: "index_student_exams_on_student_id"
+  end
+
   create_table "students", force: :cascade do |t|
     t.string "first_name", null: false
     t.string "last_name", null: false
-    t.string "personal_document_number", null: false
     t.string "school_document_number", null: false
-    t.date "birthdate", null: false
-    t.string "phone_number", null: false
-    t.string "address", null: false
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
@@ -155,6 +193,8 @@ ActiveRecord::Schema.define(version: 20180929164355) do
     t.inet "last_sign_in_ip"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "username", null: false
+    t.integer "priority", null: false
     t.index ["email"], name: "index_students_on_email", unique: true
     t.index ["reset_password_token"], name: "index_students_on_reset_password_token", unique: true
   end

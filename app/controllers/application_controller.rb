@@ -4,6 +4,8 @@ class ApplicationController < ActionController::Base
   attr_reader :current_user
 
   rescue_from UnauthorizedUserException, with: :unauthorized_user
+  rescue_from ActiveRecord::RecordNotFound, with: :not_found
+  rescue_from ArgumentError, with: :argument_error
 
   # i18n configuration. See: http://guides.rubyonrails.org/i18n.html
   before_action :set_locale
@@ -25,8 +27,8 @@ class ApplicationController < ActionController::Base
 
   private
 
-  def authenticate_user!(entity)
-    @current_user = AuthenticationToken.new(authentication_token).user(entity)
+  def authenticate_user!(entities)
+    @current_user = AuthenticationToken.new(authentication_token).user(entities)
   end
 
   def authentication_token
@@ -35,5 +37,13 @@ class ApplicationController < ActionController::Base
 
   def unauthorized_user
     head :unauthorized
+  end
+
+  def not_found(exception)
+    render json: { error: exception }, status: :not_found
+  end
+
+  def argument_error(exception)
+    render json: { error: exception }, status: :bad_request
   end
 end
