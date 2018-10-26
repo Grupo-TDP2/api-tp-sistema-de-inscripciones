@@ -7,7 +7,9 @@ describe V1::EnrolmentsController do
       create(:school_term, year: Date.current.year, date_start: date_start,
                            term: SchoolTerm.current_term)
     end
-    let(:course_1) { create(:course, school_term: term) }
+    let(:department_1) { create(:department, code: '10') }
+    let(:subject_1) { create(:subject, department: department_1) }
+    let(:course_1) { create(:course, school_term: term, subject: subject_1) }
     let(:teacher_course) { create(:teacher_course, course: course_1) }
     let(:index_request) do
       get :index, params: { course_id: course_1.id, teacher_id: teacher_course.id }
