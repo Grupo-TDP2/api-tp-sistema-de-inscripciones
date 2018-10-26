@@ -1,6 +1,6 @@
 module V1
   class StudentExamsController < ApplicationController
-    before_action -> { authenticate_user!(['Student']) }, only: %i[create destroy]
+    before_action -> { authenticate_user!(['Student']) }, only: %i[create destroy show]
     before_action -> { authenticate_user!(%w[Student Admin DepartmentStaff Teacher]) },
                   only: %i[index]
     before_action -> { authenticate_user!(%w[Admin DepartmentStaff Teacher]) },
@@ -11,6 +11,11 @@ module V1
              include: ['student', 'exam.classroom', 'exam.classroom.building', 'exam.course',
                        'exam.course.subject', 'exam.course.subject.department',
                        'exam.course.teacher_courses', 'exam.course.teacher_courses.teacher']
+    end
+
+    def show
+      return no_permission unless student_exam.student == @current_user
+      render json: student_exam
     end
 
     def create
@@ -55,6 +60,10 @@ module V1
       end
     end
 
+    def student_exam
+      StudentExam.find(params[:id])
+    end
+
     def close_to_exam_date?
       Time.current > exam.date_time - 2.days
     end
@@ -69,6 +78,11 @@ module V1
 
     def invalid_date
       render json: { error: 'Cannot enrol in an exam 48 hs before its datetime' },
+             status: :unprocessable_entity
+    end
+
+    def no_permission
+      render json: { error: 'Cannot see the student exam of another student' },
              status: :unprocessable_entity
     end
   end

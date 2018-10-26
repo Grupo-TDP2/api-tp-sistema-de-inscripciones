@@ -20,7 +20,7 @@ Rails.application.routes.draw do
     resources :students, only: [] do
       collection do
         scope :me do
-          resources :student_exams, only: %i[index create destroy]
+          resources :student_exams, only: %i[index create destroy show]
         end
       end
     end
