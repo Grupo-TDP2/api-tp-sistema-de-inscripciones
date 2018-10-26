@@ -38,6 +38,24 @@ describe V1::StudentExamsController do
         end
       end
     end
+
+    context 'with an admin logged in' do
+      before { sign_in create(:admin) }
+      let(:index_request) do
+        get :index, params: {
+          department_id: course.subject.department.id, course_id: course.id, exam_id: exam.id
+        }
+      end
+
+      context 'with some exams' do
+        before { create(:student_exam, student: student, exam: exam) }
+
+        it 'returns 1 exam' do
+          index_request
+          expect(response_body.size).to eq 1
+        end
+      end
+    end
   end
 
   describe '#create' do

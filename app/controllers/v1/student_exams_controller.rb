@@ -1,9 +1,11 @@
 module V1
   class StudentExamsController < ApplicationController
-    before_action -> { authenticate_user!(['Student']) }, only: %i[index create destroy]
+    before_action -> { authenticate_user!(['Student']) }, only: %i[create destroy]
+    before_action -> { authenticate_user!(%w[Student Admin DepartmentStaff Teacher]) },
+                  only: %i[index]
 
     def index
-      render json: @current_user.student_exams,
+      render json: student_exams,
              include: ['student', 'exam.classroom', 'exam.classroom.building', 'exam.course',
                        'exam.course.subject', 'exam.course.subject.department',
                        'exam.course.teacher_courses', 'exam.course.teacher_courses.teacher']
@@ -32,6 +34,14 @@ module V1
 
     def student_exam_params
       params.require(:student_exam).permit(:exam_id, :condition)
+    end
+
+    def student_exams
+      if @current_user.is_a? Student
+        @current_user.student_exams
+      elsif params[:exam_id].present?
+        Exam.find(params[:exam_id]).student_exams
+      end
     end
 
     def close_to_exam_date?
