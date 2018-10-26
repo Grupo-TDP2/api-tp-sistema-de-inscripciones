@@ -9,6 +9,17 @@ class StudentExam < ApplicationRecord
 
   enum condition: { regular: 0, free: 1 }
 
+  def self.to_csv(exam)
+    CSV.generate(headers: true) do |csv|
+      csv << %w[name registration_date condition]
+      exam.student_exams.map do |registration|
+        student = registration.student
+        csv << ["#{student.last_name} #{student.first_name}", registration.created_at,
+                registration.condition]
+      end
+    end
+  end
+
   private
 
   def valid_free_condition
