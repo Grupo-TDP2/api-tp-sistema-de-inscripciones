@@ -57,7 +57,7 @@ describe V1::CoursesController do
 
     let(:associate_teacher_request) do
       post :associate_teacher, params: {
-        subject_id: course.subject.id, course_id: course.id, teacher_course: {
+        department_id: course.subject.department.id, course_id: course.id, teacher_course: {
           teacher_id: teacher.id, teaching_position: 'first_assistant'
         }
       }
@@ -107,7 +107,8 @@ describe V1::CoursesController do
     let(:course_1) { create(:course, school_term: term, accept_free_condition_exam: false) }
     let(:teacher_course) { create(:teacher_course, course: course_1) }
     let(:update_request) do
-      patch :update, params: { id: course_1.id, course: { accept_free_condition_exam: true } }
+      patch :update, params: { teacher_id: teacher_course.teacher.id,
+                               id: course_1.id, course: { accept_free_condition_exam: true } }
     end
 
     context 'when no teacher is logged in' do
@@ -135,7 +136,7 @@ describe V1::CoursesController do
     end
     let(:course_test) { create(:course, subject: test_subject) }
     let(:show_request) do
-      get :show, params: { id: course_test.id }
+      get :show, params: { department_id: course_test.subject.department.id, id: course_test.id }
     end
 
     context 'when there is one course' do
@@ -180,7 +181,7 @@ describe V1::CoursesController do
     let(:create_course_request) do
       post :create, params: {
         name: 'Cátedra', vacancies: 50, school_term_id: school_term.id,
-        subject_id: test_subject.id,
+        subject_id: test_subject.id, department_id: test_subject.department.id,
         lesson_schedules: [{ type: 'theory', day: 'monday', hour_start: '17:00',
                              hour_end: '19:00', classroom_id: classroom.id }],
         teacher_courses: [{ teaching_position: 'course_chief', teacher_id: teacher.id }]
@@ -189,7 +190,7 @@ describe V1::CoursesController do
     let(:wrong_create_course_request) do
       post :create, params: {
         name: 'Cátedra', vacancies: 50, school_term_id: school_term.id,
-        subject_id: test_subject.id,
+        subject_id: test_subject.id, department_id: test_subject.department.id,
         lesson_schedules: [{ type: 'theory', day: 'monday', hour_start: '20:00',
                              hour_end: '19:00', classroom_id: classroom.id }],
         teacher_courses: [{ teaching_position: 'course_chief', teacher_id: teacher.id }]
@@ -240,7 +241,7 @@ describe V1::CoursesController do
     let(:course_test) { create(:course, subject: test_subject) }
 
     let(:delete_request) do
-      delete :destroy, params: { id: course_test.id }
+      delete :destroy, params: { department_id: test_subject.department.id, id: course_test.id }
     end
 
     context 'with no dept logged in' do

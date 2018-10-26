@@ -1,7 +1,7 @@
 module V1
   class DepartmentsController < ApplicationController
     before_action -> { authenticate_user!(['DepartmentStaff']) }, only: [:my_courses]
-    before_action -> { authenticate_user!(['Admin']) }, only: %i[index subjects]
+    before_action -> { authenticate_user!(['Admin']) }, only: %i[index]
 
     def index
       render json: Department.all
@@ -9,13 +9,6 @@ module V1
 
     def my_courses
       render json: @current_user.department.subjects,
-             include: ['courses', 'courses.teacher_courses', 'courses.teacher_courses.teacher',
-                       'courses.lesson_schedules.classroom',
-                       'courses.lesson_schedules.classroom.building', 'subject'], status: :ok
-    end
-
-    def subjects
-      render json: Department.find(params[:department_id]).subjects,
              include: ['courses', 'courses.teacher_courses', 'courses.teacher_courses.teacher',
                        'courses.lesson_schedules.classroom',
                        'courses.lesson_schedules.classroom.building', 'subject'], status: :ok

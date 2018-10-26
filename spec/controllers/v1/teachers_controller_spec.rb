@@ -38,7 +38,7 @@ describe V1::TeachersController do
   end
 
   describe '#my_courses' do
-    let(:courses_request) { get :my_courses }
+    let(:courses_request) { get :courses, params: { teacher_id: 'me' } }
     let(:current_teacher) { create(:teacher) }
     let(:another_teacher) { create(:teacher) }
 

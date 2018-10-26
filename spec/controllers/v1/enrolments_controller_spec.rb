@@ -9,7 +9,9 @@ describe V1::EnrolmentsController do
     end
     let(:course_1) { create(:course, school_term: term) }
     let(:teacher_course) { create(:teacher_course, course: course_1) }
-    let(:index_request) { get :index, params: { course_id: course_1.id } }
+    let(:index_request) do
+      get :index, params: { course_id: course_1.id, teacher_id: teacher_course.id }
+    end
 
     context 'when there is no teacher signed in' do
       it 'returns unauthorized' do
@@ -44,7 +46,9 @@ describe V1::EnrolmentsController do
         let(:department) { create(:department, code: '99') }
         let(:subject) { create(:subject, department: department) }
         let(:course_2) { create(:course, subject: subject, school_term: term) }
-        let(:index_request) { get :index, params: { course_id: course_2.id } }
+        let(:index_request) do
+          get :index, params: { course_id: course_2.id, teacher_id: teacher_course.id }
+        end
 
         it 'returns unprocessable entity' do
           index_request
@@ -141,7 +145,7 @@ describe V1::EnrolmentsController do
     end
     let(:teacher) { teacher_course.teacher }
     let(:enrolment_request) do
-      patch :update, params: { course_id: course_1.id, id: enrolment.id,
+      patch :update, params: { course_id: course_1.id, id: enrolment.id, teacher_id: teacher.id,
                                enrolment: { status: :approved, partial_qualification: 8 } }
     end
 
