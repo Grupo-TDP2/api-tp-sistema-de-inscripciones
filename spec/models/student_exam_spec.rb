@@ -8,6 +8,10 @@ describe StudentExam do
   it { is_expected.to validate_presence_of(:condition) }
   it { is_expected.to validate_uniqueness_of(:student_id).scoped_to(:exam_id).case_insensitive }
 
+  it { is_expected.to validate_numericality_of(:qualification).only_integer }
+  it { is_expected.to validate_numericality_of(:qualification).is_less_than_or_equal_to(10) }
+  it { is_expected.to validate_numericality_of(:qualification).is_greater_than_or_equal_to(2) }
+
   context 'when the student exam is regular' do
     let(:student_exam) { build(:student_exam, student: student, exam: exam, condition: :regular) }
 
