@@ -30,7 +30,11 @@ Rails.application.routes.draw do
       resources :courses, only: [:update] do
         resources :enrolments, only: %i[index update]
         resources :exams, only: %i[create destroy index] do
-          resources :student_exams, only: [:index]
+          resources :student_exams, only: [:index] do
+            collection do
+              get :csv_format
+            end
+          end
         end
       end
     end
@@ -42,7 +46,11 @@ Rails.application.routes.draw do
         post :teachers, to: 'courses#associate_teacher'
         resources :enrolments, only: %i[index update]
         resources :exams, only: %i[create destroy index] do
-          resources :student_exams, only: [:index]
+          resources :student_exams, only: [:index] do
+            collection do
+              get :csv_format
+            end
+          end
         end
       end
     end

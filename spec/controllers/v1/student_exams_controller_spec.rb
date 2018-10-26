@@ -134,4 +134,70 @@ describe V1::StudentExamsController do
       end
     end
   end
+
+  describe '#csv_format' do
+    let(:school_term) do
+      SchoolTerm.find_by(year: Date.current.year, term: SchoolTerm.current_term).presence ||
+        create(:school_term, year: Date.current.year, term: SchoolTerm.current_term)
+    end
+    let(:course) { create(:course, school_term: school_term, accept_free_condition_exam: false) }
+    let(:exam) { create(:exam, course: course) }
+    let(:csv_request) do
+      get :csv_format, params: { teacher_id: 'me', course_id: course.id, exam_id: exam.id }
+    end
+    let(:student) do
+      date_start = exam.course.school_term.date_start
+      Timecop.freeze(date_start - 4.days) do
+        enrolment = create(:enrolment, course: exam.course, status: :approved,
+                                       partial_qualification: 8)
+        enrolment.student
+      end
+    end
+
+    before { create(:student_exam, student: student, exam: exam) }
+
+    context 'with no user logged in' do
+      it 'returns unauthorized' do
+        csv_request
+        expect(response).to have_http_status :unauthorized
+      end
+    end
+
+    context 'with a teacher logged in' do
+      before { sign_in create(:teacher) }
+
+      it 'returns the csv file with the right headers' do
+        csv_request
+        expect(CSV.parse(response.body).first).to match_array(%w[name registration_date condition])
+      end
+
+      it 'returns the csv file with the enrolled students' do
+        csv_request
+        registration = exam.student_exams.first
+        expect(CSV.parse(response.body).last[0]).to eq "#{registration.student.last_name} "\
+                                                       "#{registration.student.first_name}"
+      end
+    end
+
+    context 'with an admin logged in' do
+      let(:csv_request) do
+        get :csv_format, params: { department_id: course.subject.department.id,
+                                   course_id: course.id, exam_id: exam.id }
+      end
+
+      before { sign_in create(:admin) }
+
+      it 'returns the csv file with the right headers' do
+        csv_request
+        expect(CSV.parse(response.body).first).to match_array(%w[name registration_date condition])
+      end
+
+      it 'returns the csv file with the enrolled students' do
+        csv_request
+        registration = exam.student_exams.first
+        expect(CSV.parse(response.body).last[0]).to eq "#{registration.student.last_name} "\
+                                                       "#{registration.student.first_name}"
+      end
+    end
+  end
 end

@@ -3,6 +3,8 @@ module V1
     before_action -> { authenticate_user!(['Student']) }, only: %i[create destroy]
     before_action -> { authenticate_user!(%w[Student Admin DepartmentStaff Teacher]) },
                   only: %i[index]
+    before_action -> { authenticate_user!(%w[Admin DepartmentStaff Teacher]) },
+                  only: %i[csv_format]
 
     def index
       render json: student_exams,
@@ -28,6 +30,15 @@ module V1
       else
         head :unprocessable_entity
       end
+    end
+
+    def csv_format
+      exam = Exam.find(params[:exam_id])
+      send_data StudentExam.to_csv(exam),
+                filename: "exam-of-#{exam.date_time.to_date}-" \
+                          "#{exam.course.subject.name.unicode_normalize(:nfkd)
+                                .encode('ASCII', replace: '')}"\
+                           "-enrolments-#{Time.zone.today}.csv", format: 'csv'
     end
 
     private
