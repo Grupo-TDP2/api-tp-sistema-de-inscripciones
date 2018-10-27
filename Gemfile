@@ -21,7 +21,7 @@ gem 'uglifier', '>= 1.3.0'
 # Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails', '~> 4.2'
 
-gem 'therubyracer', platforms: :ruby
+gem 'mini_racer'
 
 # JSON Web Token
 gem 'jwt', '~> 2.1.0'
