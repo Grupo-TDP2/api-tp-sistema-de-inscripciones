@@ -24,4 +24,15 @@ class Student < User
                                               DepartmentStaff.exists?(email: email) ||
                                               Admin.exists?(email: email)
   end
+
+  def approved_subjects
+    enrolments.where('final_qualification >= 4').map do |approved_enrolment|
+      {
+        subject: approved_enrolment.course.subject,
+        department: approved_enrolment.course.subject.department,
+        enrolment: approved_enrolment,
+        school_term: approved_enrolment.course.school_term
+      }
+    end
+  end
 end
