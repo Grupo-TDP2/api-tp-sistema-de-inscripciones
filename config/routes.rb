@@ -21,6 +21,7 @@ Rails.application.routes.draw do
       collection do
         scope :me do
           resources :student_exams, only: %i[index create destroy show]
+          get :approved_subjects, to: 'students#approved_subjects'
         end
       end
     end

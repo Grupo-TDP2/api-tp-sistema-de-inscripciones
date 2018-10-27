@@ -69,7 +69,7 @@ course_2 = Course.create!(name: '002', vacancies: 2, subject: subject_2, school_
 course_3 = Course.create!(name: '003', vacancies: 0, subject: subject_3, school_term: school_term)
 course_4 = Course.create!(name: '004', vacancies: 2, subject: subject_4, school_term: school_term)
 course_5 = Course.create!(name: '005', vacancies: 2, subject: subject_3, school_term: school_term)
-course_6 = Course.create!(name: '006', vacancies: 2, subject: subject_3,
+course_6 = Course.create!(name: '006', vacancies: 2, subject: subject_1,
                           school_term: past_school_term)
 
 Exam.create!(course: course_3, final_exam_week: week_1,
@@ -152,5 +152,7 @@ Enrolment.new(course: course_3, student: student_1, type: :normal).save(validate
 Enrolment.new(course: course_3, student: student_2, type: :normal).save(validate: false)
 Enrolment.new(course: course_3, student: student_3, type: :conditional).save(validate: false)
 Enrolment.new(course: course_2, student: student_1, type: :normal).save(validate: false)
+Enrolment.new(course: course_6, student: student_1, type: :normal, final_qualification: 6)
+         .save(validate: false)
 
 StudentExam.new(exam: Exam.first, student: student_1).save(validate: false)
