@@ -166,4 +166,72 @@ describe V1::EnrolmentsController do
       end
     end
   end
+
+  describe '#destroy' do
+    let(:school_term) do
+      SchoolTerm.find_by(year: Date.current.year, term: SchoolTerm.current_term).presence ||
+        create(:school_term, year: Date.current.year, term: SchoolTerm.current_term)
+    end
+    let(:course) { create(:course, school_term: school_term, accept_free_condition_exam: false) }
+    let(:subject) { course.subject }
+    let(:student) do
+      date_start = course.school_term.date_start
+      Timecop.freeze(date_start - 4.days) do
+        enrolment = create(:enrolment, course: course, status: :not_evaluated)
+        enrolment.student
+      end
+    end
+    let(:enrolment_id) { 10 }
+    let(:delete_request) do
+      delete :destroy, params: { course_of_study_id: 1, subject_id: subject.id,
+                                 course_id: course.id, id: enrolment_id }
+    end
+
+    context 'with no student logged in' do
+      it 'returns unauthorized' do
+        delete_request
+        expect(response).to have_http_status :unauthorized
+      end
+    end
+
+    context 'with a student logged in' do
+      let(:enrolment_id) { student.enrolments.last.id }
+
+      before { sign_in student }
+
+      context 'when it is an invalid date for unsubscriptions' do
+        it 'returns error' do
+          Timecop.freeze(course.school_term.date_start + 1.day) do
+            delete_request
+            expect(response_body['errors'].last)
+              .to match(/deletion must be in the previous week of the start of the school term./)
+          end
+        end
+      end
+
+      context 'when it is a valid date for unsubscriptions' do
+        it 'deletes the enrolment' do
+          Timecop.freeze(course.school_term.date_start - 1.day) do
+            expect { delete_request }.to change(Enrolment, :count).by(-1)
+          end
+        end
+      end
+    end
+
+    context 'with a different enrolment' do
+      let(:enrolment_id) do
+        date_start = course.school_term.date_start
+        Timecop.freeze(date_start - 4.days) do
+          create(:enrolment, course: course, status: :not_evaluated).id
+        end
+      end
+
+      before { sign_in student }
+
+      it 'returns error' do
+        delete_request
+        expect(response_body['errors']).to match(/Cannot destroy an enrolment from another s/)
+      end
+    end
+  end
 end
