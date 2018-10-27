@@ -12,7 +12,7 @@ Rails.application.routes.draw do
       resources :subjects, only: [:index] do
         resources :courses, only: [:index] do
           resources :exams, only: %i[index]
-          resources :enrolments, only: [:create]
+          resources :enrolments, only: %i[create destroy]
         end
       end
     end
