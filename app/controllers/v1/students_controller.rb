@@ -1,9 +1,23 @@
 module V1
   class StudentsController < ApplicationController
-    before_action -> { authenticate_user!(%w[Student]) }, only: [:approved_subjects]
+    before_action -> { authenticate_user!(%w[Student]) }, only: %i[approved_subjects update]
 
     def approved_subjects
       render json: @current_user.approved_subjects
+    end
+
+    def update
+      if @current_user.update(update_params)
+        render json: @current_user, status: :ok
+      else
+        render json: { errors: @current_user.errors.full_messages }, status: :unprocessable_entity
+      end
+    end
+
+    private
+
+    def update_params
+      params.require(:student).permit(:device_token)
     end
   end
 end

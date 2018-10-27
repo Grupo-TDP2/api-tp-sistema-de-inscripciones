@@ -60,12 +60,10 @@ gem 'metamagic'
 
 gem 'active_model_serializers'
 
-# Use CoffeeScript for .coffee assets and views
-gem 'coffee-rails', '~> 4.2'
-# Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
-gem 'turbolinks', '~> 5'
-# Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', '~> 2.5'
+gem 'rufus-scheduler', '~> 3.4.0'
+gem 'sidekiq', '~> 5.2.2'
+gem 'sidekiq-cron', '~> 0.6.3'
+
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
 # Use ActiveModel has_secure_password
