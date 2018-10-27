@@ -20,6 +20,7 @@ Rails.application.routes.draw do
     resources :students, only: [] do
       collection do
         scope :me do
+          get :show
           patch :update
           resources :student_exams, only: %i[index create destroy show]
           get :approved_subjects, to: 'students#approved_subjects'

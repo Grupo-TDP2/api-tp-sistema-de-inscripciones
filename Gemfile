@@ -60,6 +60,7 @@ gem 'metamagic'
 
 gem 'active_model_serializers'
 
+gem 'httparty', '~> 0.16'
 gem 'rufus-scheduler', '~> 3.4.0'
 gem 'sidekiq', '~> 5.2.2'
 gem 'sidekiq-cron', '~> 0.6.3'

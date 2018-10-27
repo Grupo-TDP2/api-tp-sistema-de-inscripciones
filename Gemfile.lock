@@ -471,6 +471,7 @@ DEPENDENCIES
   faker!
   font-awesome-rails
   formulaic
+  httparty (~> 0.16)
   jbuilder (~> 2.5)
   jquery-rails
   jwt (~> 2.1.0)
