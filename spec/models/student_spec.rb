@@ -27,4 +27,31 @@ describe Student do
       expect { student.save! }.to raise_error(ActiveRecord::RecordInvalid)
     end
   end
+
+  context 'when the student has approved subjects' do
+    let(:school_term) do
+      SchoolTerm.find_by(year: Date.current.year, term: SchoolTerm.current_term).presence ||
+        create(:school_term, year: Date.current.year, term: SchoolTerm.current_term)
+    end
+    let(:course) { create(:course, school_term: school_term, accept_free_condition_exam: false) }
+    let(:course_2) { create(:course, school_term: school_term, accept_free_condition_exam: false) }
+    let(:course_3) { create(:course, school_term: school_term, accept_free_condition_exam: false) }
+    let(:student) { create(:student) }
+
+    before do
+      date_start = school_term.date_start
+      Timecop.freeze(date_start - 4.days) do
+        create(:enrolment, course: course, status: :approved,
+                           final_qualification: 8, student: student)
+        create(:enrolment, course: course_2, status: :approved,
+                           final_qualification: 8, student: student)
+        create(:enrolment, course: course_3, status: :approved,
+                           final_qualification: 2, student: student)
+      end
+    end
+
+    it 'returns those approved subjects' do
+      expect(student.approved_subjects.size).to eq 2
+    end
+  end
 end

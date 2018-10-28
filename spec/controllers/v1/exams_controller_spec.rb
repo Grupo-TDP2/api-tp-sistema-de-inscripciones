@@ -9,7 +9,10 @@ describe V1::ExamsController do
     end
     let(:course_1) { create(:course, school_term: term) }
     let(:student) { create(:student) }
-    let(:index_request) { get :index, params: { course_id: course_1.id } }
+    let(:index_request) do
+      get :index, params: { course_of_study_id: '1',
+                            subject_id: course_1.subject.id, course_id: course_1.id }
+    end
 
     before { create(:exam, course: course_1) }
 
@@ -42,7 +45,8 @@ describe V1::ExamsController do
     let(:teacher_course) { create(:teacher_course) }
     let!(:exam) { create(:exam, course: teacher_course.course) }
     let(:destroy_request) do
-      delete :destroy, params: { course_id: teacher_course.course.id, id: exam.id }
+      delete :destroy, params: { course_id: teacher_course.course.id, id: exam.id,
+                                 teacher_id: teacher_course.teacher.id }
     end
 
     context 'when there is no teacher logged in' do
@@ -82,12 +86,12 @@ describe V1::ExamsController do
                            term: SchoolTerm.current_term)
     end
     let(:course_1) { create(:course, school_term: term) }
-    let(:teacher_couse) { create(:teacher_course, course: course_1) }
+    let(:teacher_course) { create(:teacher_course, course: course_1) }
     let(:final_exam_week) { create(:final_exam_week, year: Date.current.year) }
     let(:classroom) { create(:classroom) }
     let(:post_request) do
       post :create, params: {
-        course_id: course_1.id,
+        course_id: course_1.id, teacher_id: teacher_course.teacher.id,
         exam: { final_exam_week_id: final_exam_week.id, classroom_id: classroom.id,
                 date_time: Time.zone.parse(final_exam_week.date_start_week.to_s) + 10.hours }
       }
@@ -101,7 +105,7 @@ describe V1::ExamsController do
     end
 
     context 'when there is a teacher logged in' do
-      before { sign_in teacher_couse.teacher }
+      before { sign_in teacher_course.teacher }
 
       it 'creates the exam' do
         expect { post_request }.to change(Exam, :count).by 1

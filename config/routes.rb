@@ -12,45 +12,44 @@ Rails.application.routes.draw do
       resources :subjects, only: [:index] do
         resources :courses, only: [:index] do
           resources :exams, only: %i[index]
-          resources :enrolments, only: [:create]
+          resources :enrolments, only: %i[create destroy]
         end
       end
     end
+
     resources :students, only: [] do
       collection do
         scope :me do
-          resources :student_exams, only: %i[index create destroy]
+          resources :student_exams, only: %i[index create destroy show]
+          get :approved_subjects, to: 'students#approved_subjects'
         end
       end
     end
+
     resources :teachers, only: [:index] do
       get :courses, to: 'teachers#courses'
-      collection do
-        scope :me do
-          get :courses, to: 'teachers#my_courses'
-          resources :courses, only: [:update] do
-            resources :enrolments, only: %i[index update]
-            resources :exams, only: %i[create destroy index]
+      resources :courses, only: [:update] do
+        resources :enrolments, only: %i[index update]
+        resources :exams, only: %i[create destroy index] do
+          resources :student_exams, only: [:index] do
+            collection do
+              get :csv_format
+            end
           end
         end
       end
     end
+
     resources :departments, only: [:index] do
       resources :subjects, only: [:index]
+      get :courses, to: 'departments#my_courses'
       resources :courses, only: %i[create show destroy update] do
         post :teachers, to: 'courses#associate_teacher'
         resources :enrolments, only: %i[index update]
-        resources :exams, only: %i[create destroy index]
-      end
-      collection do
-        scope :me do
-          get :courses, to: 'departments#my_courses'
-          resources :courses, only: %i[create show destroy] do
-            resources :exams, only: %i[index]
-          end
-          resources :subjects, only: [:index] do
-            resources :courses, only: [] do
-              post :teachers, to: 'courses#associate_teacher'
+        resources :exams, only: %i[create destroy index] do
+          resources :student_exams, only: [:index] do
+            collection do
+              get :csv_format
             end
           end
         end

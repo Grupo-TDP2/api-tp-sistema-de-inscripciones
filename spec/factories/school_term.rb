@@ -1,7 +1,13 @@
 FactoryBot.define do
   factory :school_term do
-    term { SchoolTerm.terms.keys.sample.to_sym }
     year { Faker::Date.between(Time.zone.today, 10.years.from_now).year }
+    term do
+      random_term = SchoolTerm.terms.keys.sample.to_sym
+      while SchoolTerm.where(year: year).exists?(term: random_term)
+        random_term = SchoolTerm.terms.keys.sample.to_sym
+      end
+      random_term
+    end
     date_start do
       if term == :first_semester
         Faker::Date.between("08-03-#{year}", "21-03-#{year}")

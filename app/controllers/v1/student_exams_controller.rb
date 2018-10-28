@@ -1,12 +1,21 @@
 module V1
   class StudentExamsController < ApplicationController
-    before_action -> { authenticate_user!(['Student']) }, only: %i[index create destroy]
+    before_action -> { authenticate_user!(['Student']) }, only: %i[create destroy show]
+    before_action -> { authenticate_user!(%w[Student Admin DepartmentStaff Teacher]) },
+                  only: %i[index]
+    before_action -> { authenticate_user!(%w[Admin DepartmentStaff Teacher]) },
+                  only: %i[csv_format]
 
     def index
-      render json: @current_user.student_exams,
+      render json: student_exams,
              include: ['student', 'exam.classroom', 'exam.classroom.building', 'exam.course',
                        'exam.course.subject', 'exam.course.subject.department',
                        'exam.course.teacher_courses', 'exam.course.teacher_courses.teacher']
+    end
+
+    def show
+      return no_permission unless student_exam.student == @current_user
+      render json: student_exam
     end
 
     def create
@@ -28,10 +37,31 @@ module V1
       end
     end
 
+    def csv_format
+      exam = Exam.find(params[:exam_id])
+      send_data StudentExam.to_csv(exam),
+                filename: "exam-of-#{exam.date_time.to_date}-" \
+                          "#{exam.course.subject.name.unicode_normalize(:nfkd)
+                                .encode('ASCII', replace: '')}"\
+                           "-enrolments-#{Time.zone.today}.csv", format: 'csv'
+    end
+
     private
 
     def student_exam_params
       params.require(:student_exam).permit(:exam_id, :condition)
+    end
+
+    def student_exams
+      if @current_user.is_a? Student
+        @current_user.student_exams
+      elsif params[:exam_id].present?
+        Exam.find(params[:exam_id]).student_exams
+      end
+    end
+
+    def student_exam
+      StudentExam.find(params[:id])
     end
 
     def close_to_exam_date?
@@ -48,6 +78,11 @@ module V1
 
     def invalid_date
       render json: { error: 'Cannot enrol in an exam 48 hs before its datetime' },
+             status: :unprocessable_entity
+    end
+
+    def no_permission
+      render json: { error: 'Cannot see the student exam of another student' },
              status: :unprocessable_entity
     end
   end

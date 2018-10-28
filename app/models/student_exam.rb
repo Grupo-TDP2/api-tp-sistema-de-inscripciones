@@ -1,6 +1,8 @@
 class StudentExam < ApplicationRecord
   validates :student, :exam, :condition, presence: true
   validates :student_id, uniqueness: { scope: :exam_id, case_sensitive: false }
+  validates :qualification, numericality: { only_integer: true, greater_than_or_equal_to: 2,
+                                            less_than_or_equal_to: 10 }, if: :qualification
   validate :validate_able_to_take_the_exam, if: %i[exam student regular?]
   validate :valid_free_condition, if: :exam
 
@@ -8,6 +10,17 @@ class StudentExam < ApplicationRecord
   belongs_to :exam
 
   enum condition: { regular: 0, free: 1 }
+
+  def self.to_csv(exam)
+    CSV.generate(headers: true) do |csv|
+      csv << %w[name registration_date condition]
+      exam.student_exams.map do |registration|
+        student = registration.student
+        csv << ["#{student.last_name} #{student.first_name}", registration.created_at,
+                registration.condition]
+      end
+    end
+  end
 
   private
 

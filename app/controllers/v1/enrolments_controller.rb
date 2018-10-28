@@ -1,6 +1,6 @@
 module V1
   class EnrolmentsController < ApplicationController
-    before_action -> { authenticate_user!(['Student']) }, only: [:create]
+    before_action -> { authenticate_user!(['Student']) }, only: %i[create destroy]
     before_action -> { authenticate_user!(%w[Admin Teacher]) }, only: [:update]
     before_action -> { authenticate_user!(%w[Admin DepartmentStaff Teacher]) }, only: %i[index]
 
@@ -25,6 +25,16 @@ module V1
       enrolment = Enrolment.find(params[:id])
       if enrolment.update(enrolment_update_params)
         render json: enrolment
+      else
+        render json: { errors: enrolment.errors.full_messages }, status: :unprocessable_entity
+      end
+    end
+
+    def destroy
+      enrolment = Enrolment.find(params[:id])
+      return wrong_enrolment unless enrolment.student == @current_user
+      if enrolment.destroy
+        head :ok
       else
         render json: { errors: enrolment.errors.full_messages }, status: :unprocessable_entity
       end
@@ -55,6 +65,11 @@ module V1
 
     def wrong_course_for_teacher
       render json: { error: 'El docente no se relaciona con el curso seleccionado' },
+             status: :unprocessable_entity
+    end
+
+    def wrong_enrolment
+      render json: { errors: 'Cannot destroy an enrolment from another student' },
              status: :unprocessable_entity
     end
   end
