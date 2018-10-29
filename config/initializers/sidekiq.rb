@@ -4,7 +4,7 @@ if File.exist?(schedule_file) && Sidekiq.server?
   Sidekiq::Cron::Job.load_from_hash YAML.load_file(schedule_file)
 end
 
-# Sidekiq configuration file
+require 'sidekiq'
 
 url = ''
 url = if ENV['REDISCLOUD_URL']
@@ -16,13 +16,13 @@ url = if ENV['REDISCLOUD_URL']
       else
         "redis://#{ENV.fetch('REDIS_1_PORT_6379_TCP_ADDR', '127.0.0.1')}:6379"
       end
-
+puts url.to_s
 Sidekiq.configure_server do |config|
-  config.redis = { size: 7, url: url }
+  config.redis = { size: 12, url: url }
 end
 
 Sidekiq.configure_client do |config|
-  config.redis = { url: url }
+  config.redis = { size: 1, url: url }
 end
 
 Sidekiq.default_worker_options = { 'backtrace' => true }
