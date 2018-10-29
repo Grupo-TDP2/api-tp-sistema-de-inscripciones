@@ -18,8 +18,7 @@ module V1
 
     def show
       message_content = {
-        to: @current_user.device_token.to_s,
-        data: { message: "Te conectaste con el usuario #{@current_user.email}." }
+        to: @current_user.device_token.to_s, data: { message: "User: #{@current_user.email}." }
       }
       HTTParty.post(FIREBASE_URL,
                     body: message_content.to_json,

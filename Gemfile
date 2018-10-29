@@ -62,9 +62,13 @@ gem 'active_model_serializers'
 
 gem 'httparty', '~> 0.16'
 gem 'rufus-scheduler', '~> 3.4.0'
-gem 'sidekiq', '~> 5.2.2'
-gem 'sidekiq-cron', '~> 0.6.3'
+# Sidekiq
+gem 'sinatra', '>= 1.3.0', require: nil
 
+gem 'sidekiq'
+gem 'sidekiq-cron', '~> 0.6.3'
+gem 'sidekiq-failures'
+gem 'sidekiq_mailer'
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
 # Use ActiveModel has_secure_password
