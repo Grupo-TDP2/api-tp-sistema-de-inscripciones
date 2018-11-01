@@ -1,5 +1,5 @@
 exam_reminder_job:
-  cron: "0 12 * 2,7,8,12 *" # Run at 12:00 in February, July, August, and December.
-  # cron: "1 * * * *" # Run every minute
+  # cron: "0 12 * 2,7,8,12 *" # Run at 12:00 in February, July, August, and December.
+  cron: "1 * * * *" # Run every minute
   class: "ExamReminderWorker"
   queue: default
