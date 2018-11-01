@@ -15,13 +15,12 @@ class ExamReminderWorker
   def send_reminder(student, exam)
     message_content = {
       to: student.device_token.to_s,
-      data: { message: "Falta poco para el exámen de #{exam.course.subject.name}." }
+      notification: { title: 'Recordatorio de examen',
+                      body: "Falta poco para el exámen de #{exam.course.subject.name}." }
     }
-    HTTParty.post(FIREBASE_URL,
-                  body: message_content.to_json,
-                  headers: {
-                    'Content-Type' => 'application/json',
-                    'Authorization' => 'key=' + Rails.application.secrets.server_push_key
-                  })
+    server_key = Rails.application.secrets.server_push_key
+    HTTParty.post(FIREBASE_URL, body: message_content.to_json,
+                                headers: { 'Content-Type' => 'application/json',
+                                           'Authorization' => "key=#{server_key}" })
   end
 end
