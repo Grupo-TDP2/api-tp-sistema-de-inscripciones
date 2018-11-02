@@ -43,7 +43,8 @@ module V1
                 filename: "exam-of-#{exam.date_time.to_date}-" \
                           "#{exam.course.subject.name.unicode_normalize(:nfkd)
                                 .encode('ASCII', replace: '')}"\
-                           "-enrolments-#{Time.zone.today}.csv", format: 'csv'
+                           "-enrolments-#{Time.zone.today}.csv", format: 'csv',
+                disposition: 'attachment'
     end
 
     private
