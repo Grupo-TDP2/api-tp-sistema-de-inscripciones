@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
   root to: 'application#index'
+  require 'sidekiq/web'
+  require 'sidekiq/cron/web'
+  mount Sidekiq::Web, at: 'sidekiq'
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   api_version(module: 'v1', path: { value: 'api/v1' }, defaults: { format: :json }) do
     resources :school_terms, only: %i[create index destroy show]
@@ -20,6 +23,8 @@ Rails.application.routes.draw do
     resources :students, only: [] do
       collection do
         scope :me do
+          get :show
+          patch :update
           resources :student_exams, only: %i[index create destroy show]
           get :approved_subjects, to: 'students#approved_subjects'
         end

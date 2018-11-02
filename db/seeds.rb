@@ -74,6 +74,8 @@ course_6 = Course.create!(name: '006', vacancies: 2, subject: subject_1,
 
 Exam.create!(course: course_3, final_exam_week: week_1,
              date_time: Time.zone.parse('2018-12-12 17:00:00'), classroom: classroom_1)
+Exam.new(course: course_3, final_exam_week: week_1, date_time: 3.days.from_now,
+         classroom: classroom_1).save(validate: false)
 
 LessonSchedule.create!(course: course_3, classroom: classroom_1, type: :theory, day: :monday,
                        hour_start: '17:00', hour_end: '19:00')
@@ -156,3 +158,6 @@ Enrolment.new(course: course_6, student: student_1, type: :normal, final_qualifi
          .save(validate: false)
 
 StudentExam.new(exam: Exam.first, student: student_1).save(validate: false)
+StudentExam.new(exam: Exam.first, student: student_2).save(validate: false)
+StudentExam.new(exam: Exam.first, student: student_3).save(validate: false)
+StudentExam.new(exam: Exam.last, student: student_1).save(validate: false)
