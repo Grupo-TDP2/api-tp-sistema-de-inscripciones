@@ -3,7 +3,7 @@ class SchoolTermUnsubscribeReminderWorker
   FIREBASE_URL = 'https://fcm.googleapis.com/fcm/send'.freeze
 
   def perform
-    # return unless SchoolTerm.current_school_term.date_start == Date.current
+    return unless SchoolTerm.current_school_term.date_start == Date.current
     SchoolTerm.current_school_term.courses.map do |course|
       course.students.each { |student| send_reminder(student) }
     end

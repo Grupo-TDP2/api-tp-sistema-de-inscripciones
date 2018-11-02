@@ -25,7 +25,8 @@ class ExamReminderWorker
 
   def reminder_message(exam)
     limit_date = exam.date_time - 2.days
+    day = I18n.t("date.days.#{limit_date.strftime('%A').downcase}")
     "Si no vas a rendir #{exam.course.subject.name}, recuerda desinscribirte antes del día" \
-    " #{limit_date.strftime('%A')} a la hora #{limit_date.strftime('%H:%M')}."
+    " #{day} a la hora #{limit_date.strftime('%H:%M')}."
   end
 end
