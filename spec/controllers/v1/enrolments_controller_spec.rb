@@ -201,7 +201,7 @@ describe V1::EnrolmentsController do
 
       context 'when it is an invalid date for unsubscriptions' do
         it 'returns error' do
-          Timecop.freeze(course.school_term.date_start + 1.day) do
+          Timecop.freeze(course.school_term.date_start - 1.day) do
             delete_request
             expect(response_body['errors'].last)
               .to match(/deletion must be in the previous week of the start of the school term./)
@@ -211,7 +211,7 @@ describe V1::EnrolmentsController do
 
       context 'when it is a valid date for unsubscriptions' do
         it 'deletes the enrolment' do
-          Timecop.freeze(course.school_term.date_start - 1.day) do
+          Timecop.freeze(course.school_term.date_start + 1.day) do
             expect { delete_request }.to change(Enrolment, :count).by(-1)
           end
         end
