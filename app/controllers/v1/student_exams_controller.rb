@@ -5,7 +5,7 @@ module V1
     before_action -> { authenticate_user!(%w[Student Admin DepartmentStaff Teacher]) },
                   only: %i[index]
     before_action -> { authenticate_user!(%w[Admin DepartmentStaff Teacher]) },
-                  only: %i[csv_format]
+                  only: %i[update csv_format]
 
     def index
       render json: student_exams,
@@ -26,6 +26,16 @@ module V1
         render json: student_exam, status: :created
       else
         render json: { error: student_exam.errors.full_messages }, status: :unprocessable_entity
+      end
+    end
+
+    def update
+      return cannot_set_qualification_before_exam if forthcoming_exam?
+      begin
+        student_exam.qualifications(update_params)
+        render json: student_exam
+      rescue ArgumentError, ActiveRecord::RecordInvalid => exception
+        render json: { errors: exception }, status: :unprocessable_entity
       end
     end
 
@@ -54,6 +64,10 @@ module V1
       params.require(:student_exam).permit(:exam_id, :condition)
     end
 
+    def update_params
+      params.permit(:qualification, :final_qualification)
+    end
+
     def student_exams
       if @current_user.is_a? Student
         @current_user.student_exams
@@ -68,6 +82,10 @@ module V1
 
     def close_to_exam_date?
       Time.current > exam.date_time - 2.days
+    end
+
+    def forthcoming_exam?
+      Exam.find(params[:exam_id]).date_time > Time.current
     end
 
     def exam
@@ -85,6 +103,11 @@ module V1
 
     def no_permission
       render json: { error: 'Cannot see the student exam of another student' },
+             status: :unprocessable_entity
+    end
+
+    def cannot_set_qualification_before_exam
+      render json: { errors: 'Cannot set the exam qualification before the exam date.' },
              status: :unprocessable_entity
     end
   end
