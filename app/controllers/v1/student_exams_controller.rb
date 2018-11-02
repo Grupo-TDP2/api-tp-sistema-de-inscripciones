@@ -1,5 +1,6 @@
 module V1
   class StudentExamsController < ApplicationController
+    serialization_scope :current_user
     before_action -> { authenticate_user!(['Student']) }, only: %i[create destroy show]
     before_action -> { authenticate_user!(%w[Student Admin DepartmentStaff Teacher]) },
                   only: %i[index]
