@@ -13,7 +13,7 @@ module V1
     def destroy
       return invalid_course unless teacher_course_exist
       exam = Exam.find(params[:id])
-      if exam.delete
+      if exam.destroy
         head :ok
       else
         head :unprocessable_entity

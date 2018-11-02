@@ -8,7 +8,7 @@ class SchoolTerm < ApplicationRecord
 
   enum term: { first_semester: 0, second_semester: 1, summer_school: 2 }
 
-  has_many :courses, dependent: :destroy
+  has_many :courses, dependent: :restrict_with_exception
 
   scope :current_school_term, -> { find_by(year: Time.current.year, term: current_term) }
 

@@ -31,7 +31,7 @@ module V1
 
     def destroy
       return invalid_date if close_to_exam_date?
-      if StudentExam.find(params[:id]).delete
+      if StudentExam.find(params[:id]).destroy
         head :ok
       else
         head :unprocessable_entity
