@@ -66,11 +66,14 @@ week_6 = FinalExamWeek.create!(date_start_week: Date.new(2019, 2, 25), year: '20
 
 course_1 = Course.create!(name: '001', vacancies: 2, subject: subject_1, school_term: school_term)
 course_2 = Course.create!(name: '002', vacancies: 2, subject: subject_2, school_term: school_term)
-course_3 = Course.create!(name: '003', vacancies: 0, subject: subject_3, school_term: school_term)
+course_3 = Course.create!(name: '003', vacancies: 0, subject: subject_3, school_term: school_term,
+                          accept_free_condition_exam: true)
 course_4 = Course.create!(name: '004', vacancies: 2, subject: subject_4, school_term: school_term)
 course_5 = Course.create!(name: '005', vacancies: 2, subject: subject_3, school_term: school_term)
 course_6 = Course.create!(name: '006', vacancies: 2, subject: subject_1,
                           school_term: past_school_term)
+course_7 = Course.create!(name: '007', vacancies: 0, subject: subject_3,
+                          school_term: past_school_term, accept_free_condition_exam: true)
 
 Exam.create!(course: course_3, final_exam_week: week_1,
              date_time: Time.zone.parse('2018-12-12 17:00:00'), classroom: classroom_1)
@@ -151,13 +154,15 @@ TeacherCourse.create!(course: course_2, teacher: teacher_1, teaching_position: :
 TeacherCourse.create!(course: course_3, teacher: teacher_2, teaching_position: :practice_chief)
 
 Enrolment.new(course: course_3, student: student_1, type: :normal).save(validate: false)
-Enrolment.new(course: course_3, student: student_2, type: :normal).save(validate: false)
-Enrolment.new(course: course_3, student: student_3, type: :conditional).save(validate: false)
+Enrolment.new(course: course_3, student: student_2, type: :normal, status: :approved,
+              partial_qualification: 8).save(validate: false)
 Enrolment.new(course: course_2, student: student_1, type: :normal).save(validate: false)
 Enrolment.new(course: course_6, student: student_1, type: :normal, final_qualification: 6)
          .save(validate: false)
+Enrolment.new(course: course_7, student: student_3, type: :normal, status: :approved,
+              partial_qualification: 6).save(validate: false)
 
-StudentExam.new(exam: Exam.first, student: student_1).save(validate: false)
+StudentExam.new(exam: Exam.first, student: student_1, condition: :free).save(validate: false)
 StudentExam.new(exam: Exam.first, student: student_2).save(validate: false)
 StudentExam.new(exam: Exam.first, student: student_3).save(validate: false)
 StudentExam.new(exam: Exam.last, student: student_1).save(validate: false)
