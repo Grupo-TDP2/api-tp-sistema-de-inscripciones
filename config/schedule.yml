@@ -4,3 +4,9 @@ exam_reminder_job:
   # cron: "* * * * *" # Run every minute
   class: "ExamReminderWorker"
   queue: default
+
+school_term_unsubscribe_reminder_job:
+  cron: "0 12 * 1,3,8 *" # Run at 12:00 in January, March and August.
+  # cron: "* * * * *" # Run every minute
+  class: "SchoolTermUnsubscribeReminderWorker"
+  queue: default
