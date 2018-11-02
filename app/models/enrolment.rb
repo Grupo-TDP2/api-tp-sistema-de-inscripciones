@@ -41,7 +41,7 @@ class Enrolment < ApplicationRecord
 
   def valid_delete_date
     start_term = SchoolTerm.current_school_term.date_start
-    return if Time.current.between?(start_term - 1.week, start_term)
+    return if Time.current.between?(start_term, start_term + 1.week)
     errors.add(:base, 'The deletion must be in the previous week of the start of the school term.')
   end
 
