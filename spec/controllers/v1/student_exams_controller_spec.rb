@@ -252,4 +252,75 @@ describe V1::StudentExamsController do
       end
     end
   end
+
+  describe 'update' do
+    let(:school_term) do
+      SchoolTerm.find_by(year: Date.current.year, term: SchoolTerm.current_term).presence ||
+        create(:school_term, year: Date.current.year, term: SchoolTerm.current_term)
+    end
+    let(:course) { create(:course, school_term: school_term, accept_free_condition_exam: false) }
+    let(:exam) { create(:exam, course: course) }
+    let!(:teacher_course) { create(:teacher_course, course: course) }
+    let(:student) do
+      date_start = exam.course.school_term.date_start
+      Timecop.freeze(date_start - 4.days) do
+        enrolment = create(:enrolment, course: exam.course, status: :approved,
+                                       partial_qualification: 8)
+        enrolment.student
+      end
+    end
+    let(:student_exam) { create(:student_exam, student: student, exam: exam, condition: :regular) }
+    let(:base_params) do
+      { teacher_id: 'me', course_id: course.id, exam_id: exam.id, id: student_exam.id }
+    end
+    let(:params) { base_params }
+    let(:update_request) do
+      patch :update, params: params
+    end
+
+    context 'with no teacher logged in' do
+      it 'returns unauthorized' do
+        update_request
+        expect(response).to have_http_status :unauthorized
+      end
+    end
+
+    context 'with a teacher logged in' do
+      context 'when trying to set a qualification on a forthcoming exam' do
+        it 'returns error' do # rubocop:disable RSpec/ExampleLength
+          Timecop.freeze(exam.date_time - 1.hour) do
+            sign_in teacher_course.teacher
+            update_request
+            expect(response_body['errors'])
+              .to match(/Cannot set the exam qualification before the exam/)
+          end
+        end
+      end
+
+      context 'when trying to set a final qualification without a qualification' do
+        let(:params) { base_params.merge(final_qualification: 8) }
+
+        it 'returns error' do # rubocop:disable RSpec/ExampleLength
+          Timecop.freeze(exam.date_time + 1.hour) do
+            sign_in teacher_course.teacher
+            update_request
+            expect(response_body['errors'])
+              .to match(/Cannot set final_qualification without an exam qualification/)
+          end
+        end
+      end
+
+      context 'when setting both qualifications' do
+        let(:params) { base_params.merge(qualification: 8, final_qualification: 8) }
+
+        it 'returns error' do
+          Timecop.freeze(exam.date_time + 1.hour) do
+            sign_in teacher_course.teacher
+            update_request
+            expect(student.enrolments.last.reload.final_qualification).to eq 8
+          end
+        end
+      end
+    end
+  end
 end

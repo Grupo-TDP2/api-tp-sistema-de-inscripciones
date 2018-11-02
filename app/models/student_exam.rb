@@ -22,6 +22,15 @@ class StudentExam < ApplicationRecord
     end
   end
 
+  def qualifications(params)
+    StudentExam.transaction do
+      update!(qualification: params[:qualification]) if params[:qualification].present?
+      raise ArgumentError, qualification_error_message if qualification.blank?
+      return if params[:final_qualification].blank?
+      final_qualification(params)
+    end
+  end
+
   private
 
   def valid_free_condition
@@ -60,5 +69,29 @@ class StudentExam < ApplicationRecord
     @student_subject_courses ||= exam.course.subject.courses.map do |course|
       course.enrolments.exists?(student: student) ? course.enrolments.where(student: student) : nil
     end.compact.flatten
+  end
+
+  def qualification_error_message
+    'Cannot set final_qualification without an exam qualification'
+  end
+
+  def final_qualification(params)
+    if free?
+      free_enrolment(params[:final_qualification])
+    else
+      regular_enrolment(params[:final_qualification])
+    end
+  end
+
+  def free_enrolment(final_qualification)
+    Enrolment.create!(student: student, course: exam.course, type: :free_exam,
+                      final_qualification: final_qualification,
+                      status: final_qualification.to_i >= 4 ? :approved : :disapproved)
+  end
+
+  def regular_enrolment(final_qualification)
+    student.enrolments_from_subject(exam.course.subject.id)
+           .first.update!(final_qualification: final_qualification,
+                          status: final_qualification.to_i >= 4 ? :approved : :disapproved)
   end
 end
