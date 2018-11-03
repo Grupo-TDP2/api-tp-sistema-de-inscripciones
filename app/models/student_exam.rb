@@ -3,7 +3,7 @@ class StudentExam < ApplicationRecord
   validates :student_id, uniqueness: { scope: :exam_id, case_sensitive: false }
   validates :qualification, numericality: { only_integer: true, greater_than_or_equal_to: 2,
                                             less_than_or_equal_to: 10 }, if: :qualification
-  validate :validate_able_to_take_the_exam, if: %i[exam student regular?]
+  validate :validate_able_to_take_the_exam, if: %i[exam student regular?], on: :create
   validate :valid_free_condition, if: :exam
 
   belongs_to :student
@@ -93,8 +93,7 @@ class StudentExam < ApplicationRecord
 
   def regular_enrolment(final_qualification)
     student.enrolments_from_subject(exam.course.subject.id)
-           .first.update!(final_qualification: final_qualification,
-                          status: status(final_qualification))
+           .first.update!(final_qualification: final_qualification)
   end
 
   def status(final_qualification)
@@ -104,7 +103,6 @@ class StudentExam < ApplicationRecord
 
   def update_existing_free_enrolment(final_qualification)
     Enrolment.find_by(student: student, course: exam.course, type: :free_exam)
-             .update!(final_qualification: final_qualification,
-                      status: status(final_qualification))
+             .update!(final_qualification: final_qualification)
   end
 end
