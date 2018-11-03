@@ -2,7 +2,8 @@ class Enrolment < ApplicationRecord
   self.inheritance_column = :_type_disabled # So that we can use the :type column
   validates :type, presence: true
   validates :partial_qualification, presence: true, if: :evaluated?
-  validates :student_id, uniqueness: { scope: :course_id, case_sensitive: false }
+  validates :student_id, uniqueness: { scope: :course_id, case_sensitive: false },
+                         unless: :free_exam?
   validates :partial_qualification, numericality: { only_integer: true,
                                                     greater_than_or_equal_to: 4,
                                                     less_than_or_equal_to: 10 },

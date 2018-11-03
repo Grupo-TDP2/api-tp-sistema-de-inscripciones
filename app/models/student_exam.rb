@@ -24,9 +24,7 @@ class StudentExam < ApplicationRecord
 
   def qualifications(params)
     StudentExam.transaction do
-      update!(qualification: params[:qualification]) if params[:qualification].present?
-      raise ArgumentError, qualification_error_message if qualification.blank?
-      return if params[:final_qualification].blank?
+      update!(qualification: params[:qualification])
       final_qualification(params)
     end
   end
@@ -84,14 +82,29 @@ class StudentExam < ApplicationRecord
   end
 
   def free_enrolment(final_qualification)
-    Enrolment.create!(student: student, course: exam.course, type: :free_exam,
-                      final_qualification: final_qualification,
-                      status: final_qualification.to_i >= 4 ? :approved : :disapproved)
+    if Enrolment.exists?(student: student, course: exam.course, type: :free_exam)
+      update_existing_free_enrolment(final_qualification)
+    else
+      Enrolment.create!(student: student, course: exam.course, type: :free_exam,
+                        final_qualification: final_qualification,
+                        status: status(final_qualification))
+    end
   end
 
   def regular_enrolment(final_qualification)
     student.enrolments_from_subject(exam.course.subject.id)
            .first.update!(final_qualification: final_qualification,
-                          status: final_qualification.to_i >= 4 ? :approved : :disapproved)
+                          status: status(final_qualification))
+  end
+
+  def status(final_qualification)
+    return :not_evaluated if final_qualification.blank?
+    final_qualification.to_i >= 4 ? :approved : :disapproved
+  end
+
+  def update_existing_free_enrolment(final_qualification)
+    Enrolment.find_by(student: student, course: exam.course, type: :free_exam)
+             .update!(final_qualification: final_qualification,
+                      status: status(final_qualification))
   end
 end

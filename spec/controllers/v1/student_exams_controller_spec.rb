@@ -298,14 +298,13 @@ describe V1::StudentExamsController do
       end
 
       context 'when trying to set a final qualification without a qualification' do
-        let(:params) { base_params.merge(final_qualification: 8) }
+        let(:params) { base_params.merge(qualification: nil, final_qualification: 8) }
 
-        it 'returns error' do # rubocop:disable RSpec/ExampleLength
+        it 'sets the final qualification' do
           Timecop.freeze(exam.date_time + 1.hour) do
             sign_in teacher_course.teacher
             update_request
-            expect(response_body['errors'])
-              .to match(/Cannot set final_qualification without an exam qualification/)
+            expect(student.enrolments.last.reload.final_qualification).to eq 8
           end
         end
       end
@@ -313,11 +312,28 @@ describe V1::StudentExamsController do
       context 'when setting both qualifications' do
         let(:params) { base_params.merge(qualification: 8, final_qualification: 8) }
 
-        it 'returns error' do
+        it 'sets the final qualification' do
           Timecop.freeze(exam.date_time + 1.hour) do
             sign_in teacher_course.teacher
             update_request
             expect(student.enrolments.last.reload.final_qualification).to eq 8
+          end
+        end
+      end
+
+      context 'when there are qualifications' do
+        let(:params) { base_params.merge(qualification: nil, final_qualification: nil) }
+
+        before do
+          student.enrolments.last.update!(final_qualification: 4)
+          student_exam.update!(qualification: 2)
+        end
+
+        it 'sets the final qualification' do
+          Timecop.freeze(exam.date_time + 1.hour) do
+            sign_in teacher_course.teacher
+            update_request
+            expect(student.enrolments.last.reload.final_qualification).to eq nil
           end
         end
       end
