@@ -87,18 +87,13 @@ class StudentExam < ApplicationRecord
     else
       Enrolment.create!(student: student, course: exam.course, type: :free_exam,
                         final_qualification: final_qualification,
-                        status: status(final_qualification))
+                        status: :approved)
     end
   end
 
   def regular_enrolment(final_qualification)
     student.enrolments_from_subject(exam.course.subject.id)
            .first.update!(final_qualification: final_qualification)
-  end
-
-  def status(final_qualification)
-    return :not_evaluated if final_qualification.blank?
-    final_qualification.to_i >= 4 ? :approved : :disapproved
   end
 
   def update_existing_free_enrolment(final_qualification)
