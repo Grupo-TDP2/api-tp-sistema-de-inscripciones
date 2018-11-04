@@ -42,23 +42,13 @@ class Student < User
   end
 
   def pending_exam_courses
-
-  end
-
-  def expirated_approval?
-    approved_student_courses.all? do |enrolment|
+    approved_student_courses.select do |enrolment|
       approval_term = enrolment.course.school_term
-      SchoolTerm.where(date_start: approval_term.date_start..Date.current).size > 4
+      SchoolTerm.where(date_start: approval_term.date_start..Date.current).size <= 4
     end
   end
 
   def approved_student_courses
-    student_subject_courses.select(&:approved?)
-  end
-
-  def student_subject_courses
-    @student_subject_courses ||= exam.course.subject.courses.map do |course|
-      course.enrolments.exists?(student: student) ? course.enrolments.where(student: student) : nil
-    end.compact.flatten
+    enrolments.select { |e| e.approved? && e.final_qualification.blank? }
   end
 end
