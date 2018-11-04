@@ -1,6 +1,7 @@
 module V1
   class StudentsController < ApplicationController
-    before_action -> { authenticate_user!(%w[Student]) }, only: %i[approved_subjects update show]
+    before_action -> { authenticate_user!(%w[Student]) }, only: %i[approved_subjects update show
+                                                                   pending_exam_courses]
 
     FIREBASE_URL = 'https://fcm.googleapis.com/fcm/send'.freeze
 
@@ -26,6 +27,11 @@ module V1
                                   headers: { 'Content-Type' => 'application/json',
                                              'Authorization' => "key=#{server_key}" })
       render json: @current_user
+    end
+
+    def pending_exam_courses
+      render json: @current_user.pending_exam_courses,
+             include: ['course', 'course.school_term', 'course.subject']
     end
 
     private

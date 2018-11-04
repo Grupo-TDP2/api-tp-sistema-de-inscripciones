@@ -27,6 +27,7 @@ Rails.application.routes.draw do
           patch :update
           resources :student_exams, only: %i[index create destroy show]
           get :approved_subjects, to: 'students#approved_subjects'
+          get :pending_exam_courses, to: 'students#pending_exam_courses'
         end
       end
     end
