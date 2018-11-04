@@ -254,12 +254,13 @@ describe V1::StudentExamsController do
   end
 
   describe 'update' do
-    let(:school_term) do
+    let!(:school_term) do
       SchoolTerm.find_by(year: Date.current.year, term: SchoolTerm.current_term).presence ||
         create(:school_term, year: Date.current.year, term: SchoolTerm.current_term)
     end
-    let(:course) { create(:course, school_term: school_term, accept_free_condition_exam: false) }
-    let(:exam) { create(:exam, course: course) }
+    let(:course) { create(:course, school_term: school_term, accept_free_condition_exam: true) }
+    let(:final_exam_week) { create(:final_exam_week, year: Date.current.year) }
+    let(:exam) { create(:exam, course: course, final_exam_week: final_exam_week) }
     let!(:teacher_course) { create(:teacher_course, course: course) }
     let(:student) do
       date_start = exam.course.school_term.date_start
@@ -298,14 +299,13 @@ describe V1::StudentExamsController do
       end
 
       context 'when trying to set a final qualification without a qualification' do
-        let(:params) { base_params.merge(final_qualification: 8) }
+        let(:params) { base_params.merge(qualification: nil, final_qualification: 8) }
 
-        it 'returns error' do # rubocop:disable RSpec/ExampleLength
+        it 'sets the final qualification' do
           Timecop.freeze(exam.date_time + 1.hour) do
             sign_in teacher_course.teacher
             update_request
-            expect(response_body['errors'])
-              .to match(/Cannot set final_qualification without an exam qualification/)
+            expect(student.enrolments.last.reload.final_qualification).to eq 8
           end
         end
       end
@@ -313,11 +313,66 @@ describe V1::StudentExamsController do
       context 'when setting both qualifications' do
         let(:params) { base_params.merge(qualification: 8, final_qualification: 8) }
 
-        it 'returns error' do
+        it 'sets the final qualification' do
           Timecop.freeze(exam.date_time + 1.hour) do
             sign_in teacher_course.teacher
             update_request
             expect(student.enrolments.last.reload.final_qualification).to eq 8
+          end
+        end
+      end
+
+      context 'when there are qualifications' do
+        let(:params) { base_params.merge(qualification: nil, final_qualification: nil) }
+
+        before do
+          student.enrolments.last.update!(final_qualification: 4)
+          student_exam.update!(qualification: 2)
+        end
+
+        it 'sets the final qualification' do
+          Timecop.freeze(exam.date_time + 1.hour) do
+            sign_in teacher_course.teacher
+            update_request
+            expect(student.enrolments.last.reload.final_qualification).to eq nil
+          end
+        end
+      end
+
+      context 'when the user is in free condition' do
+        let(:student) { create(:student) }
+        let!(:student_exam) do
+          create(:student_exam, student: student, exam: exam, condition: :free)
+        end
+        let(:params) { base_params.merge(qualification: 8, final_qualification: 8) }
+        let(:base_params) do
+          { teacher_id: 'me', course_id: course.id, exam_id: exam.id, id: student_exam.id }
+        end
+
+        it 'sets the final qualification' do
+          Timecop.freeze(exam.date_time + 1.hour) do
+            sign_in teacher_course.teacher
+            update_request
+            expect(student.enrolments.last.reload.final_qualification).to eq 8
+          end
+        end
+      end
+
+      context 'when the user is in free condition with qualifications' do
+        let(:student) { create(:student) }
+        let!(:student_exam) do
+          create(:student_exam, student: student, exam: exam, qualification: 8, condition: :free)
+        end
+        let(:params) { base_params.merge(qualification: nil, final_qualification: nil) }
+        let(:base_params) do
+          { teacher_id: 'me', course_id: course.id, exam_id: exam.id, id: student_exam.id }
+        end
+
+        it 'sets the final qualification' do
+          Timecop.freeze(exam.date_time + 1.hour) do
+            sign_in teacher_course.teacher
+            update_request
+            expect(student.enrolments.last.reload.final_qualification).to eq nil
           end
         end
       end

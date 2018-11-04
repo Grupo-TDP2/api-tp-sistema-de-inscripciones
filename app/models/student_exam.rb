@@ -3,7 +3,7 @@ class StudentExam < ApplicationRecord
   validates :student_id, uniqueness: { scope: :exam_id, case_sensitive: false }
   validates :qualification, numericality: { only_integer: true, greater_than_or_equal_to: 2,
                                             less_than_or_equal_to: 10 }, if: :qualification
-  validate :validate_able_to_take_the_exam, if: %i[exam student regular?]
+  validate :validate_able_to_take_the_exam, if: %i[exam student regular?], on: :create
   validate :valid_free_condition, if: :exam
 
   belongs_to :student
@@ -24,9 +24,7 @@ class StudentExam < ApplicationRecord
 
   def qualifications(params)
     StudentExam.transaction do
-      update!(qualification: params[:qualification]) if params[:qualification].present?
-      raise ArgumentError, qualification_error_message if qualification.blank?
-      return if params[:final_qualification].blank?
+      update!(qualification: params[:qualification])
       final_qualification(params)
     end
   end
@@ -84,14 +82,22 @@ class StudentExam < ApplicationRecord
   end
 
   def free_enrolment(final_qualification)
-    Enrolment.create!(student: student, course: exam.course, type: :free_exam,
-                      final_qualification: final_qualification,
-                      status: final_qualification.to_i >= 4 ? :approved : :disapproved)
+    if Enrolment.exists?(student: student, course: exam.course, type: :free_exam)
+      update_existing_free_enrolment(final_qualification)
+    else
+      Enrolment.create!(student: student, course: exam.course, type: :free_exam,
+                        final_qualification: final_qualification,
+                        status: :approved)
+    end
   end
 
   def regular_enrolment(final_qualification)
     student.enrolments_from_subject(exam.course.subject.id)
-           .first.update!(final_qualification: final_qualification,
-                          status: final_qualification.to_i >= 4 ? :approved : :disapproved)
+           .first.update!(final_qualification: final_qualification)
+  end
+
+  def update_existing_free_enrolment(final_qualification)
+    Enrolment.find_by(student: student, course: exam.course, type: :free_exam)
+             .update!(final_qualification: final_qualification)
   end
 end
