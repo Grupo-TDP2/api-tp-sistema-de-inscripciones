@@ -42,13 +42,13 @@ class Student < User
   end
 
   def pending_exam_courses
-    approved_student_courses.select do |enrolment|
+    current_student_courses.select do |enrolment|
       approval_term = enrolment.course.school_term
       SchoolTerm.where(date_start: approval_term.date_start..Date.current).size <= 4
     end
   end
 
-  def approved_student_courses
-    enrolments.select { |e| e.approved? && e.final_qualification.blank? }
+  def current_student_courses
+    enrolments.select { |e| e.final_qualification.blank? }
   end
 end
