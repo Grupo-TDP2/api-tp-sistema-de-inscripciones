@@ -168,7 +168,8 @@ describe V1::StudentExamsController do
 
       it 'returns the csv file with the right headers' do
         csv_request
-        expect(CSV.parse(response.body).first).to match_array(%w[name registration_date condition])
+        expect(CSV.parse(response.body).first)
+          .to match_array(%w[nombre padron fecha_de_inscripcion condicion nota])
       end
 
       it 'returns the csv file with the enrolled students' do
@@ -189,7 +190,8 @@ describe V1::StudentExamsController do
 
       it 'returns the csv file with the right headers' do
         csv_request
-        expect(CSV.parse(response.body).first).to match_array(%w[name registration_date condition])
+        expect(CSV.parse(response.body).first)
+          .to match_array(%w[nombre padron fecha_de_inscripcion condicion nota])
       end
 
       it 'returns the csv file with the enrolled students' do

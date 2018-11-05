@@ -13,11 +13,11 @@ class StudentExam < ApplicationRecord
 
   def self.to_csv(exam)
     CSV.generate(headers: true) do |csv|
-      csv << %w[name registration_date condition]
+      csv << %w[nombre padron fecha_de_inscripcion condicion nota]
       exam.student_exams.map do |registration|
         student = registration.student
-        csv << ["#{student.last_name} #{student.first_name}", registration.created_at,
-                registration.condition]
+        csv << ["#{student.last_name} #{student.first_name}", student.school_document_number,
+                registration.created_at, registration.condition, registration.qualification]
       end
     end
   end
