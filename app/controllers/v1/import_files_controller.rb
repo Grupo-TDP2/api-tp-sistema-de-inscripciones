@@ -9,17 +9,23 @@ module V1
     def create
       if import_file_params[:model].match?(/student/i)
         result = StudentImport.new(import_file_params).process
-        render json: result, status: :ok
+      elsif import_file_params[:model].match?(/teacher/i)
+        result = TeacherImport.new(import_file_params).process
       else
-        render json: { error: "#{import_file_params[:model]} has no importer set" },
-               status: :unprocessable_entity
+        return no_importer_response
       end
+      render json: result, status: :ok
     end
 
     private
 
     def import_file_params
       params.permit(:file, :filename, :model)
+    end
+
+    def no_importer_response
+      render json: { error: "#{import_file_params[:model]} has no importer set" },
+             status: :unprocessable_entity
     end
   end
 end
