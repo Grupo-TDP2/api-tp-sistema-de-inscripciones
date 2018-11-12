@@ -5,12 +5,32 @@ class StudentImport
   end
 
   def process
-    CSV.parse(params[:file], :col_sep => ';') do |row|
-      #byebug
-      create(:student, row)
-      p row
+    convert = {"nombre" => "first_name",
+               "apellido" => "last_name",
+               "mail" => "email",
+               "clave" => "password",
+               "padrón" => "school_document_number",
+               "usuario" => "username",
+               "prioridad" => "priority"}
+    success = 0
+    failed = 0
+    line = 0
+    proccesed_errors = ""
+    csv = CSV.new(@file, :headers => true, :header_converters => lambda { |header| convert[header.downcase.strip] },
+                  :converters => lambda {|field| field ? field.strip : nil})
+    csv.to_a.map do |row|
+      student = Student.new(row.to_hash)
+      if student.save
+        success += 1
+      else
+        proccesed_errors += '- Linea ' + line.to_s + ': ' + student.errors.full_messages.to_s + '\n'
+        failed += 1
+      end
+      line += 1
+      p proccesed_errors
     end
-    @import_file.update(rows_successfuly_processed: 0, rows_unsuccessfuly_processed: 0)
+    @import_file.update(rows_successfuly_processed: success, rows_unsuccessfuly_processed: failed,
+                        proccesed_errors: proccesed_errors)
     @import_file
   end
 end
