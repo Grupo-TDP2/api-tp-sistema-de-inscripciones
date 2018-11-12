@@ -69,6 +69,13 @@ es:
         date_end: Fecha de finalización
         created_at: Creado
         updated_at: Modificado
+      student:
+        school_document_number: Padrón
+        priority: Prioridad
+        username: Usuario
+      teacher:
+        school_document_number: Legajo
+        username: Usuario
     errors:
       messages:
         record_invalid: "La validación falló: %{errors}"
@@ -103,12 +110,12 @@ es:
       required: debe existir
       taken: ya está en uso
       too_long:
-        one: "es demasiado largo (1 carácter máximo)"
-        other: "es demasiado largo (%{count} caracteres máximo)"
+        one: "es demasiado largo (1 digito máximo)"
+        other: "es demasiado largo (%{count} digitos máximo)"
       too_short:
-        one: "es demasiado corto (1 carácter mínimo)"
-        other: "es demasiado corto (%{count} caracteres mínimo)"
+        one: "es demasiado corto (1 digito mínimo)"
+        other: "es demasiado corto (%{count} digitos mínimo)"
       wrong_length:
-        one: "no tiene la longitud correcta (1 carácter exactos)"
-        other: "no tiene la longitud correcta (%{count} caracteres exactos)"
+        one: "no tiene la longitud correcta (1 digito exactos)"
+        other: "no tiene la longitud correcta (%{count} digitos exactos)"
       other_than: debe ser distinto de %{count}
