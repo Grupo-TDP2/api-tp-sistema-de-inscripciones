@@ -1,6 +1,7 @@
 class ExamReminderWorker
   include Sidekiq::Worker
   FIREBASE_URL = 'https://fcm.googleapis.com/fcm/send'.freeze
+  ACTION_MSG = 'unsubscribe_exam'.freeze
 
   def perform
     from = (Date.current + 3.days).beginning_of_day
@@ -15,7 +16,7 @@ class ExamReminderWorker
   def send_reminder(student, exam)
     message_content = {
       to: student.device_token.to_s,
-      notification: { title: 'Recordatorio de examen', body: reminder_message(exam) }
+      data: { title: 'Recordatorio de examen', body: reminder_message(exam), type: ACTION_MSG }
     }
     server_key = Rails.application.secrets.server_push_key
     HTTParty.post(FIREBASE_URL, body: message_content.to_json,
