@@ -23,7 +23,6 @@ class StudentImport
 
     csv.to_a.map do |row|
       student = Student.new(row.to_hash)
-      byebug
       if row.to_hash.values.last == nil
         proccesed_errors += '- Linea ' + line.to_s + ': Número de columnas erroneo\n'
         failed += 1
