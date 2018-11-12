@@ -120,12 +120,12 @@ LessonSchedule.create!(course: course_6, classroom: classroom_4, type: :practice
 
 
 teacher_1 = Teacher.create!(email: 'teacher1@example.com', password: '12345678',
-                            first_name: 'Carlos', last_name: 'Fontela', 
-                            username: 'teacher1@example.com')
+                            first_name: 'Carlos', last_name: 'Fontela',
+                            username: 'teacher1@example.com', school_document_number: '1234567')
 
 teacher_2 = Teacher.create!(email: 'teacher2@example.com', password: '12345678',
                             first_name: 'Luis', last_name: 'Argerich',
-                            username: 'teacher2@example.com')
+                            username: 'teacher2@example.com', school_document_number: '1234568')
 
 student_1 = Student.create!(email: 'leandro.masello@example.com', password: '12345678',
                             first_name: 'Leandro', last_name: 'Masello',
