@@ -7,14 +7,18 @@ module V1
     end
 
     def create
-      if import_file_params[:model].match?(/student/i)
-        result = StudentImport.new(import_file_params).process
-      elsif import_file_params[:model].match?(/teacher/i)
-        result = TeacherImport.new(import_file_params).process
-      else
-        return no_importer_response
+      begin
+        if import_file_params[:model].match?(/student/i)
+          result = StudentImport.new(import_file_params).process
+        elsif import_file_params[:model].match?(/teacher/i)
+          result = TeacherImport.new(import_file_params).process
+        else
+          return no_importer_response
+        end
+        render json: result, status: :ok
+      rescue ArgumentError
+        render json: { errors: 'Wrong columns' }, status: :bad_request
       end
-      render json: result, status: :ok
     end
 
     private
