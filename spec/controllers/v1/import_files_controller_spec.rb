@@ -26,7 +26,7 @@ describe V1::ImportFilesController do
       it 'returns the right keys' do
         index_request
         expect(response_body.first.keys)
-          .to match_array(%w[id model filename rows_successfuly_processed
+          .to match_array(%w[id model filename rows_successfuly_processed proccesed_errors
                              rows_unsuccessfuly_processed created_at updated_at])
       end
     end
@@ -35,7 +35,10 @@ describe V1::ImportFilesController do
   describe '#create' do
     let(:admin) { create(:admin) }
     let(:create_request) do
-      post :create, params: { file: 'abc.csv', filename: 'abc.csv', model: model }
+      post :create, params: { 
+        file: "nombre,apellido,mail,clave,usuario,padrón,prioridad\nGonzalo,Merino,asd24asd.com,123,gmerino,111111,1", 
+        filename: 'abc.csv', 
+        model: model }
     end
 
     context 'when there is no admin logged in' do
