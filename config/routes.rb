@@ -28,6 +28,7 @@ Rails.application.routes.draw do
           resources :student_exams, only: %i[index create destroy show]
           get :approved_subjects, to: 'students#approved_subjects'
           get :pending_exam_courses, to: 'students#pending_exam_courses'
+          resources :polls, only: %i[index create]
         end
       end
     end
