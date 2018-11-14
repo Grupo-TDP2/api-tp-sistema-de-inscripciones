@@ -38,7 +38,7 @@ module V1
     private
 
     def update_params
-      params.require(:student).permit(:device_token)
+      params.require(:student).permit(:device_token, :first_name, :last_name, :email)
     end
   end
 end
