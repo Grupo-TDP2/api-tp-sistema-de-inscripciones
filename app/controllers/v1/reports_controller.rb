@@ -3,12 +3,11 @@ module V1
     before_action -> { authenticate_user!(['Admin DepartmentStaff']) }
 
     def polls
-      render json: ImportFile.all
+      render json:
+        PollReport.new(report_params[:department_id], report_params[:school_term_id]).report
     end
 
-    def subject_enrolments
-
-    end
+    def subject_enrolments; end
 
     private
 

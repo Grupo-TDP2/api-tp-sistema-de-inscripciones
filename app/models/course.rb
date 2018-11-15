@@ -15,6 +15,10 @@ class Course < ApplicationRecord
   has_many :polls, dependent: :destroy
 
   scope :current_school_term, -> { where(school_term_id: SchoolTerm.current_school_term.id) }
+  scope :from_school_term, ->(school_term_id) { where(school_term_id: school_term_id) }
+  scope :from_department, lambda { |department_id|
+    joins(:subject).where(subjects: { department_id: department_id })
+  }
 
   def without_vacancies?
     vacancies.zero?
