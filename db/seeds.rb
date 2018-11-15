@@ -21,6 +21,7 @@ Enrolment.delete_all
 FinalExamWeek.delete_all
 Exam.delete_all
 Admin.delete_all
+Poll.delete_all
 
 course_of_study_1 = CourseOfStudy.create!(name: 'Ingeniería en Informática', required_credits: 240)
 course_of_study_2 = CourseOfStudy.create!(name: 'Ingeniería Química', required_credits: 240)
@@ -170,8 +171,8 @@ TeacherCourse.create!(course: course_3, teacher: teacher_2, teaching_position: :
 Enrolment.new(course: course_3, student: student_2, type: :normal, status: :approved,
               partial_qualification: 8).save(validate: false)
 Enrolment.new(course: course_2, student: student_1, type: :normal).save(validate: false)
-Enrolment.new(course: course_6, student: student_1, type: :normal, final_qualification: 6)
-         .save(validate: false)
+Enrolment.new(course: course_6, student: student_1, type: :normal, status: :approved,
+              final_qualification: 6).save(validate: false)
 Enrolment.new(course: course_1, student: student_3, type: :normal, status: :approved,
               partial_qualification: 6).save(validate: false)
 Enrolment.new(course: course_2, student: student_3, type: :normal, status: :approved,
@@ -185,3 +186,10 @@ StudentExam.new(exam: Exam.first, student: student_1, condition: :free).save(val
 StudentExam.new(exam: Exam.first, student: student_2).save(validate: false)
 StudentExam.new(exam: Exam.first, student: student_3).save(validate: false)
 StudentExam.new(exam: Exam.last, student: student_1).save(validate: false)
+
+Poll.create!(course: course_3, student: student_2, rate: 3, comment: 'Comment 1')
+Poll.create!(course: course_6, student: student_1, rate: 4, comment: 'Comment 2')
+Poll.create!(course: course_1, student: student_3, rate: 5, comment: 'Comment 3')
+Poll.create!(course: course_2, student: student_3, rate: 4, comment: 'Comment 4')
+Poll.create!(course: course_8, student: student_3, rate: 3, comment: 'Comment 5')
+Poll.create!(course: course_9, student: student_3, rate: 2, comment: 'Comment 6')

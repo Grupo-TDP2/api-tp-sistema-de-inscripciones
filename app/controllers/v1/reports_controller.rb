@@ -1,6 +1,6 @@
 module V1
   class ReportsController < ApplicationController
-    before_action -> { authenticate_user!(['Admin DepartmentStaff']) }
+    before_action -> { authenticate_user!(%w[Admin DepartmentStaff]) }
 
     def polls
       render json:
