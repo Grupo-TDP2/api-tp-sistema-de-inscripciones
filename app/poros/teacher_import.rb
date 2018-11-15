@@ -5,31 +5,39 @@ class TeacherImport
   end
 
   def process
-    convert = {"nombre" => "first_name", "apellido" => "last_name", "mail" => "email",
-               "clave" => "password", "legajo" => "school_document_number",
-               "usuario" => "username"}
-    expected_headers = ["first_name", "last_name", "email",
-                        "password", "school_document_number", "username"]
+    # rubocop:disable Metrics/AbcSize Lint/Void
+    convert = { 'nombre' => 'first_name', 'apellido' => 'last_name', 'mail' => 'email',
+                'clave' => 'password', 'legajo' => 'school_document_number',
+                'usuario' => 'username' }
+    expected_headers = %w[first_name last_name email
+                          password school_document_number username]
     success = 0
     failed = 0
     line = 0
-    proccesed_errors = ""
-    csv = CSV.new(@file, :headers => true, :header_converters => lambda { |header| convert[header.downcase.strip] },
-                  :converters => lambda {|field| field ? field.strip : nil})
-    csv_headers = CSV.new(@file, :headers => true, :header_converters => lambda { |header| convert[header.downcase.strip] }).read
+    proccesed_errors = ''
+    csv = CSV.new(@file, headers: true,
+                         header_converters: ->(header) { convert[header.downcase.strip] },
+                         converters: ->(field) { field ? field.strip : nil })
+    csv_headers = CSV.new(@file, headers: true,
+                                 header_converters: lambda { |header|
+                                                      convert[header.downcase.strip]
+                                                    }).read
 
     file_headers = csv_headers.headers
-    raise ArgumentError unless expected_headers.all? { |header| file_headers.include?(header) } && expected_headers.size == file_headers.size
+    raise ArgumentError unless expected_headers.all? do |header|
+                                 file_headers.include?(header)
+                               end && expected_headers.size == file_headers.size
 
     csv.to_a.map do |row|
       teacher = Teacher.new(row.to_hash)
-      if row.to_hash.values.last == nil
+      if row.to_hash.values.last.nil?
         proccesed_errors += '- Linea ' + line.to_s + ': Número de columnas erroneo\n'
         failed += 1
       elsif teacher.save
         success += 1
       else
-        proccesed_errors += '- Linea ' + line.to_s + ': ' + teacher.errors.full_messages.to_s + '\n'
+        proccesed_errors += '- Linea ' + line.to_s + ': '
+        + teacher.errors.full_messages.to_s + '\n'
         failed += 1
       end
       line += 1
