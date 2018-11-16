@@ -36,8 +36,8 @@ describe V1::ImportFilesController do
     let(:admin) { create(:admin) }
     let(:create_request) do
       post :create, params: {
-        file: "nombre,apellido,mail,clave,usuario,padrón,prioridad\n
-                Gonzalo,Merino,asd24asd.com,123,gmerino,111111,1",
+        file: "nombre,apellido,mail,clave,usuario,padrón,prioridad
+                Gonzalo,Merino,asd24@asd.com,123,gmerino,99999,1",
         filename: 'abc.csv',
         model: model
       }

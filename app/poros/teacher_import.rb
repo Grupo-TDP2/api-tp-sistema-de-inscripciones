@@ -4,8 +4,7 @@ class TeacherImport
     @import_file = ImportFile.new(model: params[:model].downcase, filename: params[:filename])
   end
 
-  def process
-    # rubocop:disable Metrics/AbcSize Lint/Void
+  def process # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     convert = { 'nombre' => 'first_name', 'apellido' => 'last_name', 'mail' => 'email',
                 'clave' => 'password', 'legajo' => 'school_document_number',
                 'usuario' => 'username' }
@@ -37,7 +36,7 @@ class TeacherImport
         success += 1
       else
         proccesed_errors += '- Linea ' + line.to_s + ': '
-        + teacher.errors.full_messages.to_s + '\n'
+        + teacher.errors.full_messages.to_s + '\n' # rubocop:disable Lint/Void
         failed += 1
       end
       line += 1

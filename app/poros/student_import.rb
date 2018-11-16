@@ -4,8 +4,7 @@ class StudentImport
     @import_file = ImportFile.new(model: params[:model].downcase, filename: params[:filename])
   end
 
-  def process
-    # rubocop:disable Metrics/MethodLength Metrics/AbcSize Lint/Void
+  def process # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     convert = { 'nombre' => 'first_name', 'apellido' => 'last_name', 'mail' => 'email',
                 'clave' => 'password', 'padrón' => 'school_document_number',
                 'usuario' => 'username', 'prioridad' => 'priority' }
@@ -22,7 +21,7 @@ class StudentImport
                                  header_converters: lambda { |header|
                                                       convert[header.downcase.strip]
                                                     }).read
-
+    byebug
     file_headers = csv_headers.headers
     raise ArgumentError unless expected_headers.all? do |header|
                                  file_headers.include?(header)
@@ -37,7 +36,7 @@ class StudentImport
         success += 1
       else
         proccesed_errors += '- Linea ' + line.to_s + ': '
-        + student.errors.full_messages.to_s + '\n'
+        + student.errors.full_messages.to_s + '\n' # rubocop:disable Lint/Void
         failed += 1
       end
       line += 1
