@@ -1,6 +1,7 @@
 class SchoolTermUnsubscribeReminderWorker
   include Sidekiq::Worker
   FIREBASE_URL = 'https://fcm.googleapis.com/fcm/send'.freeze
+  ACTION_MSG = 'unsubscribe_course'.freeze
 
   def perform
     return unless SchoolTerm.current_school_term.date_start == Date.current
@@ -14,7 +15,7 @@ class SchoolTermUnsubscribeReminderWorker
   def send_reminder(student)
     message_content = {
       to: student.device_token.to_s,
-      notification: { title: 'Desinscripción a materias', body: reminder_message }
+      data: { title: 'Desinscripción a materias', body: reminder_message, type: ACTION_MSG }
     }
     server_key = Rails.application.secrets.server_push_key
     HTTParty.post(FIREBASE_URL, body: message_content.to_json,

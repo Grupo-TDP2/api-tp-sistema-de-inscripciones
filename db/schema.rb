@@ -142,6 +142,7 @@ ActiveRecord::Schema.define(version: 20181114210235) do
     t.integer "rows_unsuccessfuly_processed", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "proccesed_errors"
   end
 
   create_table "lesson_schedules", force: :cascade do |t|
@@ -242,6 +243,7 @@ ActiveRecord::Schema.define(version: 20181114210235) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "username", null: false
+    t.integer "school_document_number"
     t.index ["email"], name: "index_teachers_on_email", unique: true
     t.index ["reset_password_token"], name: "index_teachers_on_reset_password_token", unique: true
   end
