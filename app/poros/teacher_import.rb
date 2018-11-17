@@ -13,15 +13,6 @@ class TeacherImport < Importer
     @proccesed_errors = ''
   end
 
-  def process
-    csv = read_csv
-    raise ArgumentError unless all_headers? && right_number_of_headers?
-    csv.to_a.map { |row| process_row(row) }
-    @import_file.update(rows_successfuly_processed: @success, proccesed_errors: @proccesed_errors,
-                        rows_unsuccessfuly_processed: @failed)
-    @import_file
-  end
-
   private
 
   def process_row(row)
@@ -30,17 +21,8 @@ class TeacherImport < Importer
       @proccesed_errors += "- Linea #{@line}: Número de columnas erroneo\n"
       @failed += 1
     else
-      import_teacher(teacher)
+      import_model(teacher)
     end
     @line += 1
-  end
-
-  def import_teacher(teacher)
-    if teacher.save
-      @success += 1
-    else
-      @proccesed_errors += "- Linea #{@line}: #{teacher.errors.full_messages}\n"
-      @failed += 1
-    end
   end
 end

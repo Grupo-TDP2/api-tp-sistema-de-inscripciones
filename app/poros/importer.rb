@@ -1,4 +1,13 @@
 class Importer
+  def process
+    csv = read_csv
+    raise ArgumentError unless all_headers? && right_number_of_headers?
+    csv.to_a.map { |row| process_row(row) }
+    @import_file.update(rows_successfuly_processed: @success, proccesed_errors: @proccesed_errors,
+                        rows_unsuccessfuly_processed: @failed)
+    @import_file
+  end
+
   private
 
   def read_csv
@@ -25,5 +34,14 @@ class Importer
 
   def wrong_columns?(row)
     row.to_hash.values.last.nil?
+  end
+
+  def import_model(model)
+    if model.save
+      @success += 1
+    else
+      @proccesed_errors += "- Linea #{@line}: #{model.errors.full_messages}\n"
+      @failed += 1
+    end
   end
 end
