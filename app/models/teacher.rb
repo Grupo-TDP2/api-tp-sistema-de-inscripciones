@@ -5,11 +5,10 @@ class Teacher < User
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  validates :email, :first_name, :last_name, :personal_document_number, :birthdate, :phone_number,
-            :address, presence: true
-  validates :phone_number, numericality: true, length: { minimum: 8, maximum: 10 }
-  validates :personal_document_number, numericality: true, length: { is: 8 }
+  validates :email, :first_name, :last_name, :username, :school_document_number, presence: true
   validates :email, uniqueness: { case_sensitive: false }
+  validates :school_document_number, uniqueness: { case_sensitive: false }
+  validates :school_document_number, numericality: true, length: { minimum: 7, maximum: 8 }
 
   has_many :teacher_courses, dependent: :destroy
   has_many :courses, through: :teacher_courses

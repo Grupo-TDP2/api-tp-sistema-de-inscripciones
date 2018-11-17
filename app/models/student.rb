@@ -10,6 +10,7 @@ class Student < User
   validates :priority, numericality: { only_integer: true, greater_than: 0,
                                        less_than_or_equal_to: 100 }
   validates :school_document_number, numericality: true, length: { minimum: 5, maximum: 6 }
+  validates :school_document_number, uniqueness: { case_sensitive: false }
   validates :email, uniqueness: { case_sensitive: false }
   validate :unique_email
 
