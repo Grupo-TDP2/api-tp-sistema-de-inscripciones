@@ -7,7 +7,10 @@ module V1
         PollReport.new(report_params[:department_id], report_params[:school_term_id]).report
     end
 
-    def subject_enrolments; end
+    def subject_enrolments
+      render json:
+        SubjectReport.new(report_params[:department_id], report_params[:school_term_id]).report
+    end
 
     private
 
