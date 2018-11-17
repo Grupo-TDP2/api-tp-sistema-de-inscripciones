@@ -165,14 +165,19 @@ course_of_study_4.subjects << subject_1
 course_of_study_4.subjects << subject_2
 
 TeacherCourse.create!(course: course_2, teacher: teacher_1, teaching_position: :course_chief)
+TeacherCourse.create!(course: course_3, teacher: teacher_1, teaching_position: :course_chief)
 TeacherCourse.create!(course: course_3, teacher: teacher_2, teaching_position: :practice_chief)
+TeacherCourse.create!(course: course_5, teacher: teacher_2, teaching_position: :practice_chief)
 
-# Enrolment.new(course: course_3, student: student_1, type: :normal).save(validate: false)
+Enrolment.new(course: course_3, student: student_1, status: :approved, type: :normal)
+         .save(validate: false)
 Enrolment.new(course: course_3, student: student_2, type: :normal, status: :approved,
               partial_qualification: 8).save(validate: false)
 Enrolment.new(course: course_2, student: student_1, type: :normal).save(validate: false)
 Enrolment.new(course: course_6, student: student_1, type: :normal, status: :approved,
               final_qualification: 6).save(validate: false)
+Enrolment.new(course: course_5, student: student_3, type: :normal, status: :approved,
+              partial_qualification: 6).save(validate: false)
 Enrolment.new(course: course_1, student: student_3, type: :normal, status: :approved,
               partial_qualification: 6).save(validate: false)
 Enrolment.new(course: course_2, student: student_3, type: :normal, status: :approved,
