@@ -1,27 +1,27 @@
-class StudentImport < Importer
+class TeacherImport < Importer
   # Refactor from the last version. There is still much to improve
   def initialize(params)
     @file = params[:file]
     @import_file = ImportFile.new(model: params[:model].downcase, filename: params[:filename])
+    @convert = { 'nombre' => 'first_name', 'apellido' => 'last_name', 'mail' => 'email',
+                 'clave' => 'password', 'legajo' => 'school_document_number',
+                 'usuario' => 'username' }
+    @exp_headers = %w[first_name last_name email password school_document_number username]
     @success = 0
     @failed = 0
     @line = 0
     @proccesed_errors = ''
-    @convert = { 'nombre' => 'first_name', 'apellido' => 'last_name', 'mail' => 'email',
-                 'clave' => 'password', 'padrón' => 'school_document_number',
-                 'usuario' => 'username', 'prioridad' => 'priority' }
-    @exp_headers = %w[first_name last_name email password school_document_number username priority]
   end
 
   private
 
   def process_row(row)
-    student = Student.new(row.to_hash)
-    if wrong_columns?(row)
+    teacher = Teacher.new(row.to_hash)
+    if row.to_hash.values.last.nil?
       @proccesed_errors += "- Linea #{@line}: Número de columnas erroneo\n"
       @failed += 1
     else
-      import_model(student)
+      import_model(teacher)
     end
     @line += 1
   end
