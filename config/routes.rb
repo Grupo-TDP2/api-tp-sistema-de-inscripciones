@@ -47,6 +47,13 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :reports, only: [] do
+      collection do
+        get :polls
+        get :subject_enrolments
+      end
+    end
+
     resources :departments, only: [:index] do
       resources :subjects, only: [:index]
       get :courses, to: 'departments#my_courses'

@@ -237,6 +237,10 @@ ActiveRecord::Schema.define(version: 20181114210235) do
     t.string "encrypted_password", default: "", null: false
     t.string "first_name", null: false
     t.string "last_name", null: false
+    t.string "personal_document_number", null: false
+    t.date "birthdate", null: false
+    t.string "phone_number", null: false
+    t.string "address", null: false
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
