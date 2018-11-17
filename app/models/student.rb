@@ -20,6 +20,8 @@ class Student < User
   has_many :student_exams, dependent: :destroy
   has_many :exams, through: :student_exams
 
+  has_many :polls, dependent: :destroy
+
   def enrolments_from_subject(subject_id)
     enrolments.joins(:course).where(student_id: id, status: :approved,
                                     courses: { subject_id: subject_id })
