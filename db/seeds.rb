@@ -56,6 +56,15 @@ school_term = SchoolTerm.create!(term: :second_semester, year: '2018',
 past_school_term = SchoolTerm.create!(term: :first_semester, year: '2018',
                                       date_start: Date.new(2018, 3, 10).next_week,
                                       date_end: Date.new(2018, 3, 10).next_week + 16.weeks)
+SchoolTerm.create!(term: :summer_school, year: '2018',
+                   date_start: Date.new(2018, 1, 1).next_week,
+                   date_end: Date.new(2018, 1, 1).next_week + 8.weeks)
+prev_year_2_term = SchoolTerm.create!(term: :second_semester, year: '2017',
+                                      date_start: Date.new(2017, 8, 1).next_week,
+                                      date_end: Date.new(2017, 8, 1).next_week + 16.weeks)
+prev_year_1_term = SchoolTerm.create!(term: :first_semester, year: '2017',
+                                      date_start: Date.new(2017, 3, 10).next_week,
+                                      date_end: Date.new(2017, 3, 10).next_week + 16.weeks)
 
 week_1 = FinalExamWeek.create!(date_start_week: Date.new(2018, 12, 10), year: '2018')
 week_2 = FinalExamWeek.create!(date_start_week: Date.new(2018, 12, 17), year: '2018')
@@ -66,14 +75,23 @@ week_6 = FinalExamWeek.create!(date_start_week: Date.new(2019, 2, 25), year: '20
 
 course_1 = Course.create!(name: '001', vacancies: 2, subject: subject_1, school_term: school_term)
 course_2 = Course.create!(name: '002', vacancies: 2, subject: subject_2, school_term: school_term)
-course_3 = Course.create!(name: '003', vacancies: 0, subject: subject_3, school_term: school_term)
+course_3 = Course.create!(name: '003', vacancies: 0, subject: subject_3, school_term: school_term,
+                          accept_free_condition_exam: true)
 course_4 = Course.create!(name: '004', vacancies: 2, subject: subject_4, school_term: school_term)
 course_5 = Course.create!(name: '005', vacancies: 2, subject: subject_3, school_term: school_term)
-course_6 = Course.create!(name: '006', vacancies: 2, subject: subject_3,
+course_6 = Course.create!(name: '006', vacancies: 2, subject: subject_1,
                           school_term: past_school_term)
+course_7 = Course.create!(name: '007', vacancies: 0, subject: subject_3,
+                          school_term: past_school_term, accept_free_condition_exam: true)
+course_8 = Course.create!(name: '008', vacancies: 0, subject: subject_3,
+                          school_term: prev_year_2_term, accept_free_condition_exam: true)
+course_9 = Course.create!(name: '009', vacancies: 0, subject: subject_3,
+                          school_term: prev_year_1_term, accept_free_condition_exam: true)
 
 Exam.create!(course: course_3, final_exam_week: week_1,
              date_time: Time.zone.parse('2018-12-12 17:00:00'), classroom: classroom_1)
+Exam.new(course: course_3, final_exam_week: week_1, date_time: 3.days.from_now,
+         classroom: classroom_1).save(validate: false)
 
 LessonSchedule.create!(course: course_3, classroom: classroom_1, type: :theory, day: :monday,
                        hour_start: '17:00', hour_end: '19:00')
@@ -103,13 +121,11 @@ LessonSchedule.create!(course: course_6, classroom: classroom_4, type: :practice
 
 teacher_1 = Teacher.create!(email: 'teacher1@example.com', password: '12345678',
                             first_name: 'Carlos', last_name: 'Fontela',
-                            personal_document_number: '30000000', birthdate: '1970-01-01',
-                            phone_number: '44444444', address: 'Some address 123')
+                            username: 'teacher1@example.com', school_document_number: '1234567')
 
 teacher_2 = Teacher.create!(email: 'teacher2@example.com', password: '12345678',
                             first_name: 'Luis', last_name: 'Argerich',
-                            personal_document_number: '30000001', birthdate: '1970-01-01',
-                            phone_number: '44444445', address: 'Some address 1234')
+                            username: 'teacher2@example.com', school_document_number: '1234568')
 
 student_1 = Student.create!(email: 'leandro.masello@example.com', password: '12345678',
                             first_name: 'Leandro', last_name: 'Masello',
@@ -148,9 +164,22 @@ course_of_study_4.subjects << subject_2
 TeacherCourse.create!(course: course_2, teacher: teacher_1, teaching_position: :course_chief)
 TeacherCourse.create!(course: course_3, teacher: teacher_2, teaching_position: :practice_chief)
 
-Enrolment.new(course: course_3, student: student_1, type: :normal).save(validate: false)
-Enrolment.new(course: course_3, student: student_2, type: :normal).save(validate: false)
-Enrolment.new(course: course_3, student: student_3, type: :conditional).save(validate: false)
+# Enrolment.new(course: course_3, student: student_1, type: :normal).save(validate: false)
+Enrolment.new(course: course_3, student: student_2, type: :normal, status: :approved,
+              partial_qualification: 8).save(validate: false)
 Enrolment.new(course: course_2, student: student_1, type: :normal).save(validate: false)
+Enrolment.new(course: course_6, student: student_1, type: :normal, final_qualification: 6)
+         .save(validate: false)
+Enrolment.new(course: course_1, student: student_3, type: :normal, status: :approved,
+              partial_qualification: 6).save(validate: false)
+Enrolment.new(course: course_2, student: student_3, type: :normal, status: :approved,
+              partial_qualification: 6, final_qualification: 6).save(validate: false)
+Enrolment.new(course: course_8, student: student_3, type: :normal, status: :approved,
+              partial_qualification: 6).save(validate: false)
+Enrolment.new(course: course_9, student: student_3, type: :normal, status: :approved,
+              partial_qualification: 6).save(validate: false)
 
-StudentExam.new(exam: Exam.first, student: student_1).save(validate: false)
+StudentExam.new(exam: Exam.first, student: student_1, condition: :free).save(validate: false)
+StudentExam.new(exam: Exam.first, student: student_2).save(validate: false)
+StudentExam.new(exam: Exam.first, student: student_3).save(validate: false)
+StudentExam.new(exam: Exam.last, student: student_1).save(validate: false)

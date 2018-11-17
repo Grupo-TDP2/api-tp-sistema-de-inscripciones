@@ -7,19 +7,35 @@ module V1
     end
 
     def create
-      if import_file_params[:model].match?(/student/i)
+      if student_importer?
         result = StudentImport.new(import_file_params).process
-        render json: result, status: :ok
+      elsif teacher_importer?
+        result = TeacherImport.new(import_file_params).process
       else
-        render json: { error: "#{import_file_params[:model]} has no importer set" },
-               status: :unprocessable_entity
+        return no_importer_response
       end
+      render json: result, status: :ok
+    rescue ArgumentError
+      render json: { errors: 'Wrong columns' }, status: :bad_request
     end
 
     private
 
+    def student_importer?
+      import_file_params[:model].match?(/student/i)
+    end
+
+    def teacher_importer?
+      import_file_params[:model].match?(/teacher/i)
+    end
+
     def import_file_params
       params.permit(:file, :filename, :model)
+    end
+
+    def no_importer_response
+      render json: { error: "#{import_file_params[:model]} has no importer set" },
+             status: :unprocessable_entity
     end
   end
 end

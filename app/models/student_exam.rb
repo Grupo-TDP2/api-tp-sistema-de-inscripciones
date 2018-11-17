@@ -1,13 +1,33 @@
 class StudentExam < ApplicationRecord
   validates :student, :exam, :condition, presence: true
   validates :student_id, uniqueness: { scope: :exam_id, case_sensitive: false }
-  validate :validate_able_to_take_the_exam, if: %i[exam student regular?]
+  validates :qualification, numericality: { only_integer: true, greater_than_or_equal_to: 2,
+                                            less_than_or_equal_to: 10 }, if: :qualification
+  validate :validate_able_to_take_the_exam, if: %i[exam student regular?], on: :create
   validate :valid_free_condition, if: :exam
 
   belongs_to :student
   belongs_to :exam
 
   enum condition: { regular: 0, free: 1 }
+
+  def self.to_csv(exam)
+    CSV.generate(headers: true) do |csv|
+      csv << %w[nombre padron fecha_de_inscripcion condicion nota]
+      exam.student_exams.map do |registration|
+        student = registration.student
+        csv << ["#{student.last_name} #{student.first_name}", student.school_document_number,
+                registration.created_at, registration.condition, registration.qualification]
+      end
+    end
+  end
+
+  def qualifications(params)
+    StudentExam.transaction do
+      update!(qualification: params[:qualification])
+      final_qualification(params)
+    end
+  end
 
   private
 
@@ -47,5 +67,37 @@ class StudentExam < ApplicationRecord
     @student_subject_courses ||= exam.course.subject.courses.map do |course|
       course.enrolments.exists?(student: student) ? course.enrolments.where(student: student) : nil
     end.compact.flatten
+  end
+
+  def qualification_error_message
+    'Cannot set final_qualification without an exam qualification'
+  end
+
+  def final_qualification(params)
+    if free?
+      free_enrolment(params[:final_qualification])
+    else
+      regular_enrolment(params[:final_qualification])
+    end
+  end
+
+  def free_enrolment(final_qualification)
+    if Enrolment.exists?(student: student, course: exam.course, type: :free_exam)
+      update_existing_free_enrolment(final_qualification)
+    else
+      Enrolment.create!(student: student, course: exam.course, type: :free_exam,
+                        final_qualification: final_qualification,
+                        status: :approved)
+    end
+  end
+
+  def regular_enrolment(final_qualification)
+    student.enrolments_from_subject(exam.course.subject.id)
+           .first.update!(final_qualification: final_qualification)
+  end
+
+  def update_existing_free_enrolment(final_qualification)
+    Enrolment.find_by(student: student, course: exam.course, type: :free_exam)
+             .update!(final_qualification: final_qualification)
   end
 end

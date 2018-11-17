@@ -21,7 +21,7 @@ gem 'uglifier', '>= 1.3.0'
 # Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails', '~> 4.2'
 
-gem 'therubyracer', platforms: :ruby
+gem 'mini_racer'
 
 # JSON Web Token
 gem 'jwt', '~> 2.1.0'
@@ -60,14 +60,17 @@ gem 'metamagic'
 
 gem 'active_model_serializers'
 
-# Use CoffeeScript for .coffee assets and views
-gem 'coffee-rails', '~> 4.2'
-# Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
-gem 'turbolinks', '~> 5'
-# Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', '~> 2.5'
+gem 'httparty', '~> 0.16'
+gem 'rufus-scheduler', '~> 3.4.0'
+# Sidekiq
+gem 'sinatra', '>= 1.3.0', require: nil
+
+gem 'sidekiq'
+gem 'sidekiq-cron', '~> 0.6.3'
+gem 'sidekiq-failures'
+gem 'sidekiq_mailer'
 # Use Redis adapter to run Action Cable in production
-# gem 'redis', '~> 4.0'
+gem 'redis', '~> 4.0'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
