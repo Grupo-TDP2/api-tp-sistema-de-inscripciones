@@ -18,14 +18,6 @@ module V1
     end
 
     def show
-      server_key = Rails.application.secrets.server_push_key
-      message_content = {
-        to: @current_user.device_token.to_s, notification: { title: 'Logged in user',
-                                                             body: @current_user.email }
-      }
-      HTTParty.post(FIREBASE_URL, body: message_content.to_json,
-                                  headers: { 'Content-Type' => 'application/json',
-                                             'Authorization' => "key=#{server_key}" })
       render json: @current_user
     end
 
