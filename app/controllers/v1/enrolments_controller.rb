@@ -1,7 +1,7 @@
 module V1
   class EnrolmentsController < ApplicationController
     before_action -> { authenticate_user!(['Student']) }, only: %i[create destroy]
-    before_action -> { authenticate_user!(%w[Admin Teacher]) }, only: [:update]
+    before_action -> { authenticate_user!(%w[Admin Teacher DepartmentStaff]) }, only: [:update]
     before_action -> { authenticate_user!(%w[Admin DepartmentStaff Teacher]) }, only: %i[index]
 
     def index
@@ -21,7 +21,8 @@ module V1
     end
 
     def update
-      return wrong_course_for_teacher unless teacher_course_exist || admin_role?
+      return wrong_course_for_teacher unless teacher_course_exist || admin_role? ||
+                                             staff_from_department?
       enrolment = Enrolment.find(params[:id])
       if enrolment.update(enrolment_update_params)
         render json: enrolment
@@ -55,6 +56,11 @@ module V1
       enrolment.assign_attributes(type: :normal)
     end
 
+    def staff_from_department?
+      return false unless @current_user.is_a?(DepartmentStaff)
+      @current_user.department == course.subject.department
+    end
+
     def enrolment_update_params
       params.require(:enrolment).permit(:status, :partial_qualification)
     end
@@ -64,7 +70,7 @@ module V1
     end
 
     def wrong_course_for_teacher
-      render json: { error: 'El docente no se relaciona con el curso seleccionado' },
+      render json: { error: 'El docente/depto no se relaciona con el curso seleccionado' },
              status: :unprocessable_entity
     end
 
