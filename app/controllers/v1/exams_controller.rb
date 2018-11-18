@@ -1,7 +1,8 @@
 module V1
   class ExamsController < ApplicationController
     serialization_scope :current_user
-    before_action -> { authenticate_user!(%w[Admin Teacher DepartmentStaff]) }, only: %i[create destroy]
+    before_action -> { authenticate_user!(%w[Admin Teacher DepartmentStaff]) },
+                  only: %i[create destroy]
     before_action -> { authenticate_user!(%w[Admin Student Teacher DepartmentStaff]) },
                   only: [:index]
 
@@ -33,12 +34,13 @@ module V1
     private
 
     def invalid_course
-      render json: { error: 'El docente/depto no puede modificar un examen que no sea de su curso/depto' },
+      render json: {
+        error: 'El docente/depto no puede modificar un examen que no sea de su curso/depto'
+      },
              status: :unprocessable_entity
     end
 
     def staff_from_department?
-      byebug
       return false unless @current_user.is_a?(DepartmentStaff)
       @current_user.department == course.subject.department
     end

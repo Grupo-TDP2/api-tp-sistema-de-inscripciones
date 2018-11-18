@@ -44,8 +44,7 @@ module V1
     end
 
     def update
-      return wrong_course_for_teacher unless teacher_course_exist || 
-                                             @current_user.is_a?(Admin) ||
+      return wrong_course_for_teacher unless teacher_course_exist || @current_user.is_a?(Admin) ||
                                              staff_from_department?
       if course.update(update_free_condition_params)
         render json: course
