@@ -1,7 +1,8 @@
 module V1
   class ExamsController < ApplicationController
     serialization_scope :current_user
-    before_action -> { authenticate_user!(%w[Admin Teacher]) }, only: %i[create destroy]
+    before_action -> { authenticate_user!(%w[Admin Teacher DepartmentStaff]) },
+                  only: %i[create destroy]
     before_action -> { authenticate_user!(%w[Admin Student Teacher DepartmentStaff]) },
                   only: [:index]
 
@@ -11,7 +12,7 @@ module V1
     end
 
     def destroy
-      return invalid_course unless teacher_course_exist
+      return invalid_course unless teacher_course_exist || staff_from_department?
       exam = Exam.find(params[:id])
       if exam.destroy
         head :ok
@@ -21,7 +22,7 @@ module V1
     end
 
     def create
-      return invalid_course unless teacher_course_exist
+      return invalid_course unless teacher_course_exist || staff_from_department?
       exam = Exam.new(exam_params.merge(course_id: course.id))
       if exam.save
         render json: exam, status: :created
@@ -33,8 +34,15 @@ module V1
     private
 
     def invalid_course
-      render json: { error: 'El docente no puede eliminar un examen que no sea de su curso' },
+      render json: {
+        error: 'El docente/depto no puede modificar un examen que no sea de su curso/depto'
+      },
              status: :unprocessable_entity
+    end
+
+    def staff_from_department?
+      return false unless @current_user.is_a?(DepartmentStaff)
+      @current_user.department == course.subject.department
     end
 
     def course
