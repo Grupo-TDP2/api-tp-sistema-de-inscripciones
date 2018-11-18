@@ -95,6 +95,8 @@ Exam.create!(course: course_3, final_exam_week: week_1,
              date_time: Time.zone.parse('2018-12-12 17:00:00'), classroom: classroom_1)
 Exam.new(course: course_3, final_exam_week: week_1, date_time: 3.days.from_now,
          classroom: classroom_1).save(validate: false)
+Exam.create!(course: course_3, final_exam_week: week_7,
+    date_time: Time.zone.parse('2018-2-7 17:00:00'), classroom: classroom_1)
 
 LessonSchedule.create!(course: course_3, classroom: classroom_1, type: :theory, day: :monday,
                        hour_start: '17:00', hour_end: '19:00')
@@ -191,6 +193,8 @@ StudentExam.new(exam: Exam.first, student: student_1, condition: :free).save(val
 StudentExam.new(exam: Exam.first, student: student_2).save(validate: false)
 StudentExam.new(exam: Exam.first, student: student_3).save(validate: false)
 StudentExam.new(exam: Exam.last, student: student_1).save(validate: false)
+StudentExam.new(exam: Exam.last, student: student_2).save(validate: false)
+
 
 Poll.create!(course: course_3, student: student_2, rate: 3, comment: 'Comment 1')
 Poll.create!(course: course_6, student: student_1, rate: 4, comment: 'Comment 2')
