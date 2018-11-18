@@ -73,6 +73,8 @@ week_3 = FinalExamWeek.create!(date_start_week: Date.new(2019, 2, 4), year: '201
 week_4 = FinalExamWeek.create!(date_start_week: Date.new(2019, 2, 11), year: '2019')
 week_5 = FinalExamWeek.create!(date_start_week: Date.new(2019, 2, 18), year: '2019')
 week_6 = FinalExamWeek.create!(date_start_week: Date.new(2019, 2, 25), year: '2019')
+week_7 = FinalExamWeek.create!(date_start_week: Date.new(2018, 2, 5), year: '2018')
+
 
 course_1 = Course.create!(name: '001', vacancies: 2, subject: subject_1, school_term: school_term)
 course_2 = Course.create!(name: '002', vacancies: 2, subject: subject_2, school_term: school_term)
