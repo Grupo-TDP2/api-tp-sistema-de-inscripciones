@@ -24,7 +24,7 @@ module V1
     def pending_exam_courses
       render json: @current_user.pending_exam_courses,
              include: ['course', 'course.school_term', 'course.subject',
-                       'course.subject.department', 'course.lesson_schedules']
+                       'course.subject.department', 'course.lesson_schedules', 'course.polls']
     end
 
     private
