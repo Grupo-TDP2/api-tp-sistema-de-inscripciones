@@ -62,7 +62,7 @@ module V1
     end
 
     def enrolment_update_params
-      params.require(:enrolment).permit(:status, :partial_qualification)
+      params.require(:enrolment).permit(:status, :partial_qualification, :type)
     end
 
     def teacher_course_exist
