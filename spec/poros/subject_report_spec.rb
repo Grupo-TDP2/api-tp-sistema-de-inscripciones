@@ -19,7 +19,7 @@ describe SubjectReport do
   context 'when there are some enrolments' do
     before do
       teacher_course_1 = create(:teacher_course, course: course_1)
-      create(:teacher_course, course: course_1)
+      create(:teacher_course, course: course_1, teaching_position: :first_assistant)
       create(:teacher_course, course: course_2)
       create(:teacher_course, course: course_2, teacher: teacher_course_1.teacher,
                               teaching_position: :first_assistant)
