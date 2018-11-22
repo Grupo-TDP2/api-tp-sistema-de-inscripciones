@@ -22,6 +22,7 @@ FinalExamWeek.delete_all
 Exam.delete_all
 Admin.delete_all
 Poll.delete_all
+StudentExam.delete_all
 
 course_of_study_1 = CourseOfStudy.create!(name: 'Ingeniería en Informática', required_credits: 240)
 course_of_study_2 = CourseOfStudy.create!(name: 'Ingeniería Química', required_credits: 240)

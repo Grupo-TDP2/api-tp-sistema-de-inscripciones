@@ -40,7 +40,7 @@ describe V1::EnrolmentsController do
           index_request
           expect(response_body.first.keys)
             .to match_array(%w[id type status partial_qualification final_qualification
-                               created_at student course])
+                               created_at student course exam_qualification])
         end
       end
 
