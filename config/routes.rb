@@ -20,7 +20,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :students, only: [] do
+    resources :students, only: [:index] do
       collection do
         scope :me do
           get :show

@@ -2,8 +2,14 @@ module V1
   class StudentsController < ApplicationController
     before_action -> { authenticate_user!(%w[Student]) }, only: %i[approved_subjects update show
                                                                    pending_exam_courses]
+    before_action -> { authenticate_user!(%w[Admin DepartmentStaff Teacher]) },
+                  only: %i[index]
 
     FIREBASE_URL = 'https://fcm.googleapis.com/fcm/send'.freeze
+
+    def index
+      render json: Student.all
+    end
 
     def approved_subjects
       render json: @current_user.approved_subjects

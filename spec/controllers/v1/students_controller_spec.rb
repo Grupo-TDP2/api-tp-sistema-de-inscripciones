@@ -1,6 +1,29 @@
 require 'rails_helper'
 
 describe V1::StudentsController do
+  describe '#index' do
+    let(:index_request) { get :index }
+
+    context 'when there is no admin logged in' do
+      it 'returns http status unauthorized' do
+        index_request
+        expect(response).to have_http_status :unauthorized
+      end
+    end
+
+    context 'when there is an admin logged in' do
+      before do
+        create_list(:student, 5)
+        sign_in create(:admin)
+      end
+
+      it 'returns the list of students' do
+        index_request
+        expect(response_body.size).to eq 5
+      end
+    end
+  end
+
   describe '#approved_subjects' do
     let(:approved_subjects_request) { get :approved_subjects }
 
