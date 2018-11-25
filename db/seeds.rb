@@ -115,9 +115,9 @@ week_4 = FinalExamWeek.create!(date_start_week: Date.new(2019, 2, 11), year: '20
 week_5 = FinalExamWeek.create!(date_start_week: Date.new(2019, 2, 18), year: '2019')
 week_6 = FinalExamWeek.create!(date_start_week: Date.new(2019, 2, 25), year: '2019')
 week_7 = FinalExamWeek.create!(date_start_week: Date.new(2018, 2, 5), year: '2018')
-week_7 = FinalExamWeek.create!(date_start_week: Date.new(2018, 2, 12), year: '2018')
-week_7 = FinalExamWeek.create!(date_start_week: Date.new(2018, 2, 19), year: '2018')
-week_7 = FinalExamWeek.create!(date_start_week: Date.new(2018, 2, 26), year: '2018')
+week_8 = FinalExamWeek.create!(date_start_week: Date.new(2018, 2, 12), year: '2018')
+week_9 = FinalExamWeek.create!(date_start_week: Date.new(2018, 2, 19), year: '2018')
+week_10 = FinalExamWeek.create!(date_start_week: Date.new(2018, 2, 26), year: '2018')
 
 
 
