@@ -33,7 +33,7 @@ describe V1::CoursesController do
         index_request
         expect(response_body.first.keys)
           .to match_array(%w[id name vacancies inscribed? subject lesson_schedules able_to_enrol?
-                             teacher_courses accept_free_condition_exam enrolment])
+                             teacher_courses accept_free_condition_exam enrolment poll])
       end
 
       context 'with courses from other school terms' do

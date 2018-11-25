@@ -1,6 +1,8 @@
 module V1
   class EnrolmentsController < ApplicationController
-    before_action -> { authenticate_user!(['Student']) }, only: %i[create destroy]
+    before_action -> { authenticate_user!(['Student']) }, only: %i[destroy]
+    before_action -> { authenticate_user!(%w[Student Teacher DepartmentStaff Admin]) },
+                  only: %i[create]
     before_action -> { authenticate_user!(%w[Admin Teacher DepartmentStaff]) }, only: [:update]
     before_action -> { authenticate_user!(%w[Admin DepartmentStaff Teacher]) }, only: %i[index]
 
@@ -9,14 +11,16 @@ module V1
       render json: course.enrolments, status: :ok
     end
 
-    def create
-      enrolment = Enrolment.new(course: course, student: @current_user)
+    def create # rubocop:disable Metrics/AbcSize
+      return wrong_course_for_teacher unless teacher_course_exist || admin_role? ||
+                                             staff_from_department? || student_role?
+      enrolment = Enrolment.new(course: course, student_id: student_id)
       enrolment_type(enrolment)
       if enrolment.save
         course.decrease_vacancies!
         render json: enrolment, status: :created
       else
-        render json: { error: 'La inscripcion no ha sido creada' }, status: :unprocessable_entity
+        render json: { error: enrolment.errors.full_messages }, status: :unprocessable_entity
       end
     end
 
@@ -51,6 +55,10 @@ module V1
       @current_user.is_a?(Admin) || @current_user.is_a?(DepartmentStaff)
     end
 
+    def student_role?
+      @current_user.is_a?(Student)
+    end
+
     def enrolment_type(enrolment)
       return enrolment.assign_attributes(type: :conditional) if course.without_vacancies?
       enrolment.assign_attributes(type: :normal)
@@ -62,11 +70,20 @@ module V1
     end
 
     def enrolment_update_params
-      params.require(:enrolment).permit(:status, :partial_qualification)
+      params.require(:enrolment).permit(:status, :partial_qualification, :type)
+    end
+
+    def enrolment_create_params
+      params.require(:enrolment).permit(:student_id)
     end
 
     def teacher_course_exist
-      TeacherCourse.exists?(course: course, teacher: @current_user)
+      teacher_id = @current_user.is_a?(Teacher) ? @current_user.id : params[:teacher_id]
+      TeacherCourse.exists?(course: course, teacher_id: teacher_id)
+    end
+
+    def student_id
+      @current_user.is_a?(Student) ? @current_user.id : enrolment_create_params[:student_id]
     end
 
     def wrong_course_for_teacher

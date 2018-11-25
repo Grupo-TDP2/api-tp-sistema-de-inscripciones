@@ -40,7 +40,7 @@ describe V1::EnrolmentsController do
           index_request
           expect(response_body.first.keys)
             .to match_array(%w[id type status partial_qualification final_qualification
-                               created_at student course])
+                               created_at student course exam_qualification])
         end
       end
 
@@ -130,6 +130,43 @@ describe V1::EnrolmentsController do
         end
       end
     end
+
+    context 'when the department staff creates the enrolment' do
+      let(:student) { create(:student) }
+      let(:date_start) { Date.new(2018, 8, 16) }
+      let(:term) do
+        create(:school_term, year: Date.current.year, date_start: date_start,
+                             term: SchoolTerm.current_term)
+      end
+      let(:course) { create(:course, school_term: term) }
+      let(:teacher_course) { create(:teacher_course, course: course) }
+      let(:enrolment_request) do
+        post :create, params: { teacher_id: teacher_course.teacher.id,
+                                course_id: course.id,
+                                enrolment: { student_id: student.id } }
+      end
+
+      before do
+        Timecop.freeze(date_start - 4.days)
+        sign_in create(:department_staff, department: course.subject.department)
+      end
+
+      it 'creates an enrolment' do
+        expect { enrolment_request }.to change(Enrolment, :count).by(1)
+      end
+
+      context 'when the teacher does not relate to the course' do
+        let(:enrolment_request) do
+          post :create, params: { department_id: course.subject.department.id,
+                                  course_id: course.id,
+                                  enrolment: { student_id: student.id } }
+        end
+
+        it 'creates an enrolment' do
+          expect { enrolment_request }.to change(Enrolment, :count).by(1)
+        end
+      end
+    end
   end
 
   describe '#update' do
@@ -142,7 +179,7 @@ describe V1::EnrolmentsController do
     let(:teacher_course) { create(:teacher_course, course: course_1) }
     let(:enrolment) do
       Timecop.freeze(date_start - 4.days) do
-        create(:enrolment, course: course_1, status: :not_evaluated)
+        create(:enrolment, course: course_1, status: :not_evaluated, type: :conditional)
       end
     end
     let(:teacher) { teacher_course.teacher }
@@ -163,6 +200,18 @@ describe V1::EnrolmentsController do
       it 'updates the enrolment' do
         enrolment_request
         expect(response_body['status']).to eq 'approved'
+      end
+
+      context 'when it updates the condition of the enrolment' do
+        let(:enrolment_request) do
+          patch :update, params: { course_id: course_1.id, id: enrolment.id,
+                                   teacher_id: teacher.id, enrolment: { type: :normal } }
+        end
+
+        it 'updates the enrolment' do
+          enrolment_request
+          expect(response_body['type']).to eq 'normal'
+        end
       end
     end
   end
