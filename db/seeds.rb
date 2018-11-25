@@ -28,6 +28,7 @@ course_of_study_1 = CourseOfStudy.create!(name: 'Ingeniería en Informática', r
 course_of_study_2 = CourseOfStudy.create!(name: 'Ingeniería Química', required_credits: 240)
 course_of_study_3 = CourseOfStudy.create!(name: 'Ingeniería Electrónica', required_credits: 240)
 course_of_study_4 = CourseOfStudy.create!(name: 'Ingeniería Mecánica', required_credits: 240)
+course_of_study_5 = CourseOfStudy.create!(name: 'Ingeniería Industrial', required_credits: 240)
 
 building_1 = Building.create!(name: 'PC', address: 'Av. Paseo Colón 850', postal_code: '1063',
                               city: 'CABA')
@@ -37,7 +38,13 @@ building_2 = Building.create!(name: 'LH', address: 'Av. Gral. Las Heras 2220', p
 classroom_1 = Classroom.create!(floor: '3', number: '22', building: building_1)
 classroom_2 = Classroom.create!(floor: '3', number: '03', building: building_1)
 classroom_3 = Classroom.create!(floor: '3', number: '02', building: building_1)
-classroom_4 = Classroom.create!(floor: '1', number: '06', building: building_2)
+classroom_4 = Classroom.create!(floor: '1', number: '06', building: building_1)
+classroom_5 = Classroom.create!(floor: '2', number: '26', building: building_1)
+classroom_6 = Classroom.create!(floor: '1', number: '07', building: building_2)
+classroom_7 = Classroom.create!(floor: '1', number: '08', building: building_2)
+classroom_8 = Classroom.create!(floor: '2', number: '16', building: building_2)
+classroom_9 = Classroom.create!(floor: '3', number: '18', building: building_2)
+classroom_0 = Classroom.create!(floor: '3', number: '36', building: building_2)
 
 department_1 = Department.create!(name: 'Departamento de Informática', code: '75')
 department_2 = Department.create!(name: 'Departamento de Matemática', code: '61')
@@ -51,6 +58,40 @@ subject_3 = Subject.create!(name: 'Taller de desarrollo de proyectos informátic
                             credits: 6, department: department_1)
 subject_4 = Subject.create!(name: 'Estructura del computador', code: '70', credits: 6,
                             department: department_3)
+subject_5 = Subject.create!(name: 'Algoritmos y Programación I', code: '40', credits: 6,
+                            department: department_1)
+subject_6 = Subject.create!(name: 'Organización del Computador', code: '03', credits: 6, 
+                            department: department_1)
+subject_7 = Subject.create!(name: 'Organización de Datos', code: '06',
+                            credits: 6, department: department_1)
+subject_8 = Subject.create!(name: 'Algoritmos y Programación III', code: '07', credits: 6,
+                            department: department_1)
+subject_9 = Subject.create!(name: 'Sistemas Operativos', code: '08', credits: 6,
+                            department: department_1)
+subject_10 = Subject.create!(name: 'Análisis de la Información', code: '09', credits: 6, 
+                            department: department_1)
+subject_11 = Subject.create!(name: 'Técnicas de Diseño', code: '10',
+                            credits: 6, department: department_1)
+subject_12 = Subject.create!(name: 'Análisis Numérico I', code: '12', credits: 6,
+                            department: department_1)
+subject_13 = Subject.create!(name: 'Lenguajes Formales', code: '14', credits: 6,
+                            department: department_1)
+subject_14 = Subject.create!(name: 'Bases de Datos', code: '15', credits: 6, 
+                            department: department_1)
+subject_15 = Subject.create!(name: 'Lenguajes de Programación', code: '16',
+                            credits: 6, department: department_1)
+subject_16 = Subject.create!(name: 'Algoritmos y Programación II', code: '41', credits: 6,
+                            department: department_1)
+subject_17 = Subject.create!(name: 'Taller de Programación I', code: '42', credits: 6,
+                            department: department_1)
+subject_18 = Subject.create!(name: 'Introducción a los Sistemas Distribuídos', code: '43', credits: 4,
+                            department: department_1)
+subject_19 = Subject.create!(name: 'Administración y Control de Proyectos Informáticos I', code: '44', 
+                            credits: 6, department: department_1)
+subject_20 = Subject.create!(name: 'Taller de Desarrollo de Proyectos I', code: '45', credits: 4,
+                            department: department_1)
+subject_21 = Subject.create!(name: 'Administración y Control de Proyectos Informáticos II', code: '46', 
+                            credits: 6, department: department_1)                                                                                    
 
 school_term = SchoolTerm.create!(term: :second_semester, year: '2018',
                                  date_start: Date.new(2018, 8, 10).next_week,
@@ -75,6 +116,10 @@ week_4 = FinalExamWeek.create!(date_start_week: Date.new(2019, 2, 11), year: '20
 week_5 = FinalExamWeek.create!(date_start_week: Date.new(2019, 2, 18), year: '2019')
 week_6 = FinalExamWeek.create!(date_start_week: Date.new(2019, 2, 25), year: '2019')
 week_7 = FinalExamWeek.create!(date_start_week: Date.new(2018, 2, 5), year: '2018')
+week_8 = FinalExamWeek.create!(date_start_week: Date.new(2018, 2, 12), year: '2018')
+week_9 = FinalExamWeek.create!(date_start_week: Date.new(2018, 2, 19), year: '2018')
+week_10 = FinalExamWeek.create!(date_start_week: Date.new(2018, 2, 26), year: '2018')
+
 
 
 course_1 = Course.create!(name: '001', vacancies: 2, subject: subject_1, school_term: school_term)
@@ -132,20 +177,72 @@ teacher_1 = Teacher.create!(email: 'teacher1@example.com', password: '12345678',
 teacher_2 = Teacher.create!(email: 'teacher2@example.com', password: '12345678',
                             first_name: 'Luis', last_name: 'Argerich',
                             username: 'teacher2@example.com', school_document_number: '1234568')
+teacher_3 = Teacher.create!(email: 'teacher3@example.com', password: '12345678',
+                            first_name: 'Rosita', last_name: 'Wachenchauzer',
+                            username: 'teacher3@example.com', school_document_number: '1234569')
+teacher_4 = Teacher.create!(email: 'teacher4@example.com', password: '12345678',
+                            first_name: 'Luis', last_name: 'Veiga',
+                            username: 'teacher4@example.com', school_document_number: '1234589')
+teacher_5 = Teacher.create!(email: 'teacher5@example.com', password: '12345678',
+                            first_name: 'Diego', last_name: 'Sanchez',
+                            username: 'teacher5@example.com', school_document_number: '1234989')
+teacher_6 = Teacher.create!(email: 'teacher6@example.com', password: '12345678',
+                            first_name: 'Cristian', last_name: 'Calónico',
+                            username: 'teacher6@example.com', school_document_number: '1244568')
+teacher_7 = Teacher.create!(email: 'teacher7@example.com', password: '12345678',
+                            first_name: 'Pablo', last_name: 'Roca',
+                            username: 'teacher7@example.com', school_document_number: '1234587')
+teacher_8 = Teacher.create!(email: 'teacher8@example.com', password: '12345678',
+                            first_name: 'Guillermo', last_name: 'Pantaleo',
+                            username: 'teacher8@example.com', school_document_number: '1234980')
+teacher_9 = Teacher.create!(email: 'teacher9@example.com', password: '12345678',
+                            first_name: 'Diego', last_name: 'Montaldo',
+                            username: 'teacher9@example.com', school_document_number: '1244561')
+teacher_10 = Teacher.create!(email: 'teacher10@example.com', password: '12345678',
+                            first_name: 'Gustavo', last_name: 'Dejean',
+                            username: 'teacher10@example.com', school_document_number: '1234583')
+teacher_11 = Teacher.create!(email: 'teacher11@example.com', password: '12345678',
+                            first_name: 'Mariano', last_name: 'Menendez',
+                            username: 'teacher11@example.com', school_document_number: '1234984')
+teacher_12 = Teacher.create!(email: 'teacher12@example.com', password: '12345678',
+                            first_name: 'Carlos', last_name: 'Sanchez',
+                            username: 'teacher12@example.com', school_document_number: '1244564')
 
 student_1 = Student.create!(email: 'leandro.masello@example.com', password: '12345678',
                             first_name: 'Leandro', last_name: 'Masello',
                             school_document_number: '93106', username: 'leandro.masello',
                             priority: 1)
-
 student_2 = Student.create!(email: 'juan.costamagna@example.com', password: '12345678',
                             first_name: 'Juan', last_name: 'Costamagna',
                             school_document_number: '93107', username: 'juan.costamagna',
                             priority: 1)
-
 student_3 = Student.create!(email: 'enzo.perez@example.com', password: '12345678',
                             first_name: 'Enzo', last_name: 'Perez',
                             school_document_number: '93108', username: 'enzo.perez',
+                            priority: 2)
+student_4 = Student.create!(email: 'agustina.sanchez@example.com', password: '12345678',
+                            first_name: 'Agustina', last_name: 'Sanchez',
+                            school_document_number: '93105', username: 'agustina.sanchez',
+                            priority: 1)
+student_5 = Student.create!(email: 'pablo.perez@example.com', password: '12345678',
+                            first_name: 'Pablo', last_name: 'Perez',
+                            school_document_number: '93109', username: 'pablo.perez',
+                            priority: 1)
+student_6 = Student.create!(email: 'alejandro.dominguez@example.com', password: '12345678',
+                            first_name: 'Alejandro', last_name: 'Dominguez',
+                            school_document_number: '93111', username: 'alejandro.dominguez',
+                            priority: 2)
+student_7 = Student.create!(email: 'luis.miguel@example.com', password: '12345678',
+                            first_name: 'Luis', last_name: 'Miguel',
+                            school_document_number: '93112', username: 'luis.miguel',
+                            priority: 1)
+student_8 = Student.create!(email: 'cristian.castro@example.com', password: '12345678',
+                            first_name: 'Cristian', last_name: 'Castro',
+                            school_document_number: '93113', username: 'cristian.castro',
+                            priority: 1)
+student_9 = Student.create!(email: 'fernando.gago@example.com', password: '12345678',
+                            first_name: 'Fernando', last_name: 'Gago',
+                            school_document_number: '93114', username: 'fernando.gago',
                             priority: 2)
 
 DepartmentStaff.create!(email: 'staff_informatica@example.com', password: '12345678',
