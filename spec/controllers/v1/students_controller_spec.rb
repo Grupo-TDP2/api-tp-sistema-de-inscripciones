@@ -1,6 +1,29 @@
 require 'rails_helper'
 
 describe V1::StudentsController do
+  describe '#index' do
+    let(:index_request) { get :index }
+
+    context 'when there is no admin logged in' do
+      it 'returns http status unauthorized' do
+        index_request
+        expect(response).to have_http_status :unauthorized
+      end
+    end
+
+    context 'when there is an admin logged in' do
+      before do
+        create_list(:student, 5)
+        sign_in create(:admin)
+      end
+
+      it 'returns the list of students' do
+        index_request
+        expect(response_body.size).to eq 5
+      end
+    end
+  end
+
   describe '#approved_subjects' do
     let(:approved_subjects_request) { get :approved_subjects }
 
@@ -24,7 +47,12 @@ describe V1::StudentsController do
   end
 
   describe '#update' do
-    let(:update_request) { patch :update, params: { student: { device_token: 'token' } } }
+    let(:update_request) do
+      patch :update, params: {
+        student: { device_token: 'token', first_name: 'john', last_name: 'doe',
+                   email: 'test@example.com' }
+      }
+    end
     let(:student) { create(:student) }
 
     context 'with no student logged in' do
@@ -39,7 +67,7 @@ describe V1::StudentsController do
 
       it 'updates the student' do
         update_request
-        expect(student.reload.device_token).to eq 'token'
+        expect(student.reload.email).to eq 'test@example.com'
       end
     end
   end

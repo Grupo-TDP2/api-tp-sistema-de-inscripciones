@@ -3,6 +3,7 @@ class CourseSerializer < ActiveModel::Serializer
   attribute :inscribed?, if: :inscribed_student?
   attribute :able_to_enrol?, if: :inscribed_student?
   attribute :enrolment, if: :inscribed_student?
+  attribute :poll, if: :inscribed_student?
   belongs_to :subject
   belongs_to :school_term
   has_many :teacher_courses
@@ -23,5 +24,9 @@ class CourseSerializer < ActiveModel::Serializer
 
   def enrolment
     Enrolment.find_by(course: object.id, student: current_user.id)
+  end
+
+  def poll
+    Poll.find_by(course_id: object.id, student_id: current_user.id)
   end
 end

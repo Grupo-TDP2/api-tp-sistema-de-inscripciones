@@ -20,7 +20,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :students, only: [] do
+    resources :students, only: [:index] do
       collection do
         scope :me do
           get :show
@@ -28,6 +28,7 @@ Rails.application.routes.draw do
           resources :student_exams, only: %i[index create destroy show]
           get :approved_subjects, to: 'students#approved_subjects'
           get :pending_exam_courses, to: 'students#pending_exam_courses'
+          resources :polls, only: %i[index create]
         end
       end
     end
@@ -35,7 +36,7 @@ Rails.application.routes.draw do
     resources :teachers, only: [:index] do
       get :courses, to: 'teachers#courses'
       resources :courses, only: [:update] do
-        resources :enrolments, only: %i[index update]
+        resources :enrolments, only: %i[index update create]
         resources :exams, only: %i[create destroy index] do
           resources :student_exams, only: %i[index update] do
             collection do
@@ -46,12 +47,19 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :reports, only: [] do
+      collection do
+        get :polls
+        get :subject_enrolments
+      end
+    end
+
     resources :departments, only: [:index] do
       resources :subjects, only: [:index]
       get :courses, to: 'departments#my_courses'
       resources :courses, only: %i[create show destroy update] do
         post :teachers, to: 'courses#associate_teacher'
-        resources :enrolments, only: %i[index update]
+        resources :enrolments, only: %i[index update create]
         resources :exams, only: %i[create destroy index] do
           resources :student_exams, only: %i[index update] do
             collection do
