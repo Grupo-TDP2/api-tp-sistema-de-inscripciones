@@ -11,8 +11,9 @@ module V1
       render json: course.enrolments, status: :ok
     end
 
-    def create
-      return wrong_course_for_teacher unless teacher_course_exist || @current_user.is_a?(Student)
+    def create # rubocop:disable Metrics/AbcSize
+      return wrong_course_for_teacher unless teacher_course_exist || admin_role? ||
+                                             staff_from_department? || student_role?
       enrolment = Enrolment.new(course: course, student_id: student_id)
       enrolment_type(enrolment)
       if enrolment.save
@@ -52,6 +53,10 @@ module V1
 
     def admin_role?
       @current_user.is_a?(Admin) || @current_user.is_a?(DepartmentStaff)
+    end
+
+    def student_role?
+      @current_user.is_a?(Student)
     end
 
     def enrolment_type(enrolment)

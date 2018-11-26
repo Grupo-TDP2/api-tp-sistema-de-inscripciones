@@ -59,7 +59,7 @@ Rails.application.routes.draw do
       get :courses, to: 'departments#my_courses'
       resources :courses, only: %i[create show destroy update] do
         post :teachers, to: 'courses#associate_teacher'
-        resources :enrolments, only: %i[index update]
+        resources :enrolments, only: %i[index update create]
         resources :exams, only: %i[create destroy index] do
           resources :student_exams, only: %i[index update] do
             collection do

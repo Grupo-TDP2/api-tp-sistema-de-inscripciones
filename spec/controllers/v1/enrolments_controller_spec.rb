@@ -148,7 +148,7 @@ describe V1::EnrolmentsController do
 
       before do
         Timecop.freeze(date_start - 4.days)
-        sign_in create(:department_staff)
+        sign_in create(:department_staff, department: course.subject.department)
       end
 
       it 'creates an enrolment' do
@@ -157,15 +157,13 @@ describe V1::EnrolmentsController do
 
       context 'when the teacher does not relate to the course' do
         let(:enrolment_request) do
-          post :create, params: { teacher_id: -1,
+          post :create, params: { department_id: course.subject.department.id,
                                   course_id: course.id,
                                   enrolment: { student_id: student.id } }
         end
 
-        it 'return the right error' do
-          enrolment_request
-          expect(response_body['error'])
-            .to match(%r{El docente\/depto no se relaciona con el curso seleccionado})
+        it 'creates an enrolment' do
+          expect { enrolment_request }.to change(Enrolment, :count).by(1)
         end
       end
     end
