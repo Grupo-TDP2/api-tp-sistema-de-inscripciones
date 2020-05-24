@@ -1,22 +1,7 @@
-RailsBootstrap
-===============
-
 [![Build Status](https://travis-ci.org/Grupo-TDP2/api-tp-sistema-de-inscripciones.svg?branch=master)](https://travis-ci.org/Grupo-TDP2/api-tp-sistema-de-inscripciones)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/a82725fb6b5a67978601/test_coverage)](https://codeclimate.com/github/Grupo-TDP2/api-tp-sistema-de-inscripciones/test_coverage)
-Kickoff for Rails web applications.
 
 ## Running local server
-
-### Git pre push hook
-
-You can modify the [pre-push.sh](script/pre-push.sh) script to run different scripts before you `git push` (e.g Rspec, Linters). Then you need to run the following:
-
-```bash
-  chmod +x script/pre-push.sh
-  sudo ln -s ../../script/pre-push.sh .git/hooks/pre-push
-```
-
-You can skip the hook by adding `--no-verify` to your `git push`.
 
 ### 1- Installing Ruby
 
@@ -26,14 +11,6 @@ You can skip the hook by adding `--no-verify` to your `git push`.
 - Download and install [Ruby-Build](https://github.com/rbenv/ruby-build#installing-as-an-rbenv-plugin-recommended).
 - Install the appropriate Ruby version by running `rbenv install [version]` where `version` is the one located in [.ruby-version](.ruby-version)
 
-### 2- Installing Yarn
-
-```bash
-  curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
-  echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-  sudo apt remove cmdtest # Some Ubuntu systems comes with cmdtest installed by default.
-  sudo apt-get update && sudo apt-get install yarn
-```
 
 ### 3- Installing Rails gems
 
@@ -55,10 +32,6 @@ You can skip the hook by adding `--no-verify` to your `git push`.
   bundle install
 ```
 
-### [Kickoff] Application Setup
-
-Your app is ready. Happy coding!
-
 ### Database Setup
 
 Run in terminal:
@@ -74,15 +47,7 @@ Log out from postgres and run:
   bundle exec rake db:create db:migrate
 ```
 
-Your server is ready to run. You can do this by executing `rails server` and going to [http://localhost:3000](http://localhost:3000). Happy coding!
-
-#### Using React In Views
-
-Install react dependencies running:
-
-```bash
-  ./script/react
-```
+Your server is ready to run. You can do this by executing `rails server` and going to [http://localhost:3000](http://localhost:3000). 
 
 ## Deploy Guide
 
